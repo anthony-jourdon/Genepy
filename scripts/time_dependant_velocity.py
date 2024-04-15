@@ -57,7 +57,7 @@ def main():
   print('###### uL ######')
   uLx_t,uLz_t = utils.symbolic_velocity_inversion(uLe,uLc,breakpoints,slopes)
   # paraview output
-  #utils.paraview_velocity_inversion((uxe_n,uze_n),(uxc_n,uzc_n),breakpoints,slopes,time_pv,root,pvd_fname)
+  utils.paraview_velocity_inversion((uxe_n,uze_n),(uxc_n,uzc_n),breakpoints,slopes,time_pv,root,pvd_fname)
   # for 1D plot
   utils.plot_1d_velocity_inversion(ue,uc,breakpoints,slopes,time_plot)
 
