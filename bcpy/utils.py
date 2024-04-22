@@ -45,7 +45,7 @@ def compute_angle_between_points_2d(point_0,point_1):
     angle = np.arctan(dy/dx)
   return angle
 
-def x_centre_from_angle(notch_centre,angle,domain_centre):
+def x_centre_from_angle(z,angle,domain_centre):
   """
   x_centre_from_angle(notch_centre,angle,domain_centre)
   Computes the x coordinate of the centre of the notch given 
@@ -55,14 +55,13 @@ def x_centre_from_angle(notch_centre,angle,domain_centre):
 
   Parameters:
   -----------
-  notch_centre  : 2d coordinates of the notch (x,z), x is the unknown
+  z             : z coordinate of the notch centre
   angle         : angle between the notch and the domain centre
   domain_centre : 2d coordinates of the domain centre
 
   Returns:
   --------
-  notch_centre[0] : x coordinate of the notch centre
+  x : x coordinate of the notch centre
   """
-
-  notch_centre[0] = np.tan(angle) * (notch_centre[1] - domain_centre[1]) + domain_centre[0]
-  return notch_centre[0]
+  x = np.tan(angle) * (z - domain_centre[1]) + domain_centre[0]
+  return x
