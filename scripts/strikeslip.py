@@ -11,9 +11,19 @@ def transpression_7():
   Notche_centre[1,1] = 176288.0 # z
   return Notche_centre
 
+def transtension(domain,angle,dz):
+  domain_centre = 0.5*(domain.O + domain.L)
+  wz_centre = np.zeros(shape=(2,2), dtype=np.float64)
+  wz_centre[0,1] = domain_centre[1] + dz
+  wz_centre[1,1] = domain_centre[1] - dz
+  
+  wz_centre[0,0] = bp.x_centre_from_angle(wz_centre[0,1],angle,domain_centre)
+  wz_centre[1,0] = bp.x_centre_from_angle(wz_centre[1,1],angle,domain_centre)
+  return wz_centre
+
 def initial_strain(domain):
   notche_centre = transpression_7()
-
+  #notche_centre = transtension(domain,np.deg2rad(83),25.0e3)
   A = 1.0 #np.random.rand()
   a = 0.5 * 6.0e-5**2
   b = 0.0
@@ -28,7 +38,7 @@ def main():
   # domain
   O = np.array([0,0],     dtype=np.float64)
   L = np.array([600e3,300e3], dtype=np.float64)
-  n = np.array([64,64],   dtype=np.int32)
+  n = np.array([64,32],   dtype=np.int32)
   # velocity
   r_angle = np.deg2rad(15.0)
   cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0)
