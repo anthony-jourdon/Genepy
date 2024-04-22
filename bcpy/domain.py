@@ -30,13 +30,17 @@ class Domain:
     self.sym_coor = sp.symbols('x z')
     return
   
-  def rotate_referential(self,x,z):
+  def rotate_referential(self,x,z,ccw=False):
     # translate
     xT = x - 0.5*(self.L[0] + self.O[0])
     zT = z - 0.5*(self.L[1] + self.O[1])
     # rotate
-    xTR = xT * np.cos(self.theta) + zT * np.sin(self.theta)
-    zTR = zT * np.cos(self.theta) - xT * np.sin(self.theta)
+    if ccw:
+      xTR = xT * np.cos(self.theta) - zT * np.sin(self.theta)
+      zTR = zT * np.cos(self.theta) + xT * np.sin(self.theta)
+    else:
+      xTR = xT * np.cos(self.theta) + zT * np.sin(self.theta)
+      zTR = zT * np.cos(self.theta) - xT * np.sin(self.theta)
     # translate back
     xR = xTR + 0.5*(self.L[0] + self.O[0])
     zR = zTR + 0.5*(self.L[1] + self.O[1])

@@ -65,7 +65,7 @@ class BoundaryConditions:
       uz_R = -np.sin(self.domain.theta) * ux + np.cos(self.domain.theta) * uz
     return ux_R,uz_R
 
-  def evaluate_velocity(self,x,z):
+  def evaluate_velocity(self,x,z,ccw=True):
     xr,zr = self.domain.rotate_referential(x,z)
     if self.dir == 0:
       coor = xr
@@ -73,7 +73,7 @@ class BoundaryConditions:
       coor = zr
     # evaluate velocity with the rotated coordinate
     ux,uz   = self.linear_velocity(coor)
-    uxr,uzr = self.rotate_vector(ux,uz)
+    uxr,uzr = self.rotate_vector(ux,uz,ccw=ccw)
     return uxr,uzr
   
   def evaluate_boundary_velocity(self):
@@ -81,8 +81,8 @@ class BoundaryConditions:
     uL = self.rotate_vector(self.uL[0],self.uL[1],ccw=True)
     return uO,uL
 
-  def plot_velocity(self):
-    uxr,uzr = self.evaluate_velocity(self.domain.num_coor[0],self.domain.num_coor[1])
+  def plot_velocity(self,ccw=True):
+    uxr,uzr = self.evaluate_velocity(self.domain.num_coor[0],self.domain.num_coor[1],ccw=ccw)
     u_norm = np.sqrt(uxr**2 + uzr**2)
 
     fig,ax = plt.subplots()
@@ -92,9 +92,9 @@ class BoundaryConditions:
     plt.show()
     return
   
-  def symbolic_velocity(self):
+  def symbolic_velocity(self,ccw=True):
     # Evaluate velocity using symbols for x and z
-    uxr,uzr = self.evaluate_velocity(self.domain.sym_coor[0],self.domain.sym_coor[1])
+    uxr,uzr = self.evaluate_velocity(self.domain.sym_coor[0],self.domain.sym_coor[1],ccw=ccw)
     print('###### velocity function ######')
     print('ux =',uxr)
     print('uz =',uzr)
@@ -106,8 +106,8 @@ class BoundaryConditions:
     print('uL =',uL)
     return uxr,uzr
   
-  def symbolic_derivatives(self):
-    ux,uz = self.symbolic_velocity()
+  def symbolic_derivatives(self,ccw=True):
+    ux,uz = self.symbolic_velocity(ccw=ccw)
     duxdx = ux.diff(self.domain.sym_coor[0])
     duxdz = ux.diff(self.domain.sym_coor[1])
     duzdx = uz.diff(self.domain.sym_coor[0])
