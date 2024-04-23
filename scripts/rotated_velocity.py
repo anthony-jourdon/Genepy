@@ -10,13 +10,13 @@ def main():
   r_angle = np.deg2rad(-15.0)
   cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0)
   u_norm  = 2.0 * cma2ms
-  u_angle = np.deg2rad(90.0)
+  u_angle = np.deg2rad(90.0) # u_angle \in [pi/2, pi/2]
   u_dir   = 1
   u_type  = "compression"
 
   d = bp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle)
-  bc0 = bp.BoundaryConditions(d,u_norm=u_norm,u_angle=u_angle,variation_dir=u_dir,velocity_type=u_type)
-  bc0.symbolic_derivatives()
+  bc0 = bp.BoundaryConditions(u_norm=u_norm,u_angle=u_angle,variation_dir=u_dir,velocity_type=u_type,Domain=d)
+  bc0.evaluate_velocity_and_derivatives()
   bc0.plot_velocity()
 
 if __name__ == "__main__":

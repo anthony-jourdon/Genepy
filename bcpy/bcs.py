@@ -1,14 +1,14 @@
-
+from . import domain
 import numpy as np
 import matplotlib.pyplot as plt
 
-class BoundaryConditions:
-  def __init__(self,Domain,u_norm,u_angle,variation_dir:int,velocity_type:str) -> None:
-    self.domain = Domain
+class BoundaryConditions(domain.Domain):
+  def __init__(self,u_norm,u_angle,variation_dir:int,velocity_type:str,Domain) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
     self.dir    = variation_dir
     self.type   = velocity_type
+    super(BoundaryConditions, self).__init__(Domain.O,Domain.L,Domain.n,Domain.theta)
 
     self.velocity_coefficients()
 
@@ -46,8 +46,8 @@ class BoundaryConditions:
       raise RuntimeError(f'velocity_type can only be \"extension\" or \"compression\", found {self.type}')
 
     for d in range(2):
-      self.a[d] = (self.uL[d] - self.uO[d]) / (self.domain.L[self.dir] - self.domain.O[self.dir])
-      self.b[d] = -self.a[d]*self.domain.L[self.dir] + self.uL[d]
+      self.a[d] = (self.uL[d] - self.uO[d]) / (self.L[self.dir] - self.O[self.dir])
+      self.b[d] = -self.a[d]*self.L[self.dir] + self.uL[d]
     return
 
   def linear_velocity(self,x):
@@ -58,15 +58,15 @@ class BoundaryConditions:
   def rotate_vector(self,ux,uz,ccw=True):
     # rotate the vector field
     if ccw:
-      ux_R = np.cos(self.domain.theta) * ux - np.sin(self.domain.theta) * uz
-      uz_R = np.sin(self.domain.theta) * ux + np.cos(self.domain.theta) * uz
+      ux_R = np.cos(self.theta) * ux - np.sin(self.theta) * uz
+      uz_R = np.sin(self.theta) * ux + np.cos(self.theta) * uz
     else:
-      ux_R =  np.cos(self.domain.theta) * ux + np.sin(self.domain.theta) * uz
-      uz_R = -np.sin(self.domain.theta) * ux + np.cos(self.domain.theta) * uz
+      ux_R =  np.cos(self.theta) * ux + np.sin(self.theta) * uz
+      uz_R = -np.sin(self.theta) * ux + np.cos(self.theta) * uz
     return ux_R,uz_R
 
   def evaluate_velocity(self,x,z,ccw=True):
-    xr,zr = self.domain.rotate_referential(x,z)
+    xr,zr = self.rotate_referential(x,z)
     if self.dir == 0:
       coor = xr
     elif self.dir == 1:
@@ -82,19 +82,19 @@ class BoundaryConditions:
     return uO,uL
 
   def plot_velocity(self,ccw=True):
-    uxr,uzr = self.evaluate_velocity(self.domain.num_coor[0],self.domain.num_coor[1],ccw=ccw)
+    uxr,uzr = self.evaluate_velocity(self.num_coor[0],self.num_coor[1],ccw=ccw)
     u_norm = np.sqrt(uxr**2 + uzr**2)
 
     fig,ax = plt.subplots()
-    ax.contourf(self.domain.num_coor[0],self.domain.num_coor[1],u_norm,100,cmap='Blues')
-    ax.quiver(self.domain.num_coor[0],self.domain.num_coor[1],uxr,uzr)
+    ax.contourf(self.num_coor[0],self.num_coor[1],u_norm,100,cmap='Blues')
+    ax.quiver(self.num_coor[0],self.num_coor[1],uxr,uzr)
     ax.axis('equal')
     plt.show()
     return
   
   def symbolic_velocity(self,ccw=True):
     # Evaluate velocity using symbols for x and z
-    uxr,uzr = self.evaluate_velocity(self.domain.sym_coor[0],self.domain.sym_coor[1],ccw=ccw)
+    uxr,uzr = self.evaluate_velocity(self.sym_coor[0],self.sym_coor[1],ccw=ccw)
     print('###### velocity function ######')
     print('ux =',uxr)
     print('uz =',uzr)
@@ -106,15 +106,19 @@ class BoundaryConditions:
     print('uL =',uL)
     return uxr,uzr
   
-  def symbolic_derivatives(self,ccw=True):
-    ux,uz = self.symbolic_velocity(ccw=ccw)
-    duxdx = ux.diff(self.domain.sym_coor[0])
-    duxdz = ux.diff(self.domain.sym_coor[1])
-    duzdx = uz.diff(self.domain.sym_coor[0])
-    duzdz = uz.diff(self.domain.sym_coor[1])
+  def symbolic_derivatives(self,ux,uz):
+    duxdx = ux.diff(self.sym_coor[0])
+    duxdz = ux.diff(self.sym_coor[1])
+    duzdx = uz.diff(self.sym_coor[0])
+    duzdz = uz.diff(self.sym_coor[1])
     print('###### velocity derivatives ######')
     print('dux/dx =',duxdx)
     print('dux/dz =',duxdz)
     print('duz/dx =',duzdx)
     print('duz/dz =',duzdz)
+    return
+
+  def evaluate_velocity_and_derivatives(self,ccw=True):
+    ux,uz = self.symbolic_velocity(ccw=ccw)
+    self.symbolic_derivatives(ux,uz)
     return
