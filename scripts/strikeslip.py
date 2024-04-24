@@ -24,20 +24,26 @@ def transtension(domain,angle,dz):
 def initial_strain(domain):
   notche_centre = transpression_7()
   #notche_centre = transtension(domain,np.deg2rad(83),25.0e3)
-  A = 1.0 #np.random.rand()
-  a = 0.5 * 6.0e-5**2
-  b = 0.0
-  c = 0.5 * 6.0e-5**2
-  
-  ic = bp.InitialConditions(domain)
-  wz_sym,wz_num = ic.evaluate_gaussians(A,a,b,c,notche_centre[:,0],notche_centre[:,1])
+  ng = np.int32(2) # number of gaussians
+  A = np.array([1.0, 1.0],dtype=np.float64)
+  # shape
+  coeff = 0.5 * 6.0e-5**2
+  a = np.array([coeff, coeff], dtype=np.float64)
+  b = np.array([0.0, 0.0],     dtype=np.float64)
+  c = np.array([coeff, coeff], dtype=np.float64)
 
+  wz_centre = transtension(domain,np.deg2rad(83),25.0e3)
+  x0 = np.array([ wz_centre[0,0], wz_centre[1,0] ], dtype=np.float64)
+  z0 = np.array([ wz_centre[0,1], wz_centre[1,1] ], dtype=np.float64)
+  GWZ = bp.Gaussian(domain,ng,A,a,b,c,x0,z0)
+  GWZ.evaluate_gaussians()
+  GWZ.plot_gaussians()
   return
 
 def main():
   # domain
   O = np.array([0,0],     dtype=np.float64)
-  L = np.array([600e3,300e3], dtype=np.float64)
+  L = np.array([600e3, 300e3], dtype=np.float64)
   n = np.array([64,32],   dtype=np.int32)
   # velocity
   r_angle = np.deg2rad(15.0)
@@ -48,8 +54,8 @@ def main():
   u_type  = "extension"
 
   d = bp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle)
-  bc0 = bp.BoundaryConditions(d,u_norm=u_norm,u_angle=u_angle,variation_dir=u_dir,velocity_type=u_type)
-  bc0.symbolic_derivatives(ccw=True)
+  bc0 = bp.BoundaryConditions(u_norm=u_norm,u_angle=u_angle,variation_dir=u_dir,velocity_type=u_type,Domain=d)
+  bc0.evaluate_velocity_and_derivatives(ccw=True)
 
   initial_strain(d)
 

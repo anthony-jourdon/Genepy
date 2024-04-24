@@ -1,27 +1,4 @@
 import numpy as np
-import sympy as sp
-
-def gaussian_2d(A,a,b,c,x,x0,z,z0):
-  """
-  gaussian_2d(A,a,b,c,x,x0,z,z0)
-  Computes a 2D gaussian repartition.
-
-  Parameters:
-  -----------
-  A     : amplitude of the gaussian
-  a,b,c : gaussian coefficients
-  x0,z0 : center of the gaussian
-  x,z   : coordinates
-
-  Returns:
-  --------
-  u : the field with the 2D gaussian distribution
-  """
-  if type(x) == sp.core.symbol.Symbol:
-    u = A * sp.exp( -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) ) )
-  else:
-    u = A * np.exp( -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) ) )
-  return u
 
 def compute_angle_between_points_2d(point_0,point_1):
   """
