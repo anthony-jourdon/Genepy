@@ -1,20 +1,22 @@
-import os
+
 import numpy as np
+import pyvista as pvs
 from . import domain
 
 class WriteVTS(domain.Domain):
   def __init__(self, Domain, vtk_fname=None, point_data=None, cell_data=None, pvd_fname=None):
-    self.vtk_fname = vtk_fname
+    self.vtk_fname  = vtk_fname
     self.point_data = point_data
-    self.cell_data = cell_data
-    self.pvd_fname = pvd_fname
-    super(WriteVTS, self).__init__(Domain.O,Domain.L,Domain.n,Domain.theta)
+    self.cell_data  = cell_data
+    self.pvd_fname  = pvd_fname
+    super(WriteVTS, self).__init__(Domain.dim,Domain.O,Domain.L,Domain.n)
 
   def write_vts(self):
-    import pyvista as pvs
-
-    y = np.zeros(shape=(self.num_coor[0].shape), dtype=np.float64)
-    mesh = pvs.StructuredGrid(self.num_coor[0],y,self.num_coor[1])
+    if self.dim == 2:
+      y = np.zeros(shape=(self.num_coor[0].shape), dtype=np.float64)
+      mesh = pvs.StructuredGrid(self.num_coor[0],y,self.num_coor[1])
+    elif self.dim == 3:
+      mesh = pvs.StructuredGrid(self.num_coor[0],self.num_coor[1],self.num_coor[2])
 
     if self.point_data:
       for data in self.point_data:
