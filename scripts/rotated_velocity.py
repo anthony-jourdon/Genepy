@@ -9,7 +9,7 @@ def main_2d():
   # velocity
   r_angle = np.deg2rad(15.0)
   cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0)
-  u_norm  = 2.0 * cma2ms
+  u_norm  = 1.0 * cma2ms
   u_angle = np.deg2rad(90.0) # u_angle \in [pi/2, pi/2]
   u_dir   = 1
   u_type  = "compression"
@@ -38,7 +38,7 @@ def main_3d():
   n = np.array([16,16,16],      dtype=np.int32)
   # velocity
   cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0)
-  u_norm  = 2.0 * cma2ms
+  u_norm  = 1.0 * cma2ms
   u_angle = np.deg2rad(90.0) # u_angle \in [pi/2, pi/2]
   u_dir   = 2
   u_type  = "extension"
@@ -66,11 +66,17 @@ def main_3d():
   print("duz/dy =",grad_u[2,1])
   print("duz/dz =",grad_u[2,2])
 
-  u_num = bc.evaluate_velocity_numeric()  
+  #u_num = bc.evaluate_velocity_numeric()
+  u_num = np.zeros(shape=(d.n[0],d.n[1],d.n[2],3), dtype=np.float64)
+  u_num[:,:,:,0] = -5.28496533062743e-16*d.num_coor[0] + 1.97237591301416e-15*d.num_coor[2] - 1.37307427033301e-10
+  u_num[:,:,:,2] = -1.4161021923681e-16*d.num_coor[0] + 5.28496533062743e-16*d.num_coor[2] - 3.67914141883684e-11
+
+  u_num = np.reshape(u_num,(d.n[0]*d.n[1]*d.n[2],3),order='F')
+
   point_data = {"u": u_num}
   w  = bp.WriteVTS(d, vtk_fname="rotated_velocity.vts", point_data=point_data)
   bc.plot_velocity_vts(w)
 
 if __name__ == "__main__":
-  #main_2d()
+  main_2d()
   main_3d()

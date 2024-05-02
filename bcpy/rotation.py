@@ -72,8 +72,10 @@ class Rotation:
 
   def rotate_referential(self,coor,O,L,ccw=True):
     # coor is expected to be in the form (npoints,dim)
-    if coor.shape[1] != self.dim:
-      raise RuntimeError(f'Coordinate dimension must be {self.dim}, found {coor.shape[1]}')
+    print(coor.ndim)
+    print(coor.shape)
+    #if coor.shape[1] != self.dim:
+      #raise RuntimeError(f'Coordinate dimension must be {self.dim}, found {coor.shape[1]}')
     # get the rotation matrix
     R = self.rotation_matrix()
     # translate referential to get centred on 0
@@ -82,15 +84,6 @@ class Rotation:
     coorTR = self.rotate_vector(R,coorT,ccw)
     # translate back
     coorR = coorTR + 0.5*(L + O)
-    """
-    # rotate
-    if ccw:
-      coorTR = np.matmul(R,coorT.T).T
-    else:
-      coorTR = np.matmul(R.T,coorT.T).T
-    # translate back
-    coorR = coorTR + 0.5*(L + O)
-    """
     return coorR
   
 def test2d():

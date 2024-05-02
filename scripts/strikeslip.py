@@ -32,7 +32,7 @@ def initial_strain(domain):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
 
-  wz_centre = transtension(domain,np.deg2rad(83),25.0e3)
+  wz_centre = transtension(domain,np.deg2rad(-60),25.0e3)
   x0 = np.array([ wz_centre[0,0], wz_centre[1,0] ], dtype=np.float64)
   z0 = np.array([ wz_centre[0,1], wz_centre[1,1] ], dtype=np.float64)
   GWZ = bp.Gaussian(domain,ng,A,a,b,c,x0,z0)
@@ -55,11 +55,11 @@ def main():
 
   d = bp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle)
   bc0 = bp.BoundaryConditions(u_norm=u_norm,u_angle=u_angle,variation_dir=u_dir,velocity_type=u_type,Domain=d)
-  bc0.evaluate_velocity_and_derivatives(ccw=True)
+  bc0.evaluate_velocity_and_derivatives(ccw=False)
 
   initial_strain(d)
 
-  bc0.plot_velocity(ccw=True)
+  bc0.plot_velocity(ccw=False)
 
 if __name__ == "__main__":
   main()

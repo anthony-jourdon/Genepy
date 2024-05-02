@@ -1,12 +1,12 @@
 import numpy as np
 import sympy as sp
-from bcpy import utils
 from bcpy import domain
+from bcpy import rotation
 
 import matplotlib.pyplot as plt
 
-class Gaussian(domain.Domain):
-  def __init__(self,Domain,ng:int,A,a,b,c,x0,z0) -> None:
+class Gaussian(domain.Domain,rotation.Rotation):
+  def __init__(self,Domain,Rotation,ng:int,A,a,b,c,x0,z0) -> None:
     self.ng = ng
     self.A  = np.asarray(A,  dtype=np.float64) # amplitude of the gaussian
     self.a  = np.asarray(a,  dtype=np.float64) # gaussian coefficient
@@ -24,8 +24,20 @@ class Gaussian(domain.Domain):
       if value.shape[0] != ng:
         raise RuntimeError(f"Attribute {attribute} must have ng = {ng} elements")
 
-    super(Gaussian, self).__init__(Domain.O,Domain.L,Domain.n,Domain.theta)
+    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
+    rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
     return
+  
+  def __str__(self) -> str:
+    s = f'Gaussian distribution for {self.ng} gaussians\n'
+    for n in range(self.ng):
+      s += f'Gaussian [{n}]\n'
+      s += f'\tAmplitude: {self.A[n]}\n'
+      s += f'\ta: {self.a[n]}\n'
+      s += f'\tb: {self.b[n]}\n'
+      s += f'\tc: {self.c[n]}\n'
+      s += f'\tCentre: [ {self.x0[n]},{self.z0[n]} ]\n'
+    return s
 
   def gaussian_2d(self,A,a,b,c,x,x0,z,z0):
     """
@@ -52,21 +64,40 @@ class Gaussian(domain.Domain):
     return u
 
   def symbolic_gaussian(self,A,a,b,c,x0,z0):
-    g = self.gaussian_2d(A,a,b,c,self.sym_coor[0],x0,self.sym_coor[1],z0)
+    if self.dim == 2:
+      x = self.sym_coor[0]
+      z = self.sym_coor[1]
+    elif self.dim == 3:
+      x = self.sym_coor[0]
+      z = self.sym_coor[2]
+    g = self.gaussian_2d(A,a,b,c,x,x0,z,z0)
     return g
   
   def numerical_gaussian(self,A,a,b,c,x0,z0):
-    g = self.gaussian_2d(A,a,b,c,self.num_coor[0],x0,self.num_coor[1],z0)
+    if self.dim == 2:
+      x = self.num_coor[0]
+      z = self.num_coor[1]
+    elif self.dim == 3:
+      x = self.num_coor[0]
+      z = self.num_coor[2]
+    g = self.gaussian_2d(A,a,b,c,x,x0,z,z0)
     return g
   
   def evaluate_gaussians(self):
     self.gaussian_sym = np.zeros(shape=(self.ng), dtype=object)
-    self.gaussian_num = np.zeros(shape=(self.ng,self.num_coor[0].shape[0],self.num_coor[0].shape[1]), dtype=np.float64)
+    if self.dim == 2:
+      self.gaussian_num = np.zeros(shape=(self.ng,self.num_coor[0].shape[0],self.num_coor[0].shape[1]), dtype=np.float64)
+    elif self.dim == 3:
+      self.gaussian_num = np.zeros(shape=(self.ng,self.num_coor[0].shape[0],self.num_coor[0].shape[2]), dtype=np.float64)
+    
     for n in range(self.ng):
       print(f'********** Gaussian [{n}] **********')
-      self.x0[n],self.z0[n] = self.rotate_referential(self.x0[n],self.z0[n],ccw=True)
+      g_centre = np.array([self.x0[n],self.z0[n]],dtype=np.float64).T
+      g_centre = self.rotate_referential(g_centre,self.O,self.L)
+      self.x0[n] = g_centre[0]
+      self.z0[n] = g_centre[1]
       print('Centre:')
-      print('[',self.x0[n],self.z0[n],']')
+      print(f'[ {self.x0[n]},{self.z0[n]} ]')
       self.gaussian_sym[n] = self.symbolic_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
       self.gaussian_num[n] = self.numerical_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
       print('Equation:')
@@ -75,7 +106,11 @@ class Gaussian(domain.Domain):
   
   def plot_gaussians(self):
     _, ax = plt.subplots()
-    field = np.zeros(shape=(self.num_coor[0].shape[0],self.num_coor[0].shape[1]), dtype=np.float64)
+    if self.dim == 2:
+      field = np.zeros(shape=(self.num_coor[0].shape[0],self.num_coor[0].shape[1]), dtype=np.float64)
+    elif self.dim == 3:
+      field = np.zeros(shape=(self.num_coor[0].shape[0],self.num_coor[0].shape[2]), dtype=np.float64)
+
     for n in range(self.ng):
       field += self.gaussian_num[n,:,:]
     g = ax.contourf(self.num_coor[0],self.num_coor[1],field,100,cmap='magma')
@@ -85,12 +120,20 @@ class Gaussian(domain.Domain):
     return
   
 def test():
+  from bcpy import utils
+  from bcpy import rotation
   # Domain
   O = np.array([ 0.0, 0.0 ],    dtype=np.float64)
   L = np.array([ 600e3, 300e3 ],dtype=np.float64)
   n = np.array([ 64, 32 ],      dtype=np.int32)
+  Domain = domain.Domain(2,O,L,n)
+  print(Domain)
+
+  # rotation
   domain_rotation = np.deg2rad(15.0)
-  Domain = domain.Domain(O,L,n,domain_rotation)
+  Rotation = rotation.Rotation(2,domain_rotation)
+  print(Rotation)
+
   # Gaussians
   ng = np.int32(2) # number of gaussians
   A = np.array([1.0, 1.0],dtype=np.float64)
@@ -107,11 +150,12 @@ def test():
   x0 = np.zeros(shape=(ng), dtype=np.float64)
   z0 = np.array([domain_centre[1] - dz, 
                  domain_centre[1] + dz], dtype=np.float64)
-  
   x0[0] = utils.x_centre_from_angle(z0[0],angle,domain_centre)
   x0[1] = utils.x_centre_from_angle(z0[1],angle,domain_centre)
 
-  GWZ = Gaussian(Domain,ng,A,a,b,c,x0,z0)
+  GWZ = Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+  print(GWZ)
+  
   GWZ.evaluate_gaussians()
   GWZ.plot_gaussians()
   plt.show()
