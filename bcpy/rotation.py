@@ -72,8 +72,8 @@ class Rotation:
 
   def rotate_referential(self,coor,O,L,ccw=True):
     # coor is expected to be in the form (npoints,dim)
-    print(coor.ndim)
-    print(coor.shape)
+    #print(coor.ndim)
+    #print(coor.shape)
     #if coor.shape[1] != self.dim:
       #raise RuntimeError(f'Coordinate dimension must be {self.dim}, found {coor.shape[1]}')
     # get the rotation matrix
