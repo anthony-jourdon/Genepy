@@ -21,15 +21,20 @@ def main_2d():
   u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic()
 
   print("Symbolic velocity function")
-  print("ux(x,z) =",u[0,0])
-  print("uz(x,z) =",u[0,1])
+  print("ux(x,y) =",u[0,0])
+  print("uy(x,y) =",u[0,1])
   print("Derivatives of the velocity function")
   print("dux/dx =",grad_u[0,0])
-  print("dux/dz =",grad_u[0,1])
-  print("duz/dx =",grad_u[1,0])
-  print("duz/dz =",grad_u[1,1])
+  print("dux/dy =",grad_u[0,1])
+  print("duy/dx =",grad_u[1,0])
+  print("duy/dy =",grad_u[1,1])
 
-  bc.plot_velocity_matplotlib()
+  u_num = bc.evaluate_velocity_numeric()
+
+  point_data = {"u": u_num}
+  w  = bp.WriteVTS(d, vtk_fname="rotated_velocity_2d.vts", point_data=point_data)
+  bc.plot_velocity_vts(w)
+  #bc.plot_velocity_matplotlib()
 
 def main_3d():
   # domain
@@ -88,5 +93,5 @@ def main_3d():
   bc.plot_velocity_vts(w)
 
 if __name__ == "__main__":
-  #main_2d()
+  main_2d()
   main_3d()

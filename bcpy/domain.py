@@ -7,25 +7,26 @@ class Domain:
     self.dim   = dim
     
     if minCoor.shape[0] != self.dim:
-      raise ValueError(f'minCoor must have {self.dim} elements, found {minCoor.shape[0]}')
+      raise ValueError(f'{self.__class__.__name__}: minCoor must have {self.dim} elements, found {minCoor.shape[0]}')
     if maxCoor.shape[0] != self.dim:
-      raise ValueError(f'maxCoor must have {self.dim} elements, found {maxCoor.shape[0]}')
+      raise ValueError(f'{self.__class__.__name__}: maxCoor must have {self.dim} elements, found {maxCoor.shape[0]}')
     if size.shape[0] != self.dim:
-      raise ValueError(f'size must have {self.dim} elements, found {size.shape[0]}')
+      raise ValueError(f'{self.__class__.__name__}: size must have {self.dim} elements, found {size.shape[0]}')
     
-    self.O     = minCoor
-    self.L     = maxCoor
-    self.n     = size
+    self.O  = minCoor
+    self.L  = maxCoor
+    self.n  = size
+    self.nv = np.prod(self.n)
 
     self.num_coor = coor
     self.sym_coor = None
-    if self.num_coor is None:
+    if self.num_coor is None: 
       self.numerical_coordinates()
     self.symbolic_coordinates()
 
   def __str__(self) -> str:
     attributes = vars(self)
-    s = f'Domain:\n'
+    s = f'{self.__class__.__name__}:\n'
     for attribute in attributes:
       if attribute == 'num_coor':
         s += f'\t{attribute}.shape:\t{attributes[attribute][0].shape}\n'
@@ -33,40 +34,23 @@ class Domain:
         s += f'\t{attribute}:\t{attributes[attribute]}\n'
     return s
 
-  def numerical_coordinates_2d(self):
-    X,Z = np.meshgrid(np.linspace(self.O[0],self.L[0],self.n[0], dtype=np.float64),
-                      np.linspace(self.O[1],self.L[1],self.n[1], dtype=np.float64), indexing='ij')
-    self.num_coor = (X,Z)
-    return
-  
-  def numerical_coordinates_3d(self):
-    X,Y,Z = np.meshgrid(np.linspace(self.O[0],self.L[0],self.n[0], dtype=np.float64),
-                        np.linspace(self.O[1],self.L[1],self.n[1], dtype=np.float64),
-                        np.linspace(self.O[2],self.L[2],self.n[2], dtype=np.float64), indexing='ij')
-    self.num_coor = (X,Y,Z)
-    return
-
   def numerical_coordinates(self):
-    if self.dim == 2:
-      self.numerical_coordinates_2d()
-    elif self.dim == 3:
-      self.numerical_coordinates_3d()
-    return
-  
-  def symbolic_coordinates_2d(self):
-    self.sym_coor = sp.symbols('x z')
-    return
-  
-  def symbolic_coordinates_3d(self):
-    self.sym_coor = sp.symbols('x y z')
+    x1d = []
+    for d in range(self.dim):
+      x1d.append(np.linspace(self.O[d],self.L[d],self.n[d],dtype=np.float64))
+    self.num_coor = tuple(np.meshgrid(*x1d,indexing='ij'))
     return
   
   def symbolic_coordinates(self):
-    if self.dim == 2:
-      self.symbolic_coordinates_2d()
-    elif self.dim == 3:
-      self.symbolic_coordinates_3d()
+    variables = {1:'x', 2:'x y', 3:'x y z'}
+    self.sym_coor = sp.symbols(variables[self.dim])
     return
+  
+  def shape_coor(self):
+    coor = np.zeros(shape=(self.nv,self.dim), dtype=np.float64)
+    for d in range(self.dim):
+      coor[:,d] = self.num_coor[d].reshape(self.nv,order='F')
+    return coor
 
 def test2d():
   O = np.array([-0.5, -0.5], dtype=np.float64)

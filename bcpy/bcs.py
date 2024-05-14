@@ -5,7 +5,7 @@ import sympy as sp
 import matplotlib.pyplot as plt
 
 class BoundaryConditions(domain.Domain,rotation.Rotation):
-  def __init__(self,u_norm,u_angle,variation_dir:str,velocity_type:str,Domain,Rotation) -> None:
+  def __init__(self,u_norm,u_angle,variation_dir:str,velocity_type:str,Domain,Rotation=None) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
     self.type   = velocity_type
@@ -19,14 +19,16 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
       elif d == "z": self.dir = 2
       else: raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {d}")
 
-    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
-    rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
+    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n,coor=Domain.num_coor)
+    # set rotation angle to zero if Rotation class is not provided
+    if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
+    else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
 
     self.velocity_coefficients()
 
   def __str__(self) -> str:
     attributes = vars(self)
-    s  = f'Boundary Conditions:\n'
+    s  = f'{self.__class__.__name__}:\n'
     for attribute in attributes:
       if attribute == 'num_coor':
         s += f'\t{attribute}.shape:\t{attributes[attribute][0].shape}\n'
@@ -77,104 +79,58 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     uz = self.a[1]*x + self.b[1]
     return ux,uz
   
-  def evaluate_velocity_symbolic(self,x,y,z):
-    if self.dim == 2:
-      coor = np.array([[x,z]], dtype='object')
-    elif self.dim == 3:
-      coor = np.array([[x,y,z]], dtype='object')
+  def evaluate_velocity_symbolic(self):
+    coor = np.array([[*self.sym_coor]], dtype='object')
     # rotate referential
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
     # evaluate velocity with the rotated coordinate
-    ux,uz = self.linear_velocity(coor_R[0,self.dir])
+    u = np.zeros(shape=(1,self.dim), dtype='object')
+    u[0,0],u[0,self.dim-1] = self.linear_velocity(coor_R[0,self.dir])
     # rotate the velocity field
-    if self.dim == 2:
-      u = np.array([[ux,uz]], dtype='object')
-    elif self.dim == 3:
-      u = np.array([[ux,0,uz]], dtype='object')
     R = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
     return u_R
   
-  def evaluate_derivatives_2d(self,ux,uz,x,z):
-    duxdx = ux.diff(x); duxdz = ux.diff(z)
-    duzdx = uz.diff(x); duzdz = uz.diff(z)
-    grad_u = sp.Matrix([[duxdx,duxdz],
-                        [duzdx,duzdz]])
-    return grad_u
-
-  def evaluate_derivatives_3d(self,ux,uy,uz,x,y,z):
-    duxdx = ux.diff(x); duxdy = ux.diff(y); duxdz = ux.diff(z)
-    duydx = uy.diff(x); duydy = uy.diff(y); duydz = uy.diff(z)
-    duzdx = uz.diff(x); duzdy = uz.diff(y); duzdz = uz.diff(z)
-    grad_u = sp.Matrix([[duxdx,duxdy,duxdz],
-                        [duydx,duydy,duydz],
-                        [duzdx,duzdy,duzdz]])
+  def evaluate_derivatives(self,u):
+    grad_u = np.zeros(shape=(self.dim,self.dim), dtype='object')
+    for i in range(self.dim):
+      for j in range(self.dim):
+        grad_u[i,j] = u[i].diff(self.sym_coor[j])
     return grad_u
 
   def evaluate_velocity_and_derivatives_symbolic(self):
-    if self.dim == 2:
-      u = self.evaluate_velocity_symbolic(self.sym_coor[0],None,self.sym_coor[1])
-      ux,uz = u[0,0],u[0,1]
-      grad_u = self.evaluate_derivatives_2d(ux,uz,self.sym_coor[0],self.sym_coor[1])
-    elif self.dim == 3:
-      u = self.evaluate_velocity_symbolic(self.sym_coor[0],self.sym_coor[1],self.sym_coor[2])
-      ux,uy,uz = u[0,0],u[0,1],u[0,2]
-      grad_u = self.evaluate_derivatives_3d(ux,uy,uz,self.sym_coor[0],self.sym_coor[1],self.sym_coor[2])
+    u      = self.evaluate_velocity_symbolic()
+    grad_u = self.evaluate_derivatives(u[0,:])
     return u,grad_u
   
   def evaluate_velocity_numeric(self):
-    if self.dim == 2:
-      coor = np.zeros(shape=(self.n[0]*self.n[1],2), dtype=np.float64)
-      coor[:,0] = self.num_coor[0].reshape(self.n[1]*self.n[0],order='F')
-      coor[:,1] = self.num_coor[1].reshape(self.n[1]*self.n[0],order='F')
-    elif self.dim == 3:
-      coor = np.zeros(shape=(self.n[0]*self.n[1]*self.n[2],3), dtype=np.float64)
-      coor[:,0] = self.num_coor[0].reshape(self.n[2]*self.n[1]*self.n[0],order='F')
-      coor[:,1] = self.num_coor[1].reshape(self.n[2]*self.n[1]*self.n[0],order='F')
-      coor[:,2] = self.num_coor[2].reshape(self.n[2]*self.n[1]*self.n[0],order='F')
+    coor = self.shape_coor()
     # rotate referential
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
     # evaluate velocity with the rotated coordinate
-    ux,uz = self.linear_velocity(coor_R[:,self.dir])
+    u = np.zeros(shape=(self.nv,self.dim), dtype=np.float64)
+    u[:,0],u[:,self.dim-1] = self.linear_velocity(coor_R[:,self.dir])
     # rotate the velocity field
-    if self.dim == 2:
-      u = np.zeros(shape=(self.n[0]*self.n[1],2), dtype=np.float64)
-      u[:,0] = ux
-      u[:,1] = uz
-    elif self.dim == 3:
-      u = np.zeros(shape=(self.n[0]*self.n[1]*self.n[2],3), dtype=np.float64)
-      u[:,0] = ux
-      u[:,2] = uz
     R = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
     return u_R
   
   def get_velocity_orientation(self):
-    if self.dim == 3:
-      uL = np.zeros(shape=(3), dtype=np.float64)
-      uL[0] = self.uL[0]
-      uL[2] = self.uL[1]
-    else:
-      uL = self.uL
+    uL = np.zeros(shape=(self.dim), dtype=np.float64)
+    uL[0],uL[self.dim-1] = self.uL
     R = self.rotation_matrix()
     uL = self.rotate_vector(R,uL,ccw=True)
     return uL
 
   def plot_velocity_matplotlib(self):
     u = self.evaluate_velocity_numeric()
-    if self.dim == 2:
-      X = self.num_coor[0]
-      Z = self.num_coor[1]
-      ux = u[:,0].reshape(self.n[0],self.n[1])
-      uz = u[:,1].reshape(self.n[0],self.n[1])
-    elif self.dim == 3:
-      X = self.num_coor[0]
-      Z = self.num_coor[2]
-      ux = u[:,0].reshape(self.n[0],self.n[1],self.n[2])
-      uz = u[:,2].reshape(self.n[0],self.n[1],self.n[2])
+    X,Z = self.num_coor[0],self.num_coor[self.dim-1]
+    ux = u[:,0].reshape(self.n)
+    uz = u[:,self.dim-1].reshape(self.n)
+
     u_norm = np.sqrt(ux**2 + uz**2)
 
-    fig,ax = plt.subplots()
+    _,ax = plt.subplots()
     ax.contourf(X,Z,u_norm,100,cmap='Blues')
     ax.quiver(X,Z,ux,uz)
     ax.axis('equal')

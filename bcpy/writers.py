@@ -12,11 +12,9 @@ class WriteVTS(domain.Domain):
     super(WriteVTS, self).__init__(Domain.dim,Domain.O,Domain.L,Domain.n,coor=Domain.num_coor)
 
   def write_vts(self):
-    if self.dim == 2:
-      y = np.zeros(shape=(self.num_coor[0].shape), dtype=np.float64)
-      mesh = pvs.StructuredGrid(self.num_coor[0],y,self.num_coor[1])
-    elif self.dim == 3:
-      mesh = pvs.StructuredGrid(self.num_coor[0],self.num_coor[1],self.num_coor[2])
+    coor = list(self.num_coor)
+    if self.dim == 2: coor.append(np.zeros(shape=(self.n), dtype=np.float64))
+    mesh = pvs.StructuredGrid(*coor)
     if self.point_data:
       for data in self.point_data:
         mesh.point_data[data] = self.point_data[data]

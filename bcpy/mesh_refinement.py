@@ -19,7 +19,7 @@ class MeshRefinement(domain.Domain):
     return
 
   def __str__(self) -> str:
-    s  = f"Mesh Refinement:\n"
+    s  = f"{self.__class__.__name__}:\n"
     for d in self.params:
       s += f"\tDirection: {d}\n"
       for p in self.params[d]:
@@ -29,7 +29,7 @@ class MeshRefinement(domain.Domain):
   def normalize(self,x,dim):
     return (x - self.O[dim]) / (self.L[dim] - self.O[dim])
   
-  def refine_direction(self,dim,npoints,x_initial,x_refined):
+  def refine_direction(self,dim,x_initial,x_refined):
     # convert tuple to list (tuples are immutable)
     coor = list(self.num_coor)
     # get all points in the dim direction
@@ -52,7 +52,7 @@ class MeshRefinement(domain.Domain):
 
       x_initial = self.normalize(self.params[d]["x_initial"],dim)
       x_refined = self.normalize(self.params[d]["x_refined"],dim)
-      self.refine_direction(dim,x_initial.shape[0],x_initial,x_refined)
+      self.refine_direction(dim,x_initial,x_refined)
     return
 
 def test():

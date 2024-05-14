@@ -9,7 +9,11 @@ class Rotation:
     return
   
   def __str__(self) -> str:
-    return f'Rotation: {self.dim}D\nAngle: {self.theta}\nAxis: {self.axis}'
+    attributes = vars(self)
+    s = f'{self.__class__.__name__}:\n'
+    for attribute in attributes:
+      s += f'\t{attribute}:\t{attributes[attribute]}\n'
+    return s
   
   def rotation_matrix_2d(self):
     """
@@ -72,10 +76,8 @@ class Rotation:
 
   def rotate_referential(self,coor,O,L,ccw=True):
     # coor is expected to be in the form (npoints,dim)
-    #print(coor.ndim)
-    #print(coor.shape)
-    #if coor.shape[1] != self.dim:
-      #raise RuntimeError(f'Coordinate dimension must be {self.dim}, found {coor.shape[1]}')
+    if coor.shape[1] != self.dim:
+      raise RuntimeError(f'Coordinate dimension must be (npoint,{self.dim}), found {coor.shape}')
     # get the rotation matrix
     R = self.rotation_matrix()
     # translate referential to get centred on 0
@@ -95,6 +97,7 @@ def test2d():
   coor = np.array([[x,z]], dtype='object')
   theta = np.deg2rad(-90.0)
   rot = Rotation(2,theta)
+  print(rot)
   coor_R = rot.rotate_referential(coor,O,L,ccw=True)
   print(coor_R.shape)
   print('coor_R[0] =',coor_R[0,0])
@@ -110,6 +113,7 @@ def test3d():
   theta = np.deg2rad(-90.0)
   axis = np.array([0,1,0], dtype=np.float64)
   rot = Rotation(3,theta,axis)
+  print(rot)
   coor_R = rot.rotate_referential(coor,O,L,ccw=True)
   print(coor_R.shape)
   print('coor_R[0] =',coor_R[0,0])
@@ -118,8 +122,5 @@ def test3d():
 
 if __name__ == "__main__":
   print("Running tests")
-  print("\t2D")
   test2d()
-  print("\n")
-  print("\t3D")
   test3d()
