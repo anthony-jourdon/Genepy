@@ -9,7 +9,7 @@ class WriteVTS(domain.Domain):
     self.point_data = point_data
     self.cell_data  = cell_data
     self.pvd_fname  = pvd_fname
-    super(WriteVTS, self).__init__(Domain.dim,Domain.O,Domain.L,Domain.n)
+    super(WriteVTS, self).__init__(Domain.dim,Domain.O,Domain.L,Domain.n,coor=Domain.num_coor)
 
   def write_vts(self):
     if self.dim == 2:
@@ -17,7 +17,6 @@ class WriteVTS(domain.Domain):
       mesh = pvs.StructuredGrid(self.num_coor[0],y,self.num_coor[1])
     elif self.dim == 3:
       mesh = pvs.StructuredGrid(self.num_coor[0],self.num_coor[1],self.num_coor[2])
-
     if self.point_data:
       for data in self.point_data:
         mesh.point_data[data] = self.point_data[data]
