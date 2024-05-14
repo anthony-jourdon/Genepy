@@ -5,16 +5,34 @@ import sympy as sp
 import matplotlib.pyplot as plt
 
 class BoundaryConditions(domain.Domain,rotation.Rotation):
-  def __init__(self,u_norm,u_angle,variation_dir:int,velocity_type:str,Domain,Rotation) -> None:
+  def __init__(self,u_norm,u_angle,variation_dir:str,velocity_type:str,Domain,Rotation) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
-    self.dir    = variation_dir
     self.type   = velocity_type
+
+    if type(variation_dir) is not str:
+      raise TypeError(f'variation_dir must be a string, found {type(variation_dir)}')
+    
+    for d in variation_dir:
+      if   d == "x": self.dir = 0
+      elif d == "y": self.dir = 1
+      elif d == "z": self.dir = 2
+      else: raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {d}")
 
     domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
     rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
 
     self.velocity_coefficients()
+
+  def __str__(self) -> str:
+    attributes = vars(self)
+    s  = f'Boundary Conditions:\n'
+    for attribute in attributes:
+      if attribute == 'num_coor':
+        s += f'\t{attribute}.shape:\t{attributes[attribute][0].shape}\n'
+      else:
+        s += f'\t{attribute}:\t{attributes[attribute]}\n'
+    return s
 
   def boundary_vector(self):
     """
@@ -130,6 +148,17 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     R = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
     return u_R
+  
+  def get_velocity_orientation(self):
+    if self.dim == 3:
+      uL = np.zeros(shape=(3), dtype=np.float64)
+      uL[0] = self.uL[0]
+      uL[2] = self.uL[1]
+    else:
+      uL = self.uL
+    R = self.rotation_matrix()
+    uL = self.rotate_vector(R,uL,ccw=True)
+    return uL
 
   def plot_velocity_matplotlib(self):
     u = self.evaluate_velocity_numeric()
