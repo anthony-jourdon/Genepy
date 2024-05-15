@@ -72,7 +72,7 @@ def main_3d():
   print("duz/dy =",grad_u[2,1])
   print("duz/dz =",grad_u[2,2])
 
-  uL = bc.get_velocity_orientation()
+  uL = bc.get_velocity_orientation(normalize=True)
   print("Boundary velocity orientation")
   print("ux =",uL[0])
   print("uy =",uL[1])
@@ -93,5 +93,5 @@ def main_3d():
   bc.plot_velocity_vts(w)
 
 if __name__ == "__main__":
-  main_2d()
+  #main_2d()
   main_3d()

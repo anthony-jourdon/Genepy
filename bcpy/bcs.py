@@ -87,7 +87,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     u = np.zeros(shape=(1,self.dim), dtype='object')
     u[0,0],u[0,self.dim-1] = self.linear_velocity(coor_R[0,self.dir])
     # rotate the velocity field
-    R = self.rotation_matrix()
+    R   = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
     return u_R
   
@@ -100,8 +100,81 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
 
   def evaluate_velocity_and_derivatives_symbolic(self):
     u      = self.evaluate_velocity_symbolic()
+    u[0,1] = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
     grad_u = self.evaluate_derivatives(u[0,:])
     return u,grad_u
+  
+  def evaluate_u_dot_n(self,u=None):
+    nmap = {1:'n_x',2:'n_x n_y',3:'n_x n_y n_z'}
+    n = sp.symbols(nmap[self.dim])
+    if u is None:
+      u = self.evaluate_velocity_symbolic()
+    
+    u = sp.Matrix(u[0,:])
+    n = sp.Matrix([n])
+    u_dot_n = u.dot(n)
+    return u_dot_n
+
+  def evaluate_int_u_dot_n_faces(self,u=None):
+    # evaluate symbolic u.n
+    u_dot_n = self.evaluate_u_dot_n(u=u)
+    directions = ["x","y","z"]
+    faces      = ["min","max"]
+    
+    int_u_dot_n = {}
+    for d in range(self.dim): # loop over each direction
+      for f in range(2): # loop over faces (min,max)
+        # initialize normal to zero
+        normal = np.zeros(shape=(self.dim), dtype=np.float64)
+        # construct face name
+        face = directions[d]+faces[f]
+        # set non zero component of the normal vector -1 if min face, 1 if max face 
+        normal[d] = (-1)**(f+1)
+        # substitute the normal vector components by numerical values
+        n_num = {'n_x':normal[0],'n_y':normal[1]}
+        if self.dim == 3: n_num['n_z'] = normal[2]
+        # evaluate u.n
+        udn = u_dot_n.subs(n_num)
+
+        # substitute the coordinate components by numerical values corresponding to the face
+        _x = np.zeros(shape=(self.dim), dtype=np.float64)
+        if faces[f] == "min": _x[d] = self.O[d]
+        if faces[f] == "max": _x[d] = self.L[d]
+        # evaluate u.n at the face
+        udn = udn.subs({self.sym_coor[d]:_x[d]})
+
+        # integrate u.n over the face simple integral if 2d, double integral if 3d
+        if d == 0:
+          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[1],self.O[1],self.L[1]))
+          if self.dim == 3: 
+            integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
+        if d == 1:
+          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
+          if self.dim == 3: 
+            integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
+        if d == 2:
+          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
+          integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[1],self.O[1],self.L[1]))
+
+        int_u_dot_n[face] = integral_u_dot_n
+    return int_u_dot_n
+    
+  def evaluate_vertical_velocity(self,y,u=None):
+    if u is None:
+      u = self.evaluate_velocity_symbolic()
+    int_u_dot_n = self.evaluate_int_u_dot_n_faces(u=u)
+    iudn = 0.0
+    for face in int_u_dot_n:
+      iudn += int_u_dot_n[face]
+    bottom_surface = (self.L[0] - self.O[0])
+    if self.dim == 3: bottom_surface *= (self.L[2] - self.O[2])
+    uO = 0.0
+    uL = -iudn / bottom_surface
+
+    a = (uL - uO) / (self.L[1] - self.O[1])
+    b = -a*self.L[1] + uL
+    uy = a*y + b
+    return uy
   
   def evaluate_velocity_numeric(self):
     coor = self.shape_coor()
@@ -113,13 +186,16 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     # rotate the velocity field
     R = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
+    u_R[:,1] = self.evaluate_vertical_velocity(coor[:,1])
     return u_R
   
-  def get_velocity_orientation(self):
+  def get_velocity_orientation(self,normalize=False):
     uL = np.zeros(shape=(self.dim), dtype=np.float64)
     uL[0],uL[self.dim-1] = self.uL
     R = self.rotation_matrix()
     uL = self.rotate_vector(R,uL,ccw=True)
+    if normalize == True: 
+      uL = uL / np.linalg.norm(uL)
     return uL
 
   def plot_velocity_matplotlib(self):
