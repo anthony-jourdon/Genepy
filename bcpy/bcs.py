@@ -5,7 +5,7 @@ import sympy as sp
 import matplotlib.pyplot as plt
 
 class BoundaryConditions(domain.Domain,rotation.Rotation):
-  def __init__(self,u_norm,u_angle,variation_dir:str,velocity_type:str,Domain,Rotation=None) -> None:
+  def __init__(self,Domain,u_norm,variation_dir:str,velocity_type:str,u_angle=0.0,Rotation=None) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
     self.type   = velocity_type
@@ -24,6 +24,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
     else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
 
+    self.vertical_evaluated = False
     self.velocity_coefficients()
 
   def __str__(self) -> str:
@@ -35,49 +36,93 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
       else:
         s += f'\t{attribute}:\t{attributes[attribute]}\n'
     return s
-
+  
   def boundary_vector(self):
     """
     boundary_vector(self)
-    Computes the vector components based on the norm and angle with z axis (North-South) 
+    Computes the vector components
+    1D & 2D: only the norm is used
+    3D:      based on the norm and angle with z axis (North-South) 
     Warning: these values are always positive, special attention is required if different signs are needed
     """
-    uz = self.norm * np.cos(self.alpha)
-    ux = np.sqrt(self.norm**2 - uz**2)
-    return ux,uz
+    u = np.zeros(shape=(self.dim), dtype=np.float64)
+    if self.dim == 1 or self.dim == 2: 
+      u[0] = self.norm
+    elif self.dim == 3:
+      u[2] = self.norm * np.cos(self.alpha)
+      u[0] = np.sqrt(self.norm**2 - u[2]**2)
+    return u
+  
+  def velocity_coefficients_1d(self,uO,uL,O,L):
+    """
+    velocity_coefficients_1d(self)
+    computes velocity function coefficients such that
+      u(x) = a*x + b
+    for a given dimension
+    """
+    a = (uL - uO) / (L - O)
+    b = -a*L + uL
+    return a,b
   
   def velocity_coefficients(self):
     """ 
     velocity_coefficients(self)
     computes velocity function coefficients such that
       u(x) = a*x + b
-    with u = [ux, uz]
-         a = [a0, a1]
-         b = [b0, b1]
+    for all dimensions
     """
-    self.a = np.zeros(shape=(2), dtype=np.float64)
-    self.b = np.zeros(shape=(2), dtype=np.float64)
+    self.a = np.zeros(shape=(self.dim), dtype=np.float64)
+    self.b = np.zeros(shape=(self.dim), dtype=np.float64)
 
-    self.uO = np.zeros(shape=(2), dtype=np.float64)
-    self.uL = np.zeros(shape=(2), dtype=np.float64)
     if self.type == "compression":
-      self.uO[0], self.uO[1] = self.boundary_vector()
+      self.uO = self.boundary_vector()
       self.uL = -self.uO
     elif self.type == "extension":
-      self.uL[0], self.uL[1] = self.boundary_vector()
+      self.uL = self.boundary_vector()
       self.uO = -self.uL
     else:
       raise RuntimeError(f'velocity_type can only be \"extension\" or \"compression\", found {self.type}')
-
-    for d in range(2):
-      self.a[d] = (self.uL[d] - self.uO[d]) / (self.L[self.dir] - self.O[self.dir])
-      self.b[d] = -self.a[d]*self.L[self.dir] + self.uL[d]
+    
+    for d in range(self.dim):
+      self.a[d], self.b[d] = self.velocity_coefficients_1d(self.uO[d],self.uL[d],self.O[self.dir],self.L[self.dir])
     return
+  
+  def linear_velocity_1d(self,x,a,b):
+    """
+    linear_velocity_1d(self)
+    computes the linear velocity field in 1 direction (scalar valued function) such that
+      u(x) = a*x + b
 
+    Parameters:
+    -----------
+    x : coordinates of the direction in which the velocity varies
+    a : slope of the required component of the velocity
+    b : constant of the required component of the velocity
+
+    Returns:
+    --------
+    u : scalar velocity function
+    """
+    return a*x + b
+  
   def linear_velocity(self,x):
-    ux = self.a[0]*x + self.b[0]
-    uz = self.a[1]*x + self.b[1]
-    return ux,uz
+    """
+    linear_velocity(self)
+    computes the linear velocity field (vector valued function) such that
+      u(x) = a*x + b
+
+    Parameters:
+    -----------
+    x : coordinates of the direction in which the velocity varies
+
+    Returns:
+    --------
+    u : vector velocity function
+    """
+    u = []
+    for d in range(self.dim):
+      u.append(self.linear_velocity_1d(x,self.a[d],self.b[d]))
+    return u
   
   def evaluate_velocity_symbolic(self):
     coor = np.array([[*self.sym_coor]], dtype='object')
@@ -85,7 +130,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
     # evaluate velocity with the rotated coordinate
     u = np.zeros(shape=(1,self.dim), dtype='object')
-    u[0,0],u[0,self.dim-1] = self.linear_velocity(coor_R[0,self.dir])
+    u[0,:] = self.linear_velocity(coor_R[0,self.dir])
     # rotate the velocity field
     R   = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
@@ -158,8 +203,8 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
 
         int_u_dot_n[face] = integral_u_dot_n
     return int_u_dot_n
-    
-  def evaluate_vertical_velocity(self,y,u=None):
+  
+  def evaluate_vertical_velocity_coefficients(self,u=None):
     if u is None:
       u = self.evaluate_velocity_symbolic()
     int_u_dot_n = self.evaluate_int_u_dot_n_faces(u=u)
@@ -168,12 +213,17 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
       iudn += int_u_dot_n[face]
     bottom_surface = (self.L[0] - self.O[0])
     if self.dim == 3: bottom_surface *= (self.L[2] - self.O[2])
-    uO = 0.0
-    uL = -iudn / bottom_surface
+    self.uO[1] = 0.0
+    self.uL[1] = -iudn / bottom_surface
 
-    a = (uL - uO) / (self.L[1] - self.O[1])
-    b = -a*self.L[1] + uL
-    uy = a*y + b
+    self.a[1],self.b[1] = self.velocity_coefficients_1d(self.uO[1],self.uL[1],self.O[1],self.L[1])
+    self.vertical_evaluated = True
+    return
+
+  def evaluate_vertical_velocity(self,y,u=None):
+    if self.vertical_evaluated == False:
+      self.evaluate_vertical_velocity_coefficients(u=u)
+    uy = self.linear_velocity_1d(y,self.a[1],self.b[1])
     return uy
   
   def evaluate_velocity_numeric(self):
@@ -181,18 +231,36 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     # rotate referential
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
     # evaluate velocity with the rotated coordinate
-    u = np.zeros(shape=(self.nv,self.dim), dtype=np.float64)
-    u[:,0],u[:,self.dim-1] = self.linear_velocity(coor_R[:,self.dir])
+    u = self.linear_velocity(coor_R[:,self.dir])
+    # convert to numpy array of shape (npoints, dim)
+    u = np.asarray(u, dtype=np.float64).T
     # rotate the velocity field
     R = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
     u_R[:,1] = self.evaluate_vertical_velocity(coor[:,1])
     return u_R
   
-  def get_velocity_orientation(self,normalize=False):
-    uL = np.zeros(shape=(self.dim), dtype=np.float64)
-    uL[0],uL[self.dim-1] = self.uL
-    R = self.rotation_matrix()
+  def get_velocity_orientation(self,horizontal=True,normalize=False):
+    """
+    get_velocity_orientation(self,horizontal=True,normalize=False)
+    Returns the orientation (vector) of the velocity field at the boundary
+
+    Parameters:
+    -----------
+    horizontal : if True, only the horizontal components are returned
+    normalize  : if True, the vector is normalized
+
+    Returns:
+    --------
+    uL : orientation of the velocity field at the boundary
+    """
+    if horizontal == True:
+      uL = np.zeros(shape=(self.dim), dtype=np.float64)
+      uL[0] = self.uL[0]
+      uL[self.dim-1] = self.uL[self.dim-1]
+    else:
+      uL = np.copy(self.uL)
+    R  = self.rotation_matrix()
     uL = self.rotate_vector(R,uL,ccw=True)
     if normalize == True: 
       uL = uL / np.linalg.norm(uL)
