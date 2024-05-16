@@ -5,7 +5,45 @@ import sympy as sp
 import matplotlib.pyplot as plt
 
 class BoundaryConditions(domain.Domain,rotation.Rotation):
-  def __init__(self,Domain,u_norm,variation_dir:str,velocity_type:str,u_angle=0.0,Rotation=None) -> None:
+  """
+  class BoundaryConditions(domain.Domain,rotation.Rotation)
+  ---------------------------------------------------------
+  Class to evaluate symbolic and numeric linear velocity function and its derivatives in space.
+
+  Attributes:
+  -----------
+  norm   : velocity norm
+  alpha  : angle of the velocity field with the z axis
+  type   : type of velocity field (extension or compression)
+  dir    : direction in which the velocity varies
+  uO     : velocity at the component origin
+  uL     : velocity at the component max value
+  a      : slope of the of the velocity function
+  b      : constant term of the velocity function
+  vertical_evaluated : flag to check if the vertical velocity has been evaluated
+
+  Methods:
+  --------
+  __init__(Domain,u_norm,variation_dir:str,velocity_type:str,u_angle=0.0,Rotation=None) : constructor
+  __str__() : returns a string with the class name and attributes of the class
+  report_symbolic_functions(u,grad_u,uL) : returns a string with the symbolic velocity function, its derivatives and the boundary velocity orientation
+  boundary_vector() : computes the vector components
+  velocity_coefficients_1d(uO,uL,O,L) : computes velocity function coefficients such that u(x) = a*x + b
+  velocity_coefficients() : computes velocity function coefficients such that u(x) = a*x + b for all dimensions
+  linear_velocity_1d(x,a,b) : computes the linear velocity field in 1 direction (scalar valued function) such that u(x) = a*x + b
+  linear_velocity(x) : computes the linear velocity field (vector valued function) such that u(x) = a*x + b
+  evaluate_velocity_symbolic() : evaluates the velocity field in symbolic form returning a vector valued function
+  evaluate_derivatives(u) : evaluates the derivatives of the velocity function in symbolic form returning a matrix of the shape (dim,dim)
+  evaluate_velocity_and_derivatives_symbolic() : evaluates the velocity field and its derivatives in symbolic form returning a vector valued function and a matrix of the shape (dim,dim)
+  evaluate_u_dot_n(u=None) : evaluates the dot product of the velocity field with the normal vector in symbolic form
+  evaluate_int_u_dot_n_faces(u=None) : evaluates the integral of the dot product of the velocity field with the normal vector over the faces
+  evaluate_vertical_velocity_coefficients(u=None) : evaluates the coefficients of the vertical velocity component
+  evaluate_vertical_velocity(y,u=None) : evaluates the vertical velocity component
+  evaluate_velocity_numeric() : evaluates the velocity field in numeric form returning a vector valued function
+  get_velocity_orientation(horizontal=True,normalize=False) : returns the orientation (vector) of the velocity field at the boundary
+  plot_velocity_matplotlib() : plots the velocity field using matplotlib
+  """
+  def __init__(self,Domain:domain.Domain,u_norm,variation_dir:str,velocity_type:str,u_angle=0.0,Rotation:rotation.Rotation=None) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
     self.type   = velocity_type
@@ -28,6 +66,21 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     self.velocity_coefficients()
 
   def __str__(self) -> str:
+    s = f'{self.__class__.__name__}:\n'
+    s += f'\tVelocity norm:        \t{self.norm}\n'
+    s += f'\tVelocity angle:       \t{self.alpha} rad -> {np.rad2deg(self.alpha)} Deg\n'
+    s += f'\tVelocity type:        \t{self.type}\n'
+    s += f'\tVariation direction:  \t{self.sym_coor[self.dir]}\n'
+    s += f'\tReferential rotation: \t{self.theta} rad -> {np.rad2deg(self.theta)}\n'
+    s += f'\tRotation axis:        \t{self.axis}\n'
+    return s
+
+  def __repr__(self) -> str:
+    """
+    __repr__(self)
+    Returns a string with the class name and attributes of the class.
+    Can be used to print the class attributes.
+    """
     attributes = vars(self)
     s  = f'{self.__class__.__name__}:\n'
     for attribute in attributes:
@@ -37,13 +90,47 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
         s += f'\t{attribute}:\t{attributes[attribute]}\n'
     return s
   
+  def report_symbolic_functions(self,u,grad_u,uL) -> str:
+    """
+    report_symbolic_functions(self,u,grad_u,uL)
+    ------------------------------------------
+    Returns a string with the symbolic velocity function, its derivatives and the boundary velocity orientation.
+    Can be used with the print() function.
+
+    Parameters:
+    -----------
+    u      : vector valued function of the velocity field
+    grad_u : matrix of the derivatives of the velocity field shape (dim,dim)
+    uL     : orientation of the velocity field at the boundary
+
+    Returns:
+    --------
+    s : string with the symbolic velocity function, its derivatives and the boundary velocity orientation. 
+    """
+    s = f"Symbolic velocity function:\n"
+    for i in range(self.dim):
+      s += f"\tu{self.sym_coor[i]}{self.sym_coor} = {u[0,i]}\n"
+    s += f"Derivatives of the velocity function:\n"
+    for i in range(self.dim):
+      for j in range(self.dim):
+        s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(grad_u[i,j])+"\n"
+    s += f"Boundary velocity orientation:\n"
+    for i in range(self.dim):
+      s += f"\tuL{self.sym_coor[i]} = {uL[i]}\n"
+    return s
+  
   def boundary_vector(self):
     """
     boundary_vector(self)
+    ---------------------
     Computes the vector components
     1D & 2D: only the norm is used
     3D:      based on the norm and angle with z axis (North-South) 
     Warning: these values are always positive, special attention is required if different signs are needed
+
+    Returns:
+    --------
+    u : boundary velocity, shape (dim,)
     """
     u = np.zeros(shape=(self.dim), dtype=np.float64)
     if self.dim == 1 or self.dim == 2: 
@@ -56,9 +143,22 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
   def velocity_coefficients_1d(self,uO,uL,O,L):
     """
     velocity_coefficients_1d(self)
+    ------------------------------
     computes velocity function coefficients such that
       u(x) = a*x + b
     for a given dimension
+
+    Parameters:
+    -----------
+    uO : velocity at the component origin
+    uL : velocity at the component max value
+    O  : origin of the component
+    L  : max value of the component
+
+    Returns:
+    --------
+    a : slope of the component of the velocity
+    b : constant of the component of the velocity
     """
     a = (uL - uO) / (L - O)
     b = -a*L + uL
@@ -67,6 +167,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
   def velocity_coefficients(self):
     """ 
     velocity_coefficients(self)
+    ---------------------------
     computes velocity function coefficients such that
       u(x) = a*x + b
     for all dimensions
@@ -90,6 +191,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
   def linear_velocity_1d(self,x,a,b):
     """
     linear_velocity_1d(self)
+    ------------------------
     computes the linear velocity field in 1 direction (scalar valued function) such that
       u(x) = a*x + b
 
@@ -108,6 +210,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
   def linear_velocity(self,x):
     """
     linear_velocity(self)
+    ---------------------
     computes the linear velocity field (vector valued function) such that
       u(x) = a*x + b
 
@@ -125,6 +228,14 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     return u
   
   def evaluate_velocity_symbolic(self):
+    """
+    evaluate_velocity_symbolic(self)
+    --------------------------------
+    Evaluates the velocity field in symbolic form returning a vector valued function of the form
+      u (x,y,z) = a*x + b*y + c*z + d
+    and shape (1,dim)
+    """
+    # create a numpy array of shape (1,dim) with the symbolic coordinates
     coor = np.array([[*self.sym_coor]], dtype='object')
     # rotate referential
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
@@ -137,6 +248,21 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     return u_R
   
   def evaluate_derivatives(self,u):
+    """
+    evaluate_derivatives(self,u)
+    ----------------------------
+    Evaluates the derivatives of the velocity function in symbolic form 
+    returning a matrix of the shape (dim,dim) such that:
+      grad_u[i,j] = du_i/dx_j
+    
+    Parameters:
+    -----------
+    u : vector valued function of the velocity field
+
+    Returns:
+    --------
+    grad_u : matrix of the derivatives of the velocity field shape (dim,dim)
+    """
     grad_u = np.zeros(shape=(self.dim,self.dim), dtype='object')
     for i in range(self.dim):
       for j in range(self.dim):
@@ -144,12 +270,40 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     return grad_u
 
   def evaluate_velocity_and_derivatives_symbolic(self):
+    """
+    evaluate_velocity_and_derivatives_symbolic(self)
+    ------------------------------------------------
+    Evaluates the velocity field and its derivatives in symbolic form 
+    returning a vector valued function of the form
+      u (x,y,z) = a*x + b*y + c*z + d
+    and a matrix of the shape (dim,dim) such that:
+      grad_u[i,j] = du_i/dx_j
+
+    Returns:
+    --------
+    u : vector valued function of the velocity field
+    grad_u : matrix of the derivatives of the velocity field shape (dim,dim)
+    """
     u      = self.evaluate_velocity_symbolic()
     u[0,1] = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
     grad_u = self.evaluate_derivatives(u[0,:])
     return u,grad_u
   
   def evaluate_u_dot_n(self,u=None):
+    """
+    evaluate_u_dot_n(self,u=None)
+    Evaluates the dot product of the velocity field with the normal vector in symbolic form such that
+      u.n = n_x*u_x + n_y*u_y + n_z*u_z
+    
+    Parameters:
+    -----------
+    (Optional)
+    u : vector valued function of the velocity field
+    
+    Returns:
+    --------
+    u_dot_n : dot product of the velocity field with the normal vector
+    """
     nmap = {1:'n_x',2:'n_x n_y',3:'n_x n_y n_z'}
     n = sp.symbols(nmap[self.dim])
     if u is None:
@@ -188,10 +342,12 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
         # evaluate u.n at the face
         udn = udn.subs({self.sym_coor[d]:_x[d]})
 
-        # integrate u.n over the face simple integral if 2d, double integral if 3d
+        # integrate u.n over the face: simple integral if 2d, double integral if 3d
         if d == 0:
+          # I2 = int_Oy^Ly u.n dy
           integral_u_dot_n = sp.integrate(udn,(self.sym_coor[1],self.O[1],self.L[1]))
           if self.dim == 3: 
+            # I3 = int_Oz^Lz I2 dz
             integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
         if d == 1:
           integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
@@ -200,6 +356,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
         if d == 2:
           integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
           integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[1],self.O[1],self.L[1]))
+        
 
         int_u_dot_n[face] = integral_u_dot_n
     return int_u_dot_n
@@ -213,8 +370,8 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
       iudn += int_u_dot_n[face]
     bottom_surface = (self.L[0] - self.O[0])
     if self.dim == 3: bottom_surface *= (self.L[2] - self.O[2])
-    self.uO[1] = 0.0
-    self.uL[1] = -iudn / bottom_surface
+    self.uO[1] = iudn / bottom_surface
+    self.uL[1] = 0.0
 
     self.a[1],self.b[1] = self.velocity_coefficients_1d(self.uO[1],self.uL[1],self.O[1],self.L[1])
     self.vertical_evaluated = True
@@ -281,5 +438,3 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     plt.show()
     return
   
-  def plot_velocity_vts(self,writer):
-    writer.write_vts()
