@@ -23,20 +23,24 @@ class Gaussian(domain.Domain,rotation.Rotation):
       # check length
       if value.shape[0] != ng:
         raise RuntimeError(f"Attribute {attribute} must have ng = {ng} elements")
+    
+    self.gaussian_num = None
+    self.gaussian_sym = None
 
     domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
     rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
     return
   
   def __str__(self) -> str:
-    s = f'Gaussian distribution for {self.ng} gaussians\n'
+    s = f'{self.__class__.__name__}:\n'
+    s += f'\tDistribution for {self.ng} gaussians\n'
     for n in range(self.ng):
-      s += f'Gaussian [{n}]\n'
-      s += f'\tAmplitude: {self.A[n]}\n'
-      s += f'\ta: {self.a[n]}\n'
-      s += f'\tb: {self.b[n]}\n'
-      s += f'\tc: {self.c[n]}\n'
-      s += f'\tCentre: [ {self.x0[n]},{self.z0[n]} ]\n'
+      s += f'\tGaussian [{n}]\n'
+      s += f'\t\tAmplitude: {self.A[n]}\n'
+      s += f'\t\ta: {self.a[n]}\n'
+      s += f'\t\tb: {self.b[n]}\n'
+      s += f'\t\tc: {self.c[n]}\n'
+      s += f'\t\tCentre: [ {self.x0[n]},{self.z0[n]} ]\n'
     return s
 
   def gaussian_2d(self,A,a,b,c,x,x0,z,z0):
@@ -57,45 +61,30 @@ class Gaussian(domain.Domain,rotation.Rotation):
     --------
     u : the field with the 2D gaussian distribution
     """
-    if type(x) == sp.core.symbol.Symbol:
-      u = A * sp.exp( -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) ) )
-    else:
-      u = A * np.exp( -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) ) )
+    exponent = -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) )
+    if type(x) == sp.core.symbol.Symbol: u = A * sp.exp( exponent )
+    else:                                u = A * np.exp( exponent )
     return u
 
   def symbolic_gaussian(self,A,a,b,c,x0,z0):
-    if self.dim == 2:
-      x = self.sym_coor[0]
-      z = self.sym_coor[1]
-    elif self.dim == 3:
-      x = self.sym_coor[0]
-      z = self.sym_coor[2]
-    g = self.gaussian_2d(A,a,b,c,x,x0,z,z0)
+    g = self.gaussian_2d(A,a,b,c,self.sym_coor[0],x0,self.sym_coor[self.dim-1],z0)
     return g
   
   def numerical_gaussian(self,A,a,b,c,x0,z0):
-    if self.dim == 2:
-      x = self.num_coor[0]
-      z = self.num_coor[1]
-    elif self.dim == 3:
-      x = self.num_coor[0]
-      z = self.num_coor[2]
-    g = self.gaussian_2d(A,a,b,c,x,x0,z,z0)
+    g = self.gaussian_2d(A,a,b,c,self.num_coor[0],x0,self.num_coor[self.dim-1],z0)
     return g
   
   def evaluate_gaussians(self):
     self.gaussian_sym = np.zeros(shape=(self.ng), dtype=object)
-    if self.dim == 2:
-      self.gaussian_num = np.zeros(shape=(self.ng,self.num_coor[0].shape[0],self.num_coor[0].shape[1]), dtype=np.float64)
-    elif self.dim == 3:
-      self.gaussian_num = np.zeros(shape=(self.ng,self.num_coor[0].shape[0],self.num_coor[0].shape[2]), dtype=np.float64)
-    
+    self.gaussian_num = np.zeros(shape=(self.ng,*self.n), dtype=np.float64)
+
     for n in range(self.ng):
       print(f'********** Gaussian [{n}] **********')
-      g_centre = np.array([self.x0[n],self.z0[n]],dtype=np.float64).T
+      if self.dim == 2:   g_centre = np.array([[self.x0[n],self.z0[n]]],dtype=np.float64)
+      elif self.dim == 3: g_centre = np.array([[self.x0[n],0.0,self.z0[n]]],dtype=np.float64)
       g_centre = self.rotate_referential(g_centre,self.O,self.L)
-      self.x0[n] = g_centre[0]
-      self.z0[n] = g_centre[1]
+      self.x0[n] = g_centre[0,0]
+      self.z0[n] = g_centre[0,self.dim-1]
       print('Centre:')
       print(f'[ {self.x0[n]},{self.z0[n]} ]')
       self.gaussian_sym[n] = self.symbolic_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
@@ -104,24 +93,32 @@ class Gaussian(domain.Domain,rotation.Rotation):
       print(self.gaussian_sym[n])
     return 
   
+  def compute_field_distribution(self):
+    if self.gaussian_num is None:
+      self.evaluate_gaussians()
+    field = np.zeros(shape=(self.n), dtype=np.float64)
+    for n in range(self.ng):
+      field += self.gaussian_num[n]
+    field = np.reshape(field,self.nv,order='F')
+    return field
+  
   def plot_gaussians(self):
     _, ax = plt.subplots()
-    if self.dim == 2:
-      field = np.zeros(shape=(self.num_coor[0].shape[0],self.num_coor[0].shape[1]), dtype=np.float64)
-    elif self.dim == 3:
-      field = np.zeros(shape=(self.num_coor[0].shape[0],self.num_coor[0].shape[2]), dtype=np.float64)
-
+    field = np.zeros(shape=(self.n), dtype=np.float64)
     for n in range(self.ng):
-      field += self.gaussian_num[n,:,:]
-    g = ax.contourf(self.num_coor[0],self.num_coor[1],field,100,cmap='magma')
+      field += self.gaussian_num[n] 
+    if self.dim == 2:   g = ax.contourf(*self.num_coor,field,100,cmap='magma')
+    elif self.dim == 3: g = ax.contourf(self.num_coor[0][:,0,:],self.num_coor[2][:,0,:],field[:,0,:],100,cmap='magma')
     ax.axis('equal')
+    ax.set_title(f'Gaussian distribution {self.dim}D Domain')
+    ax.set_xlabel('x axis')
+    ax.set_ylabel(f'{self.sym_coor[self.dim-1]} axis')
     plt.colorbar(g,ax=ax)
     plt.draw()
     return
   
 def test():
   from bcpy import utils
-  from bcpy import rotation
   # Domain
   O = np.array([ 0.0, 0.0 ],    dtype=np.float64)
   L = np.array([ 600e3, 300e3 ],dtype=np.float64)
@@ -158,8 +155,53 @@ def test():
   
   GWZ.evaluate_gaussians()
   GWZ.plot_gaussians()
-  plt.show()
   return
+
+def test3d():
+  from bcpy import utils
+  from bcpy import writers
+  # Domain
+  O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+  L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+  n = np.array([ 64, 32, 32 ], dtype=np.int32)
+  Domain = domain.Domain(3,O,L,n)
+  print(Domain)
+  # rotation
+  domain_rotation = np.deg2rad(-15.0)
+  axis = np.array([0,1,0], dtype=np.float64)
+  Rotation = rotation.Rotation(3,domain_rotation,axis)
+  print(Rotation)
+  # Gaussians
+  ng = np.int32(2) # number of gaussians
+  A = np.array([1.0, 1.0],dtype=np.float64)
+  # shape
+  coeff = 0.5 * 6.0e-5**2
+  a = np.array([coeff, coeff], dtype=np.float64)
+  b = np.array([0.0, 0.0],     dtype=np.float64)
+  c = np.array([coeff, coeff], dtype=np.float64)
+  # position
+  dz    = 25.0e3
+  angle = np.deg2rad(83.0)
+  domain_centre = 0.5*(Domain.O + Domain.L)
+  
+  x0 = np.zeros(shape=(ng), dtype=np.float64)
+  z0 = np.array([domain_centre[2] - dz, 
+                 domain_centre[2] + dz], dtype=np.float64)
+  x0[0] = utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2]))
+  x0[1] = utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
+
+  GWZ = Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+  print(GWZ)
+  GWZ.evaluate_gaussians()
+  field = GWZ.compute_field_distribution()
+
+  w = writers.WriteVTS(Domain,vtk_fname="gaussian_field.vts",point_data={"field": field})
+
+  w.write_vts()
+  GWZ.plot_gaussians()
+  
 
 if __name__ == "__main__":
   test()
+  test3d()
+  plt.show()
