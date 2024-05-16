@@ -21,9 +21,15 @@ class MeshRefinement(domain.Domain):
   def __str__(self) -> str:
     s  = f"{self.__class__.__name__}:\n"
     for d in self.params:
+      if   d == "x": dim = 0
+      elif d == "y": dim = 1
+      elif d == "z": dim = 2
+
       s += f"\tDirection: {d}\n"
       for p in self.params[d]:
-        s += f"\t\t{p}: {self.params[d][p]}\n"
+        s += f"\t\t{p}           : {self.params[d][p]}\n"
+        if p == "x_initial" or p == "x_refined":
+          s += f"\t\t{p} normalized: {self.normalize(self.params[d][p],dim)}\n"
     return s
   
   def normalize(self,x,dim):
