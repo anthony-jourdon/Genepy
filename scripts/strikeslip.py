@@ -35,6 +35,7 @@ def strikeslip():
                       "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)*1e3}}
   m = bp.MeshRefinement(bc,refinement)
   m.refine()
+  print(m)
 
   # gaussian initial strain
   ng = np.int32(2) # number of gaussians

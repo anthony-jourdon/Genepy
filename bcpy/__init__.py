@@ -10,3 +10,10 @@ from .gaussian        import *
 from .writers         import *
 from .bc_inversion    import *
 from .mesh_refinement import *
+
+# Material parameters
+from .material_params.materials  import *
+from .material_params.density    import *
+from .material_params.plasticity import *
+from .material_params.softening  import *
+from .material_params.viscosity  import *
