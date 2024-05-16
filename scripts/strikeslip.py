@@ -1,65 +1,70 @@
 import numpy as np
 import bcpy as bp
 
-def transpression_7():
-  Notche_centre = np.zeros(shape=(2,2), dtype=np.float64)
-  # Notch 0 coordinates
-  Notche_centre[0,0] = 85900.5  # x
-  Notche_centre[0,1] = 123711.5 # z
-  # Notch 1 coordinates
-  Notche_centre[1,0] = 514099.0 # x
-  Notche_centre[1,1] = 176288.0 # z
-  return Notche_centre
+def strikeslip():
+  # 3D domain
+  O = np.array([0,-250e3,0],    dtype=np.float64) # Origin
+  L = np.array([600e3,0,300e3], dtype=np.float64) # Length
+  n = np.array([16,16,16],      dtype=np.int32)   # Number of nodes
+  # Create domain object
+  Domain = bp.Domain(3,O,L,n)
 
-def transtension(domain,angle,dz):
-  domain_centre = 0.5*(domain.O + domain.L)
-  wz_centre = np.zeros(shape=(2,2), dtype=np.float64)
-  wz_centre[0,1] = domain_centre[1] + dz
-  wz_centre[1,1] = domain_centre[1] - dz
-  
-  wz_centre[0,0] = bp.x_centre_from_angle(wz_centre[0,1],angle,domain_centre)
-  wz_centre[1,0] = bp.x_centre_from_angle(wz_centre[1,1],angle,domain_centre)
-  return wz_centre
+  # Rotation of the referential
+  r_angle = np.deg2rad(-15.0)                   # Rotation angle
+  axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
+  # Create rotation object
+  Rotation = bp.Rotation(3,r_angle,axis)
 
-def initial_strain(domain):
-  notche_centre = transpression_7()
-  #notche_centre = transtension(domain,np.deg2rad(83),25.0e3)
+  # velocity function
+  cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0) # cm/a to m/s conversion
+  u_norm  = 1.0 * cma2ms                   # horizontal velocity norm
+  u_angle = np.deg2rad(90.0)               # velocity angle \in [-pi/2, pi/2]
+  u_dir   = "z"                            # direction in which velocity varies
+  u_type  = "extension"                    # extension or compression
+  # Create boundary conditions object
+  bc = bp.BoundaryConditions(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+
+  # Evaluate the velocity and its derivatives
+  u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic() # symbolic
+  u_num    = bc.evaluate_velocity_numeric()                  # numeric
+  uL       = bc.get_velocity_orientation(horizontal=True,normalize=True)
+  print(bc.report_symbolic_functions(u,grad_u,uL))
+
+  # mesh refinement
+  refinement = {"y": {"x_initial": np.array([-250,-180,-87.5,0], dtype=np.float64)*1e3,
+                      "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)*1e3}}
+  m = bp.MeshRefinement(bc,refinement)
+  m.refine()
+
+  # gaussian initial strain
   ng = np.int32(2) # number of gaussians
-  A = np.array([1.0, 1.0],dtype=np.float64)
-  # shape
+  A  = np.array([1.0, 1.0],dtype=np.float64)
+  # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
   a = np.array([coeff, coeff], dtype=np.float64)
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
+  # position of the centre of the gaussians
+  dz    = 25.0e3                            # distance from the domain centre in z direction
+  angle = np.deg2rad(83.0)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
+  
+  x0 = np.zeros(shape=(ng), dtype=np.float64)
+  # centre of the gaussian in z direction
+  z0 = np.array([domain_centre[2] - dz, 
+                 domain_centre[2] + dz], dtype=np.float64) 
+  # centre of the gaussian in x direction
+  x0[0] = bp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
+  x0[1] = bp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
+  # Create gaussian object
+  Gaussian = bp.Gaussian(m,Rotation,ng,A,a,b,c,x0,z0)
+  Gaussian.evaluate_gaussians()
+  strain = Gaussian.compute_field_distribution()
 
-  wz_centre = transtension(domain,np.deg2rad(-60),25.0e3)
-  x0 = np.array([ wz_centre[0,0], wz_centre[1,0] ], dtype=np.float64)
-  z0 = np.array([ wz_centre[0,1], wz_centre[1,1] ], dtype=np.float64)
-  GWZ = bp.Gaussian(domain,ng,A,a,b,c,x0,z0)
-  GWZ.evaluate_gaussians()
-  GWZ.plot_gaussians()
-  return
-
-def main():
-  # domain
-  O = np.array([0,0],     dtype=np.float64)
-  L = np.array([600e3, 300e3], dtype=np.float64)
-  n = np.array([64,32],   dtype=np.int32)
-  # velocity
-  r_angle = np.deg2rad(15.0)
-  cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0)
-  u_norm  = 1.0 * cma2ms
-  u_angle = np.deg2rad(90.0)
-  u_dir   = 1
-  u_type  = "extension"
-
-  d = bp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle)
-  bc0 = bp.BoundaryConditions(u_norm=u_norm,u_angle=u_angle,variation_dir=u_dir,velocity_type=u_type,Domain=d)
-  bc0.evaluate_velocity_and_derivatives(ccw=False)
-
-  initial_strain(d)
-
-  bc0.plot_velocity(ccw=False)
+  # write the results to a file
+  point_data = {"u": u_num, "strain": strain}
+  w = bp.WriteVTS(m, vtk_fname="strike-slip.vts", point_data=point_data)
+  w.write_vts()
 
 if __name__ == "__main__":
-  main()
+  strikeslip()
