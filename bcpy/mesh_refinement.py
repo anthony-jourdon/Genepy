@@ -60,6 +60,37 @@ class MeshRefinement(domain.Domain):
       x_refined = self.normalize(self.params[d]["x_refined"],dim)
       self.refine_direction(dim,x_initial,x_refined)
     return
+  
+  def sprint_option(self,model_name:str):
+    s = super().sprint_option(model_name)
+    prefix = "refinement"
+    s += f"###### Mesh {prefix} ######\n"
+    s += f"-{model_name}_{prefix}_apply # activate mesh {prefix}\n"
+
+    n = 0
+    for d in self.params:
+      if   d == "x": dim = 0
+      elif d == "y": dim = 1
+      elif d == "z": dim = 2
+
+      s += f"-{model_name}_{prefix}_dir {dim}\n"
+      x_initial = self.normalize(self.params[d]["x_initial"],dim)
+      x_refined = self.normalize(self.params[d]["x_refined"],dim)
+
+      npoints = x_initial.shape[0]
+      s += f"-{model_name}_{prefix}_npoints_{dim} {npoints}\n"
+      s += f"-{model_name}_{prefix}_xref_{dim} "
+      for i in range(npoints-1):
+        s += f"{x_initial[i]},"
+      s += f"{x_initial[npoints-1]}\n"
+      s += f"-{model_name}_{prefix}_xnat_{dim} "
+      for i in range(npoints-1):
+        s += f"{x_refined[i]},"
+      s += f"{x_refined[npoints-1]}\n"
+      
+      n += 1
+    s += f"-{model_name}_{prefix}_ndir {n}\n"
+    return s
 
 def test():
   from bcpy import writers
@@ -78,6 +109,8 @@ def test():
 
   m = MeshRefinement(d,refinement)
   print(m)
+  options = m.sprint_option("model_GENE3D")
+  print(options)
   m.refine()
   w = writers.WriteVTS(m,vtk_fname="mesh_refinement.vts")
   w.write_vts()
