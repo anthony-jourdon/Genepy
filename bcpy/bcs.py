@@ -63,6 +63,7 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
 
     self.vertical_evaluated = False
+    self.prefix = "bc"
     self.velocity_coefficients()
 
   def __str__(self) -> str:
@@ -438,3 +439,36 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     plt.show()
     return
   
+  def sprint_option_dirichlet(self,model_name:str,region_name:str,region_tag:int,components:str,u):
+    prefix = self.prefix+"_dirichlet"
+    s = f"###### Boundary condition {region_name} {region_tag} ######\n"
+    s += f"###### Dirichlet boundary conditions ######\n"
+    s += f"-model_{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
+    s += f"-model_{model_name}_{self.prefix}_sc_type_{region_tag} 7\n"
+    for d in components:
+      if   d == "x": dim = 0
+      elif d == "y": dim = 1
+      elif d == "z": dim = 2
+      u_string = str(u[0,dim])
+      u_split  = u_string.split()
+      nmembers = len(u_split)
+      u_nospace = ""
+      for j in range(nmembers):
+        u_nospace += u_split[j]
+      s += f"-model_{model_name}_{prefix}_u{d}_{region_tag} {u_nospace}\n"
+    return s
+  
+  def sprint_option_navier(self,model_name:str,region_name:str,region_tag:int,grad_u,uL):
+    prefix = self.prefix+"_navier"
+    s = f"###### Boundary condition {region_name} {region_tag} ######\n"
+    s += f"###### Navier-slip boundary conditions ######\n"
+    s += f"-model_{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
+    s += f"-model_{model_name}_{self.prefix}_sc_type_{region_tag} 6\n"
+    s += f"-model_{model_name}_{prefix}_penalty_{region_tag} 1.0e3\n"
+    s += f"-model_{model_name}_{prefix}_duxdx_{region_tag} {str(grad_u[0,0])}\n"
+    s += f"-model_{model_name}_{prefix}_duxdz_{region_tag} {str(grad_u[0,2])}\n"
+    s += f"-model_{model_name}_{prefix}_duzdx_{region_tag} {str(grad_u[2,0])}\n"
+    s += f"-model_{model_name}_{prefix}_duzdz_{region_tag} {str(grad_u[2,2])}\n"
+    s += f"-model_{model_name}_{prefix}_uL_{region_tag} {uL[0]},{uL[2]}\n"
+    s += f"-model_{model_name}_{prefix}_mathcal_H_{region_tag} 0,1,0,1,1,1\n"
+    return s

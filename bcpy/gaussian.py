@@ -79,19 +79,23 @@ class Gaussian(domain.Domain,rotation.Rotation):
     self.gaussian_num = np.zeros(shape=(self.ng,*self.n), dtype=np.float64)
 
     for n in range(self.ng):
-      print(f'********** Gaussian [{n}] **********')
       if self.dim == 2:   g_centre = np.array([[self.x0[n],self.z0[n]]],dtype=np.float64)
       elif self.dim == 3: g_centre = np.array([[self.x0[n],0.0,self.z0[n]]],dtype=np.float64)
       g_centre = self.rotate_referential(g_centre,self.O,self.L)
       self.x0[n] = g_centre[0,0]
       self.z0[n] = g_centre[0,self.dim-1]
-      print('Centre:')
-      print(f'[ {self.x0[n]},{self.z0[n]} ]')
       self.gaussian_sym[n] = self.symbolic_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
       self.gaussian_num[n] = self.numerical_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
-      print('Equation:')
-      print(self.gaussian_sym[n])
     return 
+  
+  def report_symbolic_functions(self):
+    #s = super().report_symbolic_functions()
+    s = f"Symbolic gaussian functions:\n"
+    for n in range(self.ng):
+      s += f"\tGaussian [{n}]:\n"
+      s += f"\t\tCentre:   [ {self.x0[n]},{self.z0[n]} ]\n"
+      s += f"\t\tEquation: {self.gaussian_sym[n]}\n"
+    return s
   
   def compute_field_distribution(self):
     if self.gaussian_num is None:
@@ -116,6 +120,19 @@ class Gaussian(domain.Domain,rotation.Rotation):
     plt.colorbar(g,ax=ax)
     plt.draw()
     return
+  
+  def sprint_option(self, model_name: str):
+    s = super().sprint_option(model_name)
+    prefix = "wz"
+    s += f"########### Initial plastic strain for weak zone ###########\n"
+    s += f"-{model_name}_{prefix}_nwz {self.ng} # number of gaussians\n"
+    for n in range(self.ng):
+      gaussian_expression = str(self.gaussian_sym[n]).split()
+      s += f"-{model_name}_{prefix}_expression_{n} "
+      for term in range(len(gaussian_expression)-1):
+        s += f"{gaussian_expression[term]}"
+      s += f"{gaussian_expression[-1]}\n"
+    return s
   
 def test():
   from bcpy import utils
