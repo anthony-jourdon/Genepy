@@ -49,13 +49,25 @@ class ViscosityZ(Viscosity):
     return s 
   
 class ViscosityArrhenius(Viscosity):
-  def __init__(self, model_name: str, region: int, preexpA:float, Ascale:float, entalpy:float, Vmol:float, nexp:float, Tref:float=273.15) -> None:
+  def __init__(self, model_name: str, region: int, rock_name:str, Vmol:float=0.0, Tref:float=273.15, **kwargs) -> None:
     self.viscosity_type = 3
-    self.preexpA        = preexpA
-    self.Ascale         = Ascale
-    self.entalpy        = entalpy
+    # generate the dictionnary of standard rocks arrhenius flow laws
+    rock_param = self.arrhenius_flow_laws()
+    # verify if the requested rock is in the dictionnary
+    if rock_name in rock_param:
+      self.preexpA = rock_param[rock_name]["preexpA"]
+      self.Ascale  = rock_param[rock_name]["Ascale"]
+      self.entalpy = rock_param[rock_name]["entalpy"]
+      self.nexp    = rock_param[rock_name]["nexp"]
+    else:
+      if len(kwargs) == 0:
+        raise ValueError(f"ViscousFlowLaw: The requested flow law named: {rock_name} is not in the list of available flow laws, to add it you must provide the following arguments to the constructor: preexpA, nexp, entalpy, Ascale.")
+      self.preexpA = kwargs["preexpA"]
+      self.Ascale  = kwargs["Ascale"]
+      self.entalpy = kwargs["entalpy"]
+      self.nexp    = kwargs["nexp"]
+    
     self.Vmol           = Vmol
-    self.nexp           = nexp
     self.Tref           = Tref
     Viscosity.__init__(self,model_name,region)
   
@@ -70,17 +82,30 @@ class ViscosityArrhenius(Viscosity):
     s += f'\tnexp:     {self.nexp}\n'
     s += f'\tTref:     {self.Tref}\n'
     return s
+  
+  def arrhenius_flow_laws(self) -> None:
+    rock_param = dict()
+    rock_param["Quartz"]            = {"preexpA":1.0e-3, "nexp":2.0, "entalpy":167.0e3, "Ascale":1.0e6}
+    rock_param["Plagioclase(An75)"] = {"preexpA":3.3e-4, "nexp":3.2, "entalpy":238.0e3, "Ascale":1.0e6}
+    rock_param["Orthopyroxene"]     = {"preexpA":3.2e-1, "nexp":2.4, "entalpy":293.0e3, "Ascale":1.0e6}
+    rock_param["Clinopyroxene"]     = {"preexpA":15.7,   "nexp":2.6, "entalpy":335.0e3, "Ascale":1.0e6}
+    rock_param["Granite"]           = {"preexpA":1.8e-9, "nexp":3.2, "entalpy":123.0e3, "Ascale":1.0e6}
+    rock_param["Granite(wet)"]      = {"preexpA":2.0e-4, "nexp":1.9, "entalpy":137.0e3, "Ascale":1.0e6}
+    rock_param["Quartzite"]         = {"preexpA":6.7e-6, "nexp":2.4, "entalpy":156.0e3, "Ascale":1.0e6}
+    rock_param["Quartzite(wet)"]    = {"preexpA":3.2e-4, "nexp":2.3, "entalpy":154.0e3, "Ascale":1.0e6}
+    rock_param["QuartzDiorite"]     = {"preexpA":1.3e-3, "nexp":2.4, "entalpy":219.0e3, "Ascale":1.0e6}
+    rock_param["Diabase"]           = {"preexpA":2.0e-4, "nexp":3.4, "entalpy":260.0e3, "Ascale":1.0e6}
+    rock_param["Anorthosite"]       = {"preexpA":3.2e-4, "nexp":3.2, "entalpy":238.0e3, "Ascale":1.0e6}
+    rock_param["FelsicGranulite"]   = {"preexpA":8.0e-3, "nexp":3.1, "entalpy":243.0e3, "Ascale":1.0e6}
+    rock_param["MaficGranulite"]    = {"preexpA":1.4e4,  "nexp":4.2, "entalpy":445.0e3, "Ascale":1.0e6}
+    rock_param["Peridotite(dry)"]   = {"preexpA":2.5e4,  "nexp":3.5, "entalpy":532.0e3, "Ascale":1.0e6}
+    rock_param["Peridotite(wet)"]   = {"preexpA":2.0e3,  "nexp":4.0, "entalpy":471.0e3, "Ascale":1.0e6}
+    return rock_param
 
-class ViscosityArrhenius2(Viscosity):
-  def __init__(self, model_name: str, region: int, preexpA:float, Ascale:float, entalpy:float, Vmol:float, nexp:float, Tref:float=273.15) -> None:
+class ViscosityArrhenius2(ViscosityArrhenius):
+  def __init__(self, model_name: str, region: int, rock_name:str, Vmol:float=0.0, Tref:float=273.15, **kwargs) -> None:
+    ViscosityArrhenius.__init__(self,model_name,region,rock_name,Vmol,Tref,**kwargs)
     self.viscosity_type = 4
-    self.preexpA        = preexpA
-    self.Ascale         = Ascale
-    self.entalpy        = entalpy
-    self.Vmol           = Vmol
-    self.nexp           = nexp
-    self.Tref           = Tref
-    Viscosity.__init__(self,model_name,region)
   
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'
@@ -94,25 +119,31 @@ class ViscosityArrhenius2(Viscosity):
     s += f'\tTref:     {self.Tref}\n'
     return s
 
-class ViscosityArrheniusDislDiff(Viscosity):
-  def __init__(self, model_name: str, region: int, 
-               preexpA_disl:float, Ascale_disl:float, entalpy_disl:float, Vmol_disl:float, nexp_disl:float,
+class ViscosityArrheniusDislDiff(ViscosityArrhenius):
+  def __init__(self, model_name: str, region: int, rock_name:str,
                preexpA_diff:float, Ascale_diff:float, entalpy_diff:float, Vmol_diff:float, pexp_diff:float, gsize:float,
-               Tref:float=273.15) -> None:
-    self.viscosity_type = 5
-    self.preexpA_disl   = preexpA_disl
-    self.Ascale_disl    = Ascale_disl
-    self.entalpy_disl   = entalpy_disl
-    self.Vmol_disl      = Vmol_disl
-    self.nexp_disl      = nexp_disl
+               Vmol_disl:float=0.0, Tref:float=273.15, **kwargs) -> None:
+    ViscosityArrhenius.__init__(self,model_name,region,rock_name,Vmol_disl,Tref,**kwargs)
+    # erase the attributes from the parent class
+    self.preexpA_disl = self.preexpA
+    self.Ascale_disl = self.Ascale
+    self.entalpy_disl = self.entalpy
+    self.Vmol_disl = self.Vmol
+    self.nexp_disl = self.nexp
+    # delete the attributes from the parent class to avoid printing them in the sprint_option method
+    del self.preexpA
+    del self.Ascale
+    del self.entalpy
+    del self.Vmol
+    del self.nexp
+
     self.preexpA_diff   = preexpA_diff
     self.Ascale_diff    = Ascale_diff
     self.entalpy_diff   = entalpy_diff
     self.Vmol_diff      = Vmol_diff
     self.pexp_diff      = pexp_diff
     self.gsize          = gsize
-    self.Tref           = Tref
-    Viscosity.__init__(self,model_name,region)
+    self.viscosity_type = 5
   
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'
@@ -131,5 +162,5 @@ class ViscosityArrheniusDislDiff(Viscosity):
     s += f'\tVmol diffusion:       {self.Vmol_diff}\n'
     s += f'\tpexp diffusion:       {self.pexp_diff}\n'
     s += f'\tgsize:                {self.gsize}\n'
-    s += f'\tTref:     {self.Tref}\n'
+    s += f'\tTref:                 {self.Tref}\n'
     return s
