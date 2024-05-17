@@ -61,7 +61,12 @@ class ViscosityArrhenius(Viscosity):
       self.nexp    = rock_param[rock_name]["nexp"]
     else:
       if len(kwargs) == 0:
-        raise ValueError(f"ViscousFlowLaw: The requested flow law named: {rock_name} is not in the list of available flow laws, to add it you must provide the following arguments to the constructor: preexpA, nexp, entalpy, Ascale.")
+        s =  f"{self.__class__.__name__}: The requested flow law named: {rock_name} is not in the list of available flow laws\n"
+        s += f"To work around, you must provide the following arguments to the constructor: preexpA, nexp, entalpy, Ascale.\n"
+        s += f"Available flow laws are:\n"
+        for r in rock_param:
+          s += f"\t- {r}\n"
+        raise ValueError(s)
       self.preexpA = kwargs["preexpA"]
       self.Ascale  = kwargs["Ascale"]
       self.entalpy = kwargs["entalpy"]
