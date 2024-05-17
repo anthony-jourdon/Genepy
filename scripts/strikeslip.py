@@ -60,12 +60,18 @@ def strikeslip():
   # Create gaussian object
   Gaussian = bp.Gaussian(m,Rotation,ng,A,a,b,c,x0,z0)
   Gaussian.evaluate_gaussians()
+  print(Gaussian.report_symbolic_functions())
   strain = Gaussian.compute_field_distribution()
 
   # write the results to a file
   point_data = {"u": u_num, "strain": strain}
   w = bp.WriteVTS(m, vtk_fname="strike-slip.vts", point_data=point_data)
   w.write_vts()
+
+  opt = Gaussian.sprint_option("model_GENE3D")
+  opt += bc.sprint_option_dirichlet("model_GENE3D","Zfaces",43,["x","z"],u)
+  opt += bc.sprint_option_navier("model_GENE3D","Xfaces",32,grad_u,uL)
+  print(opt)
 
 if __name__ == "__main__":
   strikeslip()
