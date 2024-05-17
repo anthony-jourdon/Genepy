@@ -1,3 +1,4 @@
+import numpy as np
 from bcpy import MaterialConstants
 
 class Plasticity(MaterialConstants):
@@ -10,7 +11,9 @@ class PlasticNone(Plasticity):
     Plasticity.__init__(self,model_name,region)
 
 class PlasticMises(Plasticity):
-  def __init__(self, model_name:str, region:int, yield_stress:float, yield_stress_inf:float) -> None:
+  def __init__(self, model_name:str, region:int, 
+               yield_stress:float=5.e7, 
+               yield_stress_inf:float=5.e6) -> None:
     self.plastic_type     = 1
     self.yield_stress     = yield_stress
     self.yield_stress_inf = yield_stress_inf
@@ -24,7 +27,10 @@ class PlasticMises(Plasticity):
     return s
 
 class PlasticDruckerPrager(Plasticity):
-  def __init__(self, model_name:str, region:int, friction:float, friction_inf:float, cohesion:float, cohesion_inf:float, tension_cutoff:float, highstress_cutoff:float) -> None:
+  def __init__(self, model_name:str, region:int, 
+               friction:float=np.deg2rad(30.), friction_inf:float=np.deg2rad(5.),
+               cohesion:float=2.e7, cohesion_inf:float=5.e6, 
+               tension_cutoff:float=1.e7, highstress_cutoff:float=4.e8) -> None:
     self.plastic_type = 2
     self.friction     = friction
     self.friction_inf = friction_inf
