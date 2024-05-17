@@ -1,11 +1,11 @@
 from bcpy import MaterialConstants
 
 class Viscosity(MaterialConstants):
-  def __init__(self, model_name:str, region:int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     MaterialConstants.__init__(self,model_name,region)
 
 class ViscosityConstant(Viscosity):
-  def __init__(self, model_name:str, region:int, viscosity:float) -> None:
+  def __init__(self, viscosity:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.viscosity_type = 0
     self.eta0           = viscosity
     Viscosity.__init__(self,model_name,region)
@@ -17,7 +17,7 @@ class ViscosityConstant(Viscosity):
     return s
   
 class ViscosityFrankK(Viscosity):
-  def __init__(self, model_name: str, region: int, eta0:float, exponent:float) -> None:
+  def __init__(self, eta0:float, exponent:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.viscosity_type = 1
     self.eta0           = eta0
     self.theta          = exponent
@@ -32,7 +32,7 @@ class ViscosityFrankK(Viscosity):
     return s
   
 class ViscosityZ(Viscosity):
-  def __init__(self, model_name: str, region: int, eta0:float, zeta:float, zref:float) -> None:
+  def __init__(self, eta0:float, zeta:float, zref:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.viscosity_type = 2
     self.eta0           = eta0
     self.zeta           = zeta
@@ -49,7 +49,7 @@ class ViscosityZ(Viscosity):
     return s 
   
 class ViscosityArrhenius(Viscosity):
-  def __init__(self, model_name: str, region: int, rock_name:str, Vmol:float=0.0, Tref:float=273.15, **kwargs) -> None:
+  def __init__(self, rock_name:str, Vmol:float=0.0, Tref:float=273.15, model_name:str="model_GENE3D", region:int=0, **kwargs) -> None:
     self.viscosity_type = 3
     # generate the dictionnary of standard rocks arrhenius flow laws
     rock_param = self.arrhenius_flow_laws()
@@ -91,6 +91,7 @@ class ViscosityArrhenius(Viscosity):
   def arrhenius_flow_laws(self) -> None:
     rock_param = dict()
     rock_param["Quartz"]            = {"preexpA":1.0e-3, "nexp":2.0, "entalpy":167.0e3, "Ascale":1.0e6}
+    rock_param["Anorthite"]         = {"preexpA":13.4637,"nexp":3.0, "entalpy":345.0e3, "Ascale":1.0e6}
     rock_param["Plagioclase(An75)"] = {"preexpA":3.3e-4, "nexp":3.2, "entalpy":238.0e3, "Ascale":1.0e6}
     rock_param["Orthopyroxene"]     = {"preexpA":3.2e-1, "nexp":2.4, "entalpy":293.0e3, "Ascale":1.0e6}
     rock_param["Clinopyroxene"]     = {"preexpA":15.7,   "nexp":2.6, "entalpy":335.0e3, "Ascale":1.0e6}
@@ -108,8 +109,8 @@ class ViscosityArrhenius(Viscosity):
     return rock_param
 
 class ViscosityArrhenius2(ViscosityArrhenius):
-  def __init__(self, model_name: str, region: int, rock_name:str, Vmol:float=0.0, Tref:float=273.15, **kwargs) -> None:
-    ViscosityArrhenius.__init__(self,model_name,region,rock_name,Vmol,Tref,**kwargs)
+  def __init__(self, rock_name:str, Vmol:float=0.0, Tref:float=273.15, model_name:str="model_GENE3D", region:int=0, **kwargs) -> None:
+    ViscosityArrhenius.__init__(self,rock_name,Vmol,Tref,model_name,region,**kwargs)
     self.viscosity_type = 4
   
   def __str__(self) -> str:
@@ -125,10 +126,10 @@ class ViscosityArrhenius2(ViscosityArrhenius):
     return s
 
 class ViscosityArrheniusDislDiff(ViscosityArrhenius):
-  def __init__(self, model_name: str, region: int, rock_name:str,
+  def __init__(self, rock_name:str,
                preexpA_diff:float, Ascale_diff:float, entalpy_diff:float, Vmol_diff:float, pexp_diff:float, gsize:float,
-               Vmol_disl:float=0.0, Tref:float=273.15, **kwargs) -> None:
-    ViscosityArrhenius.__init__(self,model_name,region,rock_name,Vmol_disl,Tref,**kwargs)
+               Vmol_disl:float=0.0, Tref:float=273.15, model_name:str="model_GENE3D", region:int=0, **kwargs) -> None:
+    ViscosityArrhenius.__init__(self,rock_name,Vmol_disl,Tref,model_name,region,**kwargs)
     # erase the attributes from the parent class
     self.preexpA_disl = self.preexpA
     self.Ascale_disl = self.Ascale

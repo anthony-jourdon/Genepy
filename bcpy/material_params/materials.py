@@ -1,5 +1,5 @@
 class MaterialConstants:
-  def __init__(self, model_name:str, region:int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     self.model_name = model_name
     self.region     = region
   

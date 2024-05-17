@@ -1,11 +1,11 @@
 from bcpy import MaterialConstants
 
 class Density(MaterialConstants):
-  def __init__(self, model_name:str, region:int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     MaterialConstants.__init__(self,model_name,region)
 
 class DensityConstant(Density):
-  def __init__(self, model_name:str, region:int, density:float) -> None:
+  def __init__(self, density:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.density_type = 0
     self.density      = density
     Density.__init__(self,model_name,region)
@@ -17,7 +17,7 @@ class DensityConstant(Density):
     return s
   
 class DensityBoussinesq(Density):
-  def __init__(self, model_name: str, region: int, density:float, thermal_expansion:float=0.0, compressibility:float=0.0) -> None:
+  def __init__(self, density:float, thermal_expansion:float=0.0, compressibility:float=0.0, model_name:str="model_GENE3D", region:int=0) -> None:
     self.density_type     = 1
     self.density          = density
     self.thermalexpension = thermal_expansion
@@ -34,7 +34,7 @@ class DensityBoussinesq(Density):
     return s
 
 class DensityTable(Density):
-  def __init__(self, model_name: str, region: int, density:float, map:str) -> None:
+  def __init__(self, density:float, map:str, model_name:str="model_GENE3D", region:int=0) -> None:
     self.density_type = 2
     self.density      = density
     self.map          = map

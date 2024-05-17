@@ -2,18 +2,17 @@ import numpy as np
 from bcpy import MaterialConstants
 
 class Plasticity(MaterialConstants):
-  def __init__(self, model_name:str, region:int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     MaterialConstants.__init__(self,model_name,region)
 
 class PlasticNone(Plasticity):
-  def __init__(self, model_name: str, region: int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     self.plastic_type = 0
     Plasticity.__init__(self,model_name,region)
 
 class PlasticMises(Plasticity):
-  def __init__(self, model_name:str, region:int, 
-               yield_stress:float=5.e7, 
-               yield_stress_inf:float=5.e6) -> None:
+  def __init__(self, yield_stress:float=5.e7, yield_stress_inf:float=5.e6,
+               model_name:str="model_GENE3D", region:int=0) -> None:
     self.plastic_type     = 1
     self.yield_stress     = yield_stress
     self.yield_stress_inf = yield_stress_inf
@@ -27,10 +26,10 @@ class PlasticMises(Plasticity):
     return s
 
 class PlasticDruckerPrager(Plasticity):
-  def __init__(self, model_name:str, region:int, 
-               friction:float=np.deg2rad(30.), friction_inf:float=np.deg2rad(5.),
+  def __init__(self, friction:float=np.deg2rad(30.), friction_inf:float=np.deg2rad(5.),
                cohesion:float=2.e7, cohesion_inf:float=5.e6, 
-               tension_cutoff:float=1.e7, highstress_cutoff:float=4.e8) -> None:
+               tension_cutoff:float=1.e7, highstress_cutoff:float=4.e8,
+               model_name:str="model_GENE3D", region:int=0) -> None:
     self.plastic_type = 2
     self.friction     = friction
     self.friction_inf = friction_inf

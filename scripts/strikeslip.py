@@ -1,6 +1,71 @@
 import numpy as np
 import bcpy as bp
 
+def material_parameters0():
+  regions = {38 : [],
+             39 : [],
+             40 : [],
+             41 : []}
+  
+  regions[38].append(bp.DensityBoussinesq("model_GENE3D",38,2700.0,3.0e-5,1.0e-11))
+  regions[38].append(bp.PlasticDruckerPrager("model_GENE3D",38))
+  regions[38].append(bp.SofteningLinear("model_GENE3D",38,0.0,0.5))
+  regions[38].append(bp.ViscosityArrhenius2("model_GENE3D",38,"Quartzite"))
+
+  regions[39].append(bp.DensityBoussinesq("model_GENE3D",39,2850.0,3.0e-5,1.0e-11))
+  regions[39].append(bp.PlasticDruckerPrager("model_GENE3D",39))
+  regions[39].append(bp.SofteningLinear("model_GENE3D",39,0.0,0.5))
+  regions[39].append(bp.ViscosityArrhenius2("model_GENE3D",39,"Anorthite",Vmol=38.0e-6))
+
+  regions[40].append(bp.DensityBoussinesq("model_GENE3D",40,3300.0,3.0e-5,1.0e-11))
+  regions[40].append(bp.PlasticDruckerPrager("model_GENE3D",40))
+  regions[40].append(bp.SofteningLinear("model_GENE3D",40,0.0,0.5))
+  regions[40].append(bp.ViscosityArrhenius2("model_GENE3D",40,"Peridotite(dry)",Vmol=8.0e-6))
+
+  regions[41].append(bp.DensityBoussinesq("model_GENE3D",41,3300.0,3.0e-5,1.0e-11))
+  regions[41].append(bp.PlasticDruckerPrager("model_GENE3D",41))
+  regions[41].append(bp.SofteningLinear("model_GENE3D",41,0.0,0.5))
+  regions[41].append(bp.ViscosityArrhenius2("model_GENE3D",41,"Peridotite(dry)",Vmol=8.0e-6))
+
+  opt = "########### Material parameters ###########\n"
+  for region in regions:
+    opt += f"###### Region {region} ######\n"
+    for r in regions[region]:
+      opt += r.sprint_option()
+  return opt 
+
+def material_parameters():
+  regions = [
+    bp.Region(38,
+              bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11),
+              bp.SofteningLinear(0.0,0.5),
+              bp.PlasticDruckerPrager(),
+              bp.ViscosityArrhenius2("Quartzite"),
+              bp.Energy(1.5e-6,2.7)),
+    bp.Region(39,
+              bp.DensityBoussinesq(2850.0,3.0e-5,1.0e-11),
+              bp.SofteningLinear(0.0,0.5),
+              bp.PlasticDruckerPrager(),
+              bp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
+              bp.Energy(0.5e-6,2.85)),
+    bp.Region(40,
+              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              bp.SofteningLinear(0.0,0.5),
+              bp.PlasticDruckerPrager(),
+              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              bp.Energy(0.0,3.3)),
+    bp.Region(41,
+              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              bp.SofteningLinear(0.0,0.5),
+              bp.PlasticDruckerPrager(),
+              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              bp.Energy(0.0,3.3))
+  ]
+
+  all_regions = bp.ModelRegions("model_GENE3D",regions)
+  opt = all_regions.sprint_option()
+  return opt
+
 def strikeslip():
   # 3D domain
   O = np.array([0,-250e3,0],    dtype=np.float64) # Origin
@@ -71,6 +136,8 @@ def strikeslip():
   opt = Gaussian.sprint_option("model_GENE3D")
   opt += bc.sprint_option_dirichlet("model_GENE3D","Zfaces",43,["x","z"],u)
   opt += bc.sprint_option_navier("model_GENE3D","Xfaces",32,grad_u,uL)
+
+  opt += material_parameters()
   print(opt)
 
 if __name__ == "__main__":

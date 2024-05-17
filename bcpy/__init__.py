@@ -17,3 +17,5 @@ from .material_params.density    import *
 from .material_params.plasticity import *
 from .material_params.softening  import *
 from .material_params.viscosity  import *
+from .material_params.energy     import *
+from .material_params.regions    import *

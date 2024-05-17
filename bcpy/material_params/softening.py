@@ -1,16 +1,16 @@
 from bcpy import MaterialConstants
 
 class Softening(MaterialConstants):
-  def __init__(self, model_name:str, region:int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     MaterialConstants.__init__(self,model_name,region)
 
 class SofteningNone(Softening):
-  def __init__(self, model_name: str, region: int) -> None:
+  def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     self.softening_type = 0
     Softening.__init__(self,model_name,region)
 
 class SofteningLinear(Softening):
-  def __init__(self, model_name: str, region: int, strain_min:float, strain_max:float) -> None:
+  def __init__(self, strain_min:float, strain_max:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.softening_type = 1
     self.eps_min        = strain_min
     self.eps_max        = strain_max
@@ -24,7 +24,7 @@ class SofteningLinear(Softening):
     return s
 
 class SofteningExponential(Softening):
-  def __init__(self, model_name: str, region: int, strain_min:float, strain_fold:float) -> None:
+  def __init__(self, strain_min:float, strain_fold:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.softening_type = 2
     self.eps_min        = strain_min
     self.eps_fold       = strain_fold
