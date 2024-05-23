@@ -1,8 +1,8 @@
 from bcpy import StokesBoundaryCondition
 
 class Neumann(StokesBoundaryCondition):
-  def __init__(self, tag:int, name:str, dev_stress_expression=None, model_name:str="model_GENE3D") -> None:
-    StokesBoundaryCondition.__init__(self,tag,model_name)
+  def __init__(self, tag:int, name:str, dev_stress_expression=None, mesh_file:str="path_to_file", model_name:str="model_GENE3D") -> None:
+    StokesBoundaryCondition.__init__(self,tag,mesh_file,model_name)
     self.prefix     = "bc_neumann"
     self.bc_type    = 1
     self.bc_name    = name

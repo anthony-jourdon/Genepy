@@ -3,19 +3,20 @@ class BoundaryCondition:
     self.model_name = model_name
 
 class StokesBoundaryCondition(BoundaryCondition):
-  def __init__(self, tag:int=0, model_name:str="model_GENE3D") -> None:
+  def __init__(self, tag:int=0, mesh_file:str="path_to_file", model_name:str="model_GENE3D") -> None:
     BoundaryCondition.__init__(self,model_name)
     self.tag:int        = tag
     self.prefix:str     = "bc"
     self.bc_type:int    = 0
     self.bc_name:str    = "uninitialized"
+    self.mesh_file:str  = mesh_file
   
   def sprint_option(self):
     s  = f"###### Boundary condition {self.bc_name} {self.tag} ######\n"
     s += f"###### {self.__class__.__name__} boundary conditions ######\n"
     s += f"-{self.model_name}_bc_sc_name_{self.tag} {self.bc_name} # name of the boundary (arbitrary)\n"
     s += f"-{self.model_name}_bc_sc_type_{self.tag} {self.bc_type} # type of BC\n"
-    s += f"-{self.model_name}_bc_facet_mesh_file_{self.tag} path_to_file # path to file of the boundary mesh\n"
+    s += f"-{self.model_name}_bc_facet_mesh_file_{self.tag} {self.mesh_file} # path to file of the boundary mesh\n"
     return s
 
   def __str__(self):

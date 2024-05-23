@@ -1,8 +1,8 @@
 from bcpy import StokesBoundaryCondition
 
 class NavierSlip(StokesBoundaryCondition):
-  def __init__(self, tag:int, name:str, grad_u, u_orientation, model_name:str="model_GENE3D") -> None:
-    StokesBoundaryCondition.__init__(self,tag,model_name)
+  def __init__(self, tag:int, name:str, grad_u, u_orientation, mesh_file:str="path_to_file", model_name:str="model_GENE3D") -> None:
+    StokesBoundaryCondition.__init__(self,tag,mesh_file,model_name)
     self.prefix     = "bc_navier"
     self.bc_type    = 6
     self.bc_name    = name

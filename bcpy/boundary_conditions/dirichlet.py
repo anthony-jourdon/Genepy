@@ -1,8 +1,8 @@
 from bcpy import StokesBoundaryCondition
 
 class Dirichlet(StokesBoundaryCondition):
-  def __init__(self, tag:int, name:str, components, velocity, model_name:str="model_GENE3D") -> None:
-    StokesBoundaryCondition.__init__(self,tag,model_name)
+  def __init__(self, tag:int, name:str, components, velocity, mesh_file:str="path_to_file", model_name:str="model_GENE3D") -> None:
+    StokesBoundaryCondition.__init__(self,tag,mesh_file,model_name)
     self.prefix     = "bc_dirichlet"
     self.bc_type    = 7
     self.bc_name    = name
@@ -36,8 +36,8 @@ class Dirichlet(StokesBoundaryCondition):
     return s
 
 class DirichletUdotN(StokesBoundaryCondition):
-  def __init__(self, tag:int, name:str, model_name:str="model_GENE3D") -> None:
-    StokesBoundaryCondition.__init__(self,tag,model_name)
+  def __init__(self, tag:int, name:str, mesh_file:str="path_to_file",model_name:str="model_GENE3D") -> None:
+    StokesBoundaryCondition.__init__(self,tag,mesh_file,model_name)
     self.prefix     = "bc_dirichlet"
     self.bc_type    = 7
     self.bc_name    = name

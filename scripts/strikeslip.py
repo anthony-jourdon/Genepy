@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import bcpy as bp
 
@@ -80,13 +81,15 @@ def initial_conditions(Domain,MshRef,IniStrain,u):
   return model_ics
 
 def boundary_conditions(u,grad_u,uL):
+  # path to mesh files (system dependent, change accordingly)
+  root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
   # Velocity boundary conditions
   bcs = [
-    bp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u),
-    bp.Dirichlet(37,"Zmin",["x","z"],u),
-    bp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL),
-    bp.NavierSlip(14,"Xmin",grad_u,uL),
-    bp.DirichletUdotN(33,"Bottom")
+    bp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
+    bp.Dirichlet(37,"Zmin",["x","z"],u,mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
+    bp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL,mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
+    bp.NavierSlip(14,"Xmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
+    bp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
   Tbcs = bp.TemperatureBC(faces=["ymax","ymin"],values=[0.0,1450.0])

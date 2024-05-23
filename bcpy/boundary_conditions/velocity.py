@@ -43,7 +43,7 @@ class Velocity(domain.Domain,rotation.Rotation):
   get_velocity_orientation(horizontal=True,normalize=False) : returns the orientation (vector) of the velocity field at the boundary
   plot_velocity_matplotlib() : plots the velocity field using matplotlib
   """
-  def __init__(self,Domain:domain.Domain,u_norm,variation_dir:str,velocity_type:str,u_angle=0.0,Rotation:rotation.Rotation=None) -> None:
+  def __init__(self,Domain:domain.Domain,u_norm,variation_dir:str,velocity_type:str,u_angle:float=0.0,Rotation:rotation.Rotation=None) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
     self.type   = velocity_type
