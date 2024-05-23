@@ -1,6 +1,6 @@
 import numpy as np
 import sympy as sp
-from bcpy import domain
+from bcpy.initial_conditions import domain
 from bcpy import rotation
 
 import matplotlib.pyplot as plt
@@ -122,9 +122,8 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return
   
   def sprint_option(self, model_name: str):
-    s = super().sprint_option(model_name)
     prefix = "wz"
-    s += f"########### Initial plastic strain for weak zone ###########\n"
+    s  = f"########### Initial plastic strain for weak zone ###########\n"
     s += f"-{model_name}_{prefix}_nwz {self.ng} # number of gaussians\n"
     for n in range(self.ng):
       gaussian_expression = str(self.gaussian_sym[n]).split()

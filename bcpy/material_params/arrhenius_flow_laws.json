@@ -1,0 +1,149 @@
+{
+  "Quartz": {
+    "preexpA":1.0e-3, 
+    "nexp":2.0, 
+    "entalpy":167.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Anorthite": {
+    "preexpA":13.4637,
+    "nexp":3.0, 
+    "entalpy":345.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Rybackiand and Dresen (2000).Dislocation and diffusion creep of synthetic anorthite aggregates. Journal of Geophysical Research, 105, B11, 26,017-26,036. doi:10.1029/2000JB900223"
+  },
+  "Plagioclase(An75)": {
+    "preexpA":3.3e-4, 
+    "nexp":3.2, 
+    "entalpy":238.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Orthopyroxene": {
+    "preexpA":3.2e-1, 
+    "nexp":2.4, 
+    "entalpy":293.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Clinopyroxene": {
+    "preexpA":15.7,   
+    "nexp":2.6, 
+    "entalpy":335.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Granite": {
+    "preexpA":1.8e-9, 
+    "nexp":3.2, 
+    "entalpy":123.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Granite(wet)": {
+    "preexpA":2.0e-4, 
+    "nexp":1.9, 
+    "entalpy":137.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Quartzite": {
+    "preexpA":6.7e-6, 
+    "nexp":2.4, 
+    "entalpy":156.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Burov (2011). Rheology and strength of the lithosphere. Marine and Petroleum Geology 28 (2011) 1402-1443. doi:10.1016/j.marpetgeo.2011.05.008"
+  },
+  "Quartzite(wet)": {
+    "preexpA":3.2e-4, 
+    "nexp":2.3, 
+    "entalpy":154.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Quartzite(wet)GT": {
+    "preexpA":1.1e-4, 
+    "nexp":4.0, 
+    "entalpy":223.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Gleason and Tullis (1995). A flow law for dislocation creep of quartz aggregates determined with the molten salt cell. Tectonophysics, 247, 1-23, doi:10.1016/0040-1951(95)00011-B"
+  },
+  "Quartzite(wet-melt)": {
+    "preexpA":1.8e-8, 
+    "nexp":4.0, 
+    "entalpy":137.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Gleason and Tullis (1995). A flow law for dislocation creep of quartz aggregates determined with the molten salt cell. Tectonophysics, 247, 1-23, doi:10.1016/0040-1951(95)00011-B"
+  },
+  "QuartzDiorite": {
+    "preexpA":1.3e-3, 
+    "nexp":2.4, 
+    "entalpy":219.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Diabase": {
+    "preexpA":2.0e-4, 
+    "nexp":3.4, 
+    "entalpy":260.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Anorthosite": {
+    "preexpA":3.2e-4, 
+    "nexp":3.2, 
+    "entalpy":238.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "FelsicGranulite": {
+    "preexpA":8.0e-3, 
+    "nexp":3.1, 
+    "entalpy":243.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "MaficGranulite": {
+    "preexpA":1.4e4,  
+    "nexp":4.2, 
+    "entalpy":445.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Peridotite(dry)": {
+    "preexpA":2.5e4,  
+    "nexp":3.5, 
+    "entalpy":532.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Peridotite(wet)": {
+    "preexpA":2.0e3,  
+    "nexp":4.0, 
+    "entalpy":471.0e3, 
+    "Ascale":1.0e6,
+    "reference":"Ranalli (1997). Rheology of the lithosphere in space and time. Geological Society, London, Special Publications, 121, 19-37. doi:10.1144/GSL.SP.1997.121.01.02"
+  },
+  "Peridotite(dry)HK": {
+    "preexpA":1.1e5,
+    "nexp":3.5,
+    "entalpy":530.0e3,
+    "Ascale":1.0e6,
+    "reference":"Hirth and Kohlstedt (2003). Rheology of the upper mantle and the mantle wedge: A view from the experimentalists. Inside the Subduction Factory, Geophysical Monograph 138. doi:10.1029/138GM06"
+  },
+  "Peridotite(wet)HK": {
+    "preexpA":1.6e3,
+    "nexp":3.5,
+    "entalpy":520.0e3,
+    "Ascale":1.0e6,
+    "reference":"Hirth and Kohlstedt (2003). Rheology of the upper mantle and the mantle wedge: A view from the experimentalists. Inside the Subduction Factory, Geophysical Monograph 138. doi:10.1029/138GM06"
+  },
+  "Peridotite(wet2)HK": {
+    "preexpA":90.0,
+    "nexp":3.5,
+    "entalpy":480.0e3,
+    "Ascale":1.0e6,
+    "reference":"Hirth and Kohlstedt (2003). Rheology of the upper mantle and the mantle wedge: A view from the experimentalists. Inside the Subduction Factory, Geophysical Monograph 138. doi:10.1029/138GM06"
+  }
+}

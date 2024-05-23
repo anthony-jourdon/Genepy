@@ -1,3 +1,5 @@
+import os
+import json
 from bcpy import MaterialConstants
 
 class Viscosity(MaterialConstants):
@@ -6,7 +8,7 @@ class Viscosity(MaterialConstants):
 
 class ViscosityConstant(Viscosity):
   def __init__(self, viscosity:float, model_name:str="model_GENE3D", region:int=0) -> None:
-    self.viscosity_type = 0
+    self.visc_type = 0
     self.eta0           = viscosity
     Viscosity.__init__(self,model_name,region)
   
@@ -18,7 +20,7 @@ class ViscosityConstant(Viscosity):
   
 class ViscosityFrankK(Viscosity):
   def __init__(self, eta0:float, exponent:float, model_name:str="model_GENE3D", region:int=0) -> None:
-    self.viscosity_type = 1
+    self.visc_type = 1
     self.eta0           = eta0
     self.theta          = exponent
     Viscosity.__init__(self,model_name,region)
@@ -33,7 +35,7 @@ class ViscosityFrankK(Viscosity):
   
 class ViscosityZ(Viscosity):
   def __init__(self, eta0:float, zeta:float, zref:float, model_name:str="model_GENE3D", region:int=0) -> None:
-    self.viscosity_type = 2
+    self.visc_type = 2
     self.eta0           = eta0
     self.zeta           = zeta
     self.zref           = zref
@@ -49,10 +51,15 @@ class ViscosityZ(Viscosity):
     return s 
   
 class ViscosityArrhenius(Viscosity):
+  # Define the standard rocks arrhenius flow laws as class attribute (not class instance attribute)
+  # This ensures that the dictionnary is shared among all instances of the class and that if the dictionnary is modified, all instances will see the change
+  with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"arrhenius_flow_laws.json"),"r") as f:
+    __rocks__ = json.load(f)
+
   def __init__(self, rock_name:str, Vmol:float=0.0, Tref:float=273.15, model_name:str="model_GENE3D", region:int=0, **kwargs) -> None:
-    self.viscosity_type = 3
+    self.visc_type = 3
     # generate the dictionnary of standard rocks arrhenius flow laws
-    rock_param = self.arrhenius_flow_laws()
+    rock_param = ViscosityArrhenius.arrhenius_flow_laws()
     # verify if the requested rock is in the dictionnary
     if rock_name in rock_param:
       self.preexpA = rock_param[rock_name]["preexpA"]
@@ -79,39 +86,23 @@ class ViscosityArrhenius(Viscosity):
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'
     s += f'eta(u,p,T) = 0.25*Ascale*strainrate^(1/nexp - 1)*(0.75*preexpA)^(-1/nexp)*exp((entalpy + p*Vmol)/(nexp*R*T))\n'
-    s += f'\tRegion:   {self.region}\n'
-    s += f'\tpreexpA:  {self.preexpA}\n'
-    s += f'\tAscale:   {self.Ascale}\n'
-    s += f'\tentalpy:  {self.entalpy}\n'
-    s += f'\tVmol:     {self.Vmol}\n'
-    s += f'\tnexp:     {self.nexp}\n'
-    s += f'\tTref:     {self.Tref}\n'
+    s += f'\tRegion:    {self.region}\n'
+    s += f'\tpreexpA:   {self.preexpA}\n'
+    s += f'\tAscale:    {self.Ascale}\n'
+    s += f'\tentalpy:   {self.entalpy}\n'
+    s += f'\tVmol:      {self.Vmol}\n'
+    s += f'\tnexp:      {self.nexp}\n'
+    s += f'\tTref:      {self.Tref}\n'
     return s
   
-  def arrhenius_flow_laws(self) -> None:
-    rock_param = dict()
-    rock_param["Quartz"]            = {"preexpA":1.0e-3, "nexp":2.0, "entalpy":167.0e3, "Ascale":1.0e6}
-    rock_param["Anorthite"]         = {"preexpA":13.4637,"nexp":3.0, "entalpy":345.0e3, "Ascale":1.0e6}
-    rock_param["Plagioclase(An75)"] = {"preexpA":3.3e-4, "nexp":3.2, "entalpy":238.0e3, "Ascale":1.0e6}
-    rock_param["Orthopyroxene"]     = {"preexpA":3.2e-1, "nexp":2.4, "entalpy":293.0e3, "Ascale":1.0e6}
-    rock_param["Clinopyroxene"]     = {"preexpA":15.7,   "nexp":2.6, "entalpy":335.0e3, "Ascale":1.0e6}
-    rock_param["Granite"]           = {"preexpA":1.8e-9, "nexp":3.2, "entalpy":123.0e3, "Ascale":1.0e6}
-    rock_param["Granite(wet)"]      = {"preexpA":2.0e-4, "nexp":1.9, "entalpy":137.0e3, "Ascale":1.0e6}
-    rock_param["Quartzite"]         = {"preexpA":6.7e-6, "nexp":2.4, "entalpy":156.0e3, "Ascale":1.0e6}
-    rock_param["Quartzite(wet)"]    = {"preexpA":3.2e-4, "nexp":2.3, "entalpy":154.0e3, "Ascale":1.0e6}
-    rock_param["QuartzDiorite"]     = {"preexpA":1.3e-3, "nexp":2.4, "entalpy":219.0e3, "Ascale":1.0e6}
-    rock_param["Diabase"]           = {"preexpA":2.0e-4, "nexp":3.4, "entalpy":260.0e3, "Ascale":1.0e6}
-    rock_param["Anorthosite"]       = {"preexpA":3.2e-4, "nexp":3.2, "entalpy":238.0e3, "Ascale":1.0e6}
-    rock_param["FelsicGranulite"]   = {"preexpA":8.0e-3, "nexp":3.1, "entalpy":243.0e3, "Ascale":1.0e6}
-    rock_param["MaficGranulite"]    = {"preexpA":1.4e4,  "nexp":4.2, "entalpy":445.0e3, "Ascale":1.0e6}
-    rock_param["Peridotite(dry)"]   = {"preexpA":2.5e4,  "nexp":3.5, "entalpy":532.0e3, "Ascale":1.0e6}
-    rock_param["Peridotite(wet)"]   = {"preexpA":2.0e3,  "nexp":4.0, "entalpy":471.0e3, "Ascale":1.0e6}
-    return rock_param
+  @classmethod
+  def arrhenius_flow_laws(cls) -> dict:
+    return cls.__rocks__
 
 class ViscosityArrhenius2(ViscosityArrhenius):
   def __init__(self, rock_name:str, Vmol:float=0.0, Tref:float=273.15, model_name:str="model_GENE3D", region:int=0, **kwargs) -> None:
     ViscosityArrhenius.__init__(self,rock_name,Vmol,Tref,model_name,region,**kwargs)
-    self.viscosity_type = 4
+    self.visc_type = 4
   
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'
@@ -149,7 +140,7 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     self.Vmol_diff      = Vmol_diff
     self.pexp_diff      = pexp_diff
     self.gsize          = gsize
-    self.viscosity_type = 5
+    self.visc_type = 5
   
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'

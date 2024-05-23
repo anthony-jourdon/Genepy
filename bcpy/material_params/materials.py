@@ -9,8 +9,7 @@ class MaterialConstants:
     for p in attributes:
       if p in ['model_name','region']:
         continue
-      if type(attributes[p]) is str:   
-        s += f"-{self.model_name}_{p}_{self.region} {attributes[p]}\n"
-      else:
-        s += f"-{self.model_name}_{p}_{self.region} {attributes[p]:g}\n"
+      if type(attributes[p]) is str: fmt = f"{attributes[p]}"
+      else:                          fmt = f"{attributes[p]:g}"
+      s += f"-{self.model_name}_{p}_{self.region} {fmt}\n"
     return s

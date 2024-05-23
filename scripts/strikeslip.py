@@ -1,107 +1,52 @@
 import numpy as np
 import bcpy as bp
 
-def material_parameters0():
-  regions = {38 : [],
-             39 : [],
-             40 : [],
-             41 : []}
-  
-  regions[38].append(bp.DensityBoussinesq("model_GENE3D",38,2700.0,3.0e-5,1.0e-11))
-  regions[38].append(bp.PlasticDruckerPrager("model_GENE3D",38))
-  regions[38].append(bp.SofteningLinear("model_GENE3D",38,0.0,0.5))
-  regions[38].append(bp.ViscosityArrhenius2("model_GENE3D",38,"Quartzite"))
-
-  regions[39].append(bp.DensityBoussinesq("model_GENE3D",39,2850.0,3.0e-5,1.0e-11))
-  regions[39].append(bp.PlasticDruckerPrager("model_GENE3D",39))
-  regions[39].append(bp.SofteningLinear("model_GENE3D",39,0.0,0.5))
-  regions[39].append(bp.ViscosityArrhenius2("model_GENE3D",39,"Anorthite",Vmol=38.0e-6))
-
-  regions[40].append(bp.DensityBoussinesq("model_GENE3D",40,3300.0,3.0e-5,1.0e-11))
-  regions[40].append(bp.PlasticDruckerPrager("model_GENE3D",40))
-  regions[40].append(bp.SofteningLinear("model_GENE3D",40,0.0,0.5))
-  regions[40].append(bp.ViscosityArrhenius2("model_GENE3D",40,"Peridotite(dry)",Vmol=8.0e-6))
-
-  regions[41].append(bp.DensityBoussinesq("model_GENE3D",41,3300.0,3.0e-5,1.0e-11))
-  regions[41].append(bp.PlasticDruckerPrager("model_GENE3D",41))
-  regions[41].append(bp.SofteningLinear("model_GENE3D",41,0.0,0.5))
-  regions[41].append(bp.ViscosityArrhenius2("model_GENE3D",41,"Peridotite(dry)",Vmol=8.0e-6))
-
-  opt = "########### Material parameters ###########\n"
-  for region in regions:
-    opt += f"###### Region {region} ######\n"
-    for r in regions[region]:
-      opt += r.sprint_option()
-  return opt 
-
-def material_parameters():
-  regions = [
-    bp.Region(38,
-              bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.ViscosityArrhenius2("Quartzite"),
-              bp.Energy(1.5e-6,2.7)),
-    bp.Region(39,
-              bp.DensityBoussinesq(2850.0,3.0e-5,1.0e-11),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
-              bp.Energy(0.5e-6,2.85)),
-    bp.Region(40,
-              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
-              bp.Energy(0.0,3.3)),
-    bp.Region(41,
-              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
-              bp.Energy(0.0,3.3))
-  ]
-
-  all_regions = bp.ModelRegions("model_GENE3D",regions)
-  opt = all_regions.sprint_option()
-  return opt
-
-def strikeslip():
+def model_domain():
   # 3D domain
   O = np.array([0,-250e3,0],    dtype=np.float64) # Origin
   L = np.array([600e3,0,300e3], dtype=np.float64) # Length
-  n = np.array([16,16,16],      dtype=np.int32)   # Number of nodes
+  n = np.array([16,16,16],      dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
   # Create domain object
   Domain = bp.Domain(3,O,L,n)
+  return Domain
 
+def mesh_refinement(Domain,report=False):
+  # mesh refinement
+  refinement = {"y": {"x_initial": np.array([-250,-180,-87.5,0], dtype=np.float64)*1e3,
+                      "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)*1e3}}
+  MshRef = bp.MeshRefinement(Domain,refinement)
+  MshRef.refine()
+  if report:
+    print(MshRef)
+  return MshRef
+
+def domain_rotation():
   # Rotation of the referential
   r_angle = np.deg2rad(-15.0)                   # Rotation angle
   axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
   # Create rotation object
   Rotation = bp.Rotation(3,r_angle,axis)
+  return Rotation
 
+def velocity_bcs(Domain,Rotation,report=False):
   # velocity function
   cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0) # cm/a to m/s conversion
   u_norm  = 1.0 * cma2ms                   # horizontal velocity norm
-  u_angle = np.deg2rad(90.0)               # velocity angle \in [-pi/2, pi/2]
+  u_angle = np.deg2rad(90.0)                # velocity angle \in [-pi/2, pi/2]
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "extension"                    # extension or compression
   # Create boundary conditions object
-  bc = bp.BoundaryConditions(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+  BCs = bp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity and its derivatives
-  u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic() # symbolic
-  u_num    = bc.evaluate_velocity_numeric()                  # numeric
-  uL       = bc.get_velocity_orientation(horizontal=True,normalize=True)
-  print(bc.report_symbolic_functions(u,grad_u,uL))
+  u,grad_u = BCs.evaluate_velocity_and_derivatives_symbolic() # symbolic
+  u_num    = BCs.evaluate_velocity_numeric()                  # numeric
+  uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
+  if report:
+    print(BCs.report_symbolic_functions(u,grad_u,uL))
+  return BCs,u,grad_u,u_num,uL
 
-  # mesh refinement
-  refinement = {"y": {"x_initial": np.array([-250,-180,-87.5,0], dtype=np.float64)*1e3,
-                      "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)*1e3}}
-  m = bp.MeshRefinement(bc,refinement)
-  m.refine()
-  print(m)
-
+def initial_strain(Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
   ng = np.int32(2) # number of gaussians
   A  = np.array([1.0, 1.0],dtype=np.float64)
@@ -123,22 +68,115 @@ def strikeslip():
   x0[0] = bp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
   x0[1] = bp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
   # Create gaussian object
-  Gaussian = bp.Gaussian(m,Rotation,ng,A,a,b,c,x0,z0)
+  Gaussian = bp.Gaussian(MshRef,Rotation,ng,A,a,b,c,x0,z0)
   Gaussian.evaluate_gaussians()
-  print(Gaussian.report_symbolic_functions())
+  if report:
+    print(Gaussian.report_symbolic_functions())
   strain = Gaussian.compute_field_distribution()
+  return Gaussian,strain
 
-  # write the results to a file
+def initial_conditions(Domain,MshRef,IniStrain,u):
+  model_ics = bp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=IniStrain)
+  return model_ics
+
+def boundary_conditions(u,grad_u,uL):
+  # Velocity boundary conditions
+  bcs = [
+    bp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u),
+    bp.Dirichlet(37,"Zmin",["x","z"],u),
+    bp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL),
+    bp.NavierSlip(14,"Xmin",grad_u,uL),
+    bp.DirichletUdotN(33,"Bottom")
+  ]
+  # Temperature boundary conditions
+  Tbcs = bp.TemperatureBC(faces=["ymax","ymin"],values=[0.0,1450.0])
+  # collect all boundary conditions
+  all_bcs = bp.ModelBCs(bcs,Tbcs)
+  return all_bcs
+
+def material_parameters():
+  # Define the material parameters for the model as a list of Region objects
+  regions = [
+    # Upper crust
+    bp.Region(38,                                          # region tag
+              bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
+              bp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
+              bp.SofteningLinear(0.0,0.5),                 # softening
+              bp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
+              bp.Energy(1.5e-6,2.7)),                      # energy
+    # Lower crust
+    bp.Region(39,
+              bp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
+              bp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
+              bp.SofteningLinear(strain_min=0.0,strain_max=0.5),
+              bp.PlasticDruckerPrager(),
+              bp.Energy(heat_source=0.5e-6,conductivity=2.85)),
+    # Lithosphere mantle
+    bp.Region(40,
+              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              bp.SofteningLinear(0.0,0.5),
+              bp.PlasticDruckerPrager(),
+              bp.Energy(0.0,3.3)),
+    # Asthenosphere
+    bp.Region(41,
+              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              bp.SofteningLinear(0.0,0.5),
+              bp.PlasticDruckerPrager(),
+              bp.Energy(0.0,3.3))
+  ]
+
+  all_regions = bp.ModelRegions(regions)
+  return all_regions
+
+def test_default_material_parameters():
+  regions = [
+    # Upper crust
+    bp.Region(38),
+    # Lower crust
+    bp.Region(39),
+    # Lithosphere mantle
+    bp.Region(40),
+    # Asthenosphere
+    bp.Region(41)
+  ]
+  all_regions = bp.ModelRegions(regions)
+  return all_regions
+
+def strikeslip():
+  # model domain
+  Domain   = model_domain()
+  # rotation of the referential, if not needed, the Velocity object can be created without it
+  Rotation = domain_rotation()
+  # boundary conditions
+  BCs,u,grad_u,u_num,uL = velocity_bcs(Domain,Rotation,report=False)
+  # mesh refinement
+  MshRef = mesh_refinement(BCs,report=False)
+  # initial strain
+  Gaussian,strain = initial_strain(Domain,MshRef,Rotation,report=False)
+
+  # write the results to a vts file for visualization
   point_data = {"u": u_num, "strain": strain}
-  w = bp.WriteVTS(m, vtk_fname="strike-slip.vts", point_data=point_data)
+  w = bp.WriteVTS(MshRef, vtk_fname="strike-slip.vts", point_data=point_data)
   w.write_vts()
 
-  opt = Gaussian.sprint_option("model_GENE3D")
-  opt += bc.sprint_option_dirichlet("model_GENE3D","Zfaces",43,["x","z"],u)
-  opt += bc.sprint_option_navier("model_GENE3D","Xfaces",32,grad_u,uL)
+  # generate objects for options writing
+  ics     = initial_conditions(Domain,MshRef,Gaussian,u)
+  bcs     = boundary_conditions(u,grad_u,uL)
+  regions = material_parameters()
+  #regions = test_default_material_parameters()
+  spm = bp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
+  pswarm = bp.PswarmFillBox([0.0,-100.0e3,0.0],[600e3,-4.0e3,300.0e3],layout=[30,5,15],pressure=True,temperature=True)
 
-  opt += material_parameters()
-  print(opt)
+  # write the options for ptatin3d
+  model = bp.Model(ics,regions,bcs,
+                   model_name="model_GENE3D",
+                   spm=spm,pswarm=pswarm,
+                   mpi_ranks=1)
+  print(model.options)
+  with open("strike-slip.sh","w") as f:
+    f.write(model.options)
 
 if __name__ == "__main__":
   strikeslip()

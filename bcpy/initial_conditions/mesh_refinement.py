@@ -1,5 +1,5 @@
 import numpy as np
-from bcpy import domain
+from bcpy.initial_conditions import domain
 
 class MeshRefinement(domain.Domain):
   def __init__(self, Domain, refinement_params) -> None:
@@ -62,34 +62,43 @@ class MeshRefinement(domain.Domain):
     return
   
   def sprint_option(self,model_name:str):
-    s = super().sprint_option(model_name)
+    components = {"x":0,"y":1,"z":2}
     prefix = "refinement"
-    s += f"###### Mesh {prefix} ######\n"
+    s  = f"###### Mesh {prefix} ######\n"
     s += f"-{model_name}_{prefix}_apply # activate mesh {prefix}\n"
 
+    # count number of directions
     n = 0
+    for d in self.params:
+      n += 1
+    s += f"-{model_name}_{prefix}_ndir {n} # number of directions (x,y,z) being refined\n"
+
+    # write directions
+    directions = list(self.params.keys())
+    s += f"-{model_name}_{prefix}_dir "
+    for i in range(n-1):
+      s += f"{components[directions[i]]},"
+    s += f"{components[directions[n-1]]} # directions of refinement (0:x, 1:y, 2:z)\n"
+
+    # for each direction, report the number of points and the normalized xp,f(xp)
     for d in self.params:
       if   d == "x": dim = 0
       elif d == "y": dim = 1
       elif d == "z": dim = 2
 
-      s += f"-{model_name}_{prefix}_dir {dim}\n"
       x_initial = self.normalize(self.params[d]["x_initial"],dim)
       x_refined = self.normalize(self.params[d]["x_refined"],dim)
 
       npoints = x_initial.shape[0]
-      s += f"-{model_name}_{prefix}_npoints_{dim} {npoints}\n"
+      s += f"-{model_name}_{prefix}_npoints_{dim} {npoints} # number of points for interpolation\n"
       s += f"-{model_name}_{prefix}_xref_{dim} "
       for i in range(npoints-1):
         s += f"{x_initial[i]},"
-      s += f"{x_initial[npoints-1]}\n"
+      s += f"{x_initial[npoints-1]} # xp\n"
       s += f"-{model_name}_{prefix}_xnat_{dim} "
       for i in range(npoints-1):
         s += f"{x_refined[i]},"
-      s += f"{x_refined[npoints-1]}\n"
-      
-      n += 1
-    s += f"-{model_name}_{prefix}_ndir {n}\n"
+      s += f"{x_refined[npoints-1]} # f(xp)\n"
     return s
 
 def test():

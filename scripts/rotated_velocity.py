@@ -16,7 +16,7 @@ def main_2d():
 
   d  = bp.Domain(2,O,L,n)
   r  = bp.Rotation(2,r_angle)
-  bc = bp.BoundaryConditions(d,u_norm,u_dir,u_type,u_angle,r)
+  bc = bp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
 
   u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic()
 
@@ -56,7 +56,7 @@ def main_3d():
   # create rotation object
   r  = bp.Rotation(3,r_angle,axis)
   # create boundary conditions object
-  bc = bp.BoundaryConditions(d,u_norm,u_dir,u_type,u_angle,r)
+  bc = bp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
   
   # evaluate the velocity and its derivatives
   u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic()

@@ -1,7 +1,7 @@
 
 import numpy as np
 import pyvista as pvs
-from . import domain
+from .initial_conditions import domain
 
 class WriteVTS(domain.Domain):
   def __init__(self, Domain, vtk_fname=None, point_data=None, cell_data=None, pvd_fname=None):

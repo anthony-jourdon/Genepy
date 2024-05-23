@@ -1,12 +1,12 @@
-from . import domain
-from . import rotation
+from bcpy.initial_conditions import domain
+from bcpy import rotation
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 
-class BoundaryConditions(domain.Domain,rotation.Rotation):
+class Velocity(domain.Domain,rotation.Rotation):
   """
-  class BoundaryConditions(domain.Domain,rotation.Rotation)
+  class Velocity(domain.Domain,rotation.Rotation)
   ---------------------------------------------------------
   Class to evaluate symbolic and numeric linear velocity function and its derivatives in space.
 
@@ -438,13 +438,14 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
     ax.axis('equal')
     plt.show()
     return
-  
+
   def sprint_option_dirichlet(self,model_name:str,region_name:str,region_tag:int,components:str,u):
     prefix = self.prefix+"_dirichlet"
     s = f"###### Boundary condition {region_name} {region_tag} ######\n"
     s += f"###### Dirichlet boundary conditions ######\n"
-    s += f"-model_{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
-    s += f"-model_{model_name}_{self.prefix}_sc_type_{region_tag} 7\n"
+    s += f"-{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
+    s += f"-{model_name}_{self.prefix}_sc_type_{region_tag} 7\n"
+    s += f"-{model_name}_{self.prefix}_facet_mesh_file_{region_tag} path_to_file\n"
     for d in components:
       if   d == "x": dim = 0
       elif d == "y": dim = 1
@@ -455,20 +456,42 @@ class BoundaryConditions(domain.Domain,rotation.Rotation):
       u_nospace = ""
       for j in range(nmembers):
         u_nospace += u_split[j]
-      s += f"-model_{model_name}_{prefix}_u{d}_{region_tag} {u_nospace}\n"
+      s += f"-{model_name}_{prefix}_u{d}_{region_tag} {u_nospace}\n"
+    return s
+  
+  def sprint_option_u_dot_n(self,model_name:str,region_name:str,region_tag:int):
+    prefix = self.prefix+"_dirichlet"
+    s = f"###### Boundary condition {region_name} {region_tag} ######\n"
+    s += f"###### Dirichlet u.n boundary conditions ######\n"
+    s += f"-{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
+    s += f"-{model_name}_{self.prefix}_sc_type_{region_tag} 7\n"
+    s += f"-{model_name}_{self.prefix}_facet_mesh_file_{region_tag} path_to_file\n"
+    s += f"-{model_name}_{prefix}_bot_u.n_{region_tag}\n"
     return s
   
   def sprint_option_navier(self,model_name:str,region_name:str,region_tag:int,grad_u,uL):
     prefix = self.prefix+"_navier"
     s = f"###### Boundary condition {region_name} {region_tag} ######\n"
     s += f"###### Navier-slip boundary conditions ######\n"
-    s += f"-model_{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
-    s += f"-model_{model_name}_{self.prefix}_sc_type_{region_tag} 6\n"
-    s += f"-model_{model_name}_{prefix}_penalty_{region_tag} 1.0e3\n"
-    s += f"-model_{model_name}_{prefix}_duxdx_{region_tag} {str(grad_u[0,0])}\n"
-    s += f"-model_{model_name}_{prefix}_duxdz_{region_tag} {str(grad_u[0,2])}\n"
-    s += f"-model_{model_name}_{prefix}_duzdx_{region_tag} {str(grad_u[2,0])}\n"
-    s += f"-model_{model_name}_{prefix}_duzdz_{region_tag} {str(grad_u[2,2])}\n"
-    s += f"-model_{model_name}_{prefix}_uL_{region_tag} {uL[0]},{uL[2]}\n"
-    s += f"-model_{model_name}_{prefix}_mathcal_H_{region_tag} 0,1,0,1,1,1\n"
+    s += f"-{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
+    s += f"-{model_name}_{self.prefix}_sc_type_{region_tag} 6\n"
+    s += f"-{model_name}_{self.prefix}_facet_mesh_file_{region_tag} path_to_file\n"
+    s += f"-{model_name}_{prefix}_penalty_{region_tag} 1.0e3\n"
+    s += f"-{model_name}_{prefix}_duxdx_{region_tag} {str(grad_u[0,0])}\n"
+    s += f"-{model_name}_{prefix}_duxdz_{region_tag} {str(grad_u[0,2])}\n"
+    s += f"-{model_name}_{prefix}_duzdx_{region_tag} {str(grad_u[2,0])}\n"
+    s += f"-{model_name}_{prefix}_duzdz_{region_tag} {str(grad_u[2,2])}\n"
+    s += f"-{model_name}_{prefix}_uL_{region_tag} {uL[0]},{uL[2]}\n"
+    s += f"-{model_name}_{prefix}_mathcal_H_{region_tag} 0,1,0,1,1,1\n"
     return s
+  
+  def sprint_option_neumann(self,model_name:str,region_name:str,region_tag:int,expression:str=None):
+    s = f"###### Boundary condition {region_name} {region_tag} ######\n"
+    s += f"###### Neumann boundary conditions ######\n"
+    s += f"-{model_name}_{self.prefix}_sc_name_{region_tag} {region_name}\n"
+    s += f"-{model_name}_{self.prefix}_sc_type_{region_tag} 1\n"
+    s += f"-{model_name}_{self.prefix}_facet_mesh_file_{region_tag} path_to_file\n"
+    if expression is not None:
+      s += f"-{model_name}_{self.prefix}_neumann_dev_stress_{region_tag} {expression}\n"
+    return
+ 

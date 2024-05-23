@@ -55,20 +55,26 @@ class Domain:
     return s
   
   def sprint_option(self,model_name:str):
+    component = {0:'x', 1:'y', 2:'z'}
     s = "########### Bounding Box ###########\n"
-    s += f"-model_{model_name}_Ox {self.O[0]:g}\n"
-    s += f"-model_{model_name}_Oy {self.O[1]:g}\n"
-    if self.dim == 3:
-      s += f"-model_{model_name}_Oz {self.O[2]:g}\n"
-    s += f"-model_{model_name}_Lx {self.L[0]:g}\n"
-    s += f"-model_{model_name}_Ly {self.L[1]:g}\n"
-    if self.dim == 3:
-      s += f"-model_{model_name}_Lz {self.L[2]:g}\n"
+    for d in range(self.dim):
+      s += f"-{model_name}_O{component[d]} {self.O[d]:.5g} # min {component[d]} coord\n"
+      s += f"-{model_name}_L{component[d]} {self.L[d]:.5g} # max {component[d]} coord\n"
     s += "########### Mesh ###########\n"
-    s += f"-mx {self.n[0]-1} # nel x\n"
-    s += f"-my {self.n[1]-1} # nel y\n"
-    if self.dim == 3:
-      s += f"-mz {self.n[2]-1} # nel z\n"
+    for d in range(self.dim):
+      s += f"-m{component[d]} {self.n[d]-1} # number of elements in {component[d]} direction\n"
+    return s
+  
+  def sprint_option_list(self,model_name:str) -> list:
+    component = {0:'x', 1:'y', 2:'z'}
+    s = []
+    s.append("########### Bounding Box ###########")
+    for d in range(self.dim):
+      s.append(f"-{model_name}_O{component[d]} {self.O[d]:.5g} # min {component[d]} coord")
+      s.append(f"-{model_name}_L{component[d]} {self.L[d]:.5g} # max {component[d]} coord")
+    s.append("########### Mesh ###########")
+    for d in range(self.dim):
+      s.append(f"-m{component[d]} {self.n[d]-1} # number of elements in {component[d]} direction")
     return s
 
   def numerical_coordinates(self):
