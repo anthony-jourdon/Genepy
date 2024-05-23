@@ -130,7 +130,11 @@ def material_parameters():
               bp.Energy(0.0,3.3))
   ]
 
-  all_regions = bp.ModelRegions(regions)
+  # path to mesh files (system dependent, change accordingly)
+  root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
+  all_regions = bp.ModelRegions(regions,
+                                mesh_file=os.path.join(root,"box_ptatin_md.bin"),
+                                region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
   return all_regions
 
 def test_default_material_parameters():

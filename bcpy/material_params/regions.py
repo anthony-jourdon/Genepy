@@ -41,9 +41,11 @@ class Region:
     return s
   
 class ModelRegions:
-  def __init__(self, regions:list[MaterialConstants], model_name:str="model_GENE3D") -> None:
-    self.model_name = model_name
-    self.regions    = regions
+  def __init__(self, regions:list[MaterialConstants], mesh_file:str="path_to_file", region_file:str="path_to_file", model_name:str="model_GENE3D") -> None:
+    self.model_name  = model_name
+    self.mesh_file   = mesh_file
+    self.region_file = region_file
+    self.regions     = regions
 
     for r in self.regions:
       for m in r.material_parameters:
@@ -59,8 +61,8 @@ class ModelRegions:
     prefix = "regions"
     nregions = len(self.regions)
     s  = "########### Material parameters ###########\n"
-    s += f"-{self.model_name}_mesh_file path_to_file\n"
-    s += f"-{self.model_name}_{prefix}_file path_to_file\n"
+    s += f"-{self.model_name}_mesh_file {self.mesh_file}\n"
+    s += f"-{self.model_name}_{prefix}_file {self.region_file}\n"
     s += f"-{self.model_name}_{prefix}_nregions {nregions}\n"
     s += f"-{self.model_name}_{prefix}_list "
     for r in range(nregions-1):
