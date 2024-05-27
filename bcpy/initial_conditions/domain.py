@@ -1,27 +1,82 @@
-
 import numpy as np
 import sympy as sp
 
 class Domain:
   """
-  class Domain(dim,minCoor,maxCoor,size,coor=None)
-  ------------------------------------------------
+  .. py:class:: Domain(dim, minCoor, maxCoor, size, coor=None)
 
-  Attributes:
-  -----------
-  dim:int          : dimension of the domain
-  minCoor:np.array : minimum coordinates of the domain
-  maxCoor:np.array : maximum coordinates of the domain
-  size:np.array    : size of the domain (number of points in each direction)
-  coor:np.array    : coordinates of the domain (numerical) if not provided, it will be created
+    Class to build a physical domain. 
+    Compatible with 1D, 2D and 3D domains.
+    Coordinates (symbolic and numeric) are instantiated by the class constructor using provided coordinates or creating new if not provided.
 
-  Methods:
-  --------
-  __init__(dim,minCoor,maxCoor,size,coor=None) : constructor
-  __str__()                                    : string representation of the domain
-  numerical_coordinates()                      : computes the numerical coordinates of the domain
-  symbolic_coordinates()                       : computes the symbolic coordinates of the domain
-  shape_coor()                                 : reshapes the coordinates from (nx,ny,nz) to (nv,dim
+    :param int dim: dimension of the domain (can be 1, 2 or 3)
+    :param np.ndarray minCoor: minimum coordinates of the domain
+    :param np.ndarray maxCoor: maximum coordinates of the domain
+    :param np.ndarray size: size of the domain (number of points in each direction)
+    :param np.ndarray coor: coordinates of the domain (numerical), optional
+
+    Example
+    -------
+
+    .. code-block:: python
+
+      dim      = 3
+      minCoord = np.array([0,-1,-0.5], dtype=np.float64)
+      maxCoord = np.array([1,0,0.5], dtype=np.float64)
+      size     = np.array([9,5,17], dtype=np.int32)
+
+      domain   = bcpy.Domain(dim,minCoord,maxCoord,size)
+
+    Attributes
+    ----------
+
+    .. py:attribute:: dim
+      :type: int
+      :canonical: bcpy.initial_conditions.domain.Domain.dim
+
+        Dimension of the domain
+    
+    .. py:attribute:: O
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.domain.Domain.O
+
+      Minimum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
+
+    .. py:attribute:: L
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.domain.Domain.L
+
+      Maximum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
+    
+    .. py:attribute:: n
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.domain.Domain.n
+
+      Size of the domain (number of nodes in each direction), expected shape: ``(dim,)`` and dtype: ``np.int32``
+
+    .. py:attribute:: nv
+      :type: int
+      :canonical: bcpy.initial_conditions.domain.Domain.nv
+
+      Total number of nodes in the domain
+
+    .. py:attribute:: num_coor
+      :type: tuple
+      :canonical: bcpy.initial_conditions.domain.Domain.num_coor
+
+      Numerical coordinates of the domain created by :py:meth:`numerical_coordinates() <bcpy.Domain.numerical_coordinates>` . 
+      Tuple ``(X)``, ``(X,Y)`` or ``(X,Y,Z)`` (depending on the number of dimensions)
+      with each direction being of type ndarray and shape ``X.shape = (*n)``.
+
+    .. py:attribute:: sym_coor
+      :type: tuple
+      :canonical: bcpy.initial_conditions.domain.Domain.sym_coor
+
+      Symbolic coordinates of the domain. 
+      Tuple ``('x')``, ``('x','y')`` or ``('x','y','z')``
+
+    Methods
+    -------
   """
   def __init__(self,dim:int,minCoor:np.ndarray,maxCoor:np.ndarray,size:np.ndarray,coor=None) -> None:
     self.dim   = dim
@@ -45,6 +100,10 @@ class Domain:
     self.symbolic_coordinates()
 
   def __str__(self) -> str:
+    """
+    __str__(self)
+    Returns a string representation of the domain.
+    """
     attributes = vars(self)
     s = f'{self.__class__.__name__}:\n'
     for attribute in attributes:
@@ -55,6 +114,14 @@ class Domain:
     return s
   
   def sprint_option(self,model_name:str):
+    """
+    sprint_option(self,model_name:str)
+    Returns a string formatted for `pTatin3d`_ input file using `PETSc <https://petsc.org>`_ options format.
+    
+    :param str model_name: name of the model to include in the options
+
+    :return: string with the options
+    """
     component = {0:'x', 1:'y', 2:'z'}
     s = "########### Bounding Box ###########\n"
     for d in range(self.dim):
@@ -80,11 +147,12 @@ class Domain:
   def numerical_coordinates(self):
     """
     numerical_coordinates(self)
-    ---------------------------
-    Computes the numerical coordinates of the domain. 
-    Works in 1D, 2D and 3D.
-    Attach the coordinates to the object as a tuple (X,Y,Z) with each 
-    direction being of the shape X.shape = (nx,ny,nz).
+    Computes the numerical coordinates of the domain as a uniform grid. 
+    Compatible with 1D, 2D and 3D.
+    Attach the coordinates to the attribute 
+    :attr:`num_coor <bcpy.initial_conditions.domain.Domain.num_coor>` 
+    as a tuple: ``self.num_coor = (X,Y,Z)`` 
+    with each direction being of the shape ``X.shape = (self.n[0],self.n[1],self.n[2])``.
     Tuples are immutable, so to modify the coordinates, convert them to a list first and restore them as tuple once done.
     """
     x1d = []
@@ -96,10 +164,9 @@ class Domain:
   def symbolic_coordinates(self):
     """
     symbolic_coordinates(self)
-    -------------------------
     Computes the symbolic coordinates of the domain.
     Works in 1D, 2D and 3D.
-    Attach the coordinates to the object as a tuple (x,y,z)
+    Attach the coordinates to the attribute :attr:`sym_coor <bcpy.initial_conditions.domain.Domain.sym_coor>` as a tuple ('x','y','z')
     """
     variables = {1:'x', 2:'x y', 3:'x y z'}
     self.sym_coor = sp.symbols(variables[self.dim])
@@ -108,8 +175,7 @@ class Domain:
   def shape_coor(self):
     """
     shape_coor(self)
-    ----------------
-    Reshapes the coordinates from (nx,ny,nz) to (nv,dim)
+    Reshapes the coordinates from ``(n[0],n[1],n[2])`` to ``(nv,dim)``
     """
     coor = np.zeros(shape=(self.nv,self.dim), dtype=np.float64)
     for d in range(self.dim):

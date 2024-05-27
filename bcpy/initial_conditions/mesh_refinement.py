@@ -2,6 +2,38 @@ import numpy as np
 from bcpy.initial_conditions import domain
 
 class MeshRefinement(domain.Domain):
+  """
+  .. py:class:: MeshRefinement(Domain, refinement_params)
+
+    Class to refine a mesh in one or more directions. 
+    The refinement is done by linear interpolation of the coordinates of the mesh in the specified directions.
+    The class is a subclass of :py:class:`Domain <bcpy.initial_conditions.domain.Domain>`
+
+    :param Domain Domain: domain to refine
+    :param dict refinement_params: dictionary containing the refinement parameters. The dictionary must have the following structure:
+    
+    .. code-block:: python
+
+      refinement_params = {"x": {"x_initial": np.array([...],dtype=np.float64), "x_refined": np.array([...],dtype=np.float64)},
+                           "y": {"x_initial": np.array([...],dtype=np.float64), "x_refined": np.array([...],dtype=np.float64)},
+                           "z": {"x_initial": np.array([...],dtype=np.float64), "x_refined": np.array([...],dtype=np.float64)}
+
+    The keys of the dictionary are the directions to refine (``"x"``, ``"y"``, ``"z"``) and the values are dictionaries with the keys ``"x_initial"`` and ``"x_refined"``. 
+    The values of these keys are numpy arrays of the initial and refined coordinates in the specified direction. 
+    The arrays must have the same shape.
+
+    Attributes
+    ----------
+    
+    .. py:attribute:: params
+      :type: dict
+      :canonical: bcpy.initial_conditions.mesh_refinement.MeshRefinement.params
+
+      Refinement parameters
+
+    Methods
+    -------
+  """
   def __init__(self, Domain, refinement_params) -> None:
     domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
     self.params = refinement_params
@@ -33,9 +65,28 @@ class MeshRefinement(domain.Domain):
     return s
   
   def normalize(self,x,dim):
+    """
+    normalize(x,dim)
+    Normalize the coordinates of the mesh in the specified direction
+
+    :param np.ndarray x: coordinates to normalize
+    :param int dim:      direction of the coordinates to normalize
+
+    :return: normalized coordinates
+    :rtype: np.ndarray
+    """
     return (x - self.O[dim]) / (self.L[dim] - self.O[dim])
   
   def refine_direction(self,dim,x_initial,x_refined):
+    """
+    refine_direction(dim,x_initial,x_refined)
+    Refine the mesh in the specified direction using linear interpolation.
+    :attr:`num_coor <bcpy.initial_conditions.domain.Domain.num_coor>` is updated with the refined coordinates.
+
+    :param int dim:              direction of the mesh to refine (``0:x``, ``1:y``, ``2:z``)
+    :param np.ndarray x_initial: initial coordinates 
+    :param np.ndarray x_refined: refined coordinates
+    """
     # convert tuple to list (tuples are immutable)
     coor = list(self.num_coor)
     # get all points in the dim direction
@@ -51,6 +102,10 @@ class MeshRefinement(domain.Domain):
     return
   
   def refine(self):
+    """
+    refine(self)
+    Refine the mesh in the specified directions in :attr:`params <MeshRefinement.params>`.
+    """
     for d in self.params:
       if   d == "x": dim = 0
       elif d == "y": dim = 1
@@ -62,6 +117,14 @@ class MeshRefinement(domain.Domain):
     return
   
   def sprint_option(self,model_name:str):
+    """
+    sprint_option(self,model_name:str)
+    Returns a string formatted for pTatin3d input file using `PETSc <https://petsc.org>`_ options format.
+    
+    :param str model_name: name of the model to include in the options
+
+    :return: string with the options
+    """
     components = {"x":0,"y":1,"z":2}
     prefix = "refinement"
     s  = f"###### Mesh {prefix} ######\n"

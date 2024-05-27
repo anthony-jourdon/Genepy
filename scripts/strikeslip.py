@@ -6,7 +6,7 @@ def model_domain():
   # 3D domain
   O = np.array([0,-250e3,0],    dtype=np.float64) # Origin
   L = np.array([600e3,0,300e3], dtype=np.float64) # Length
-  n = np.array([16,16,16],      dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
+  n = np.array([9,9,9],         dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
   # Create domain object
   Domain = bp.Domain(3,O,L,n)
   return Domain

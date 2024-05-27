@@ -5,29 +5,25 @@ class SPM:
 
 class SPMDiffusion(SPM):
   """
-  class SPMDiffusion
-  ------------------
-  Surface processes: Diffusion computed in pTatin3d as
-    \\nabla \\cdot (k \\nabla h) = 0
-  with k the diffusivity and h the height.
+  .. py:class:: SPMDiffusion(dirichlet_faces:list[str], diffusivity:float=1.0e-6, model_name:str="model_GENE3D")
 
-  Attributes:
-  -----------
-  dirichlet_faces: list[str]
-    List of faces where Dirichlet boundary conditions are applied.
-    Recognized faces are: \"xmin\", \"xmax\", \"zmin\", \"zmax\".
-    At least one face must be passed.
-  diffusivity: float
-    Diffusivity value.
-  model_name: str (optional, default="model_GENE3D")
-    Model name.
+    Class to generate the options for surface processes diffusion in `pTatin3d`_.
+    Surface processes are handled by solving the following diffusion equation:
+    
+    .. math:: 
+      \\nabla \\cdot (k \\nabla h) = 0
+    
+    with :math:`k` the diffusivity and :math:`h` the height.
 
-  Methods:
-  --------
-  sprint_option():
-    Returns the string to be included in the input file.
-  __str__():
-    Returns the string representation of the object.
+    :param dirichlet_faces: List of faces where Dirichlet boundary conditions are applied. 
+                            Possible values are: ``"xmin"``, ``"xmax"``, ``"zmin"``, ``"zmax"``.
+                            At least one is required to ensure uniqueness of the solution.
+    :type dirichlet_faces: list[str]
+    :param diffusivity: Diffusivity value in m\ :sup:`2`.s\ :sup:`-1`. Default is :math:`10^{-6}`.
+    :type diffusivity: float
+    :param model_name: Model name.
+    :type model_name: str
+    :raises ValueError: If an unrecognized face is passed.
   """
   def __init__(self, dirichlet_faces:list[str],
                diffusivity:float=1.0e-6, 

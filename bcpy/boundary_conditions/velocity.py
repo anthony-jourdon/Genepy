@@ -6,43 +6,117 @@ import matplotlib.pyplot as plt
 
 class Velocity(domain.Domain,rotation.Rotation):
   """
-  class Velocity(domain.Domain,rotation.Rotation)
-  ---------------------------------------------------------
-  Class to evaluate symbolic and numeric linear velocity function and its derivatives in space.
+  .. py:class:: Velocity(Domain, u_norm, variation_dir, velocity_type, u_angle=0.0, Rotation=None)
 
-  Attributes:
-  -----------
-  norm   : velocity norm
-  alpha  : angle of the velocity field with the z axis
-  type   : type of velocity field (extension or compression)
-  dir    : direction in which the velocity varies
-  uO     : velocity at the component origin
-  uL     : velocity at the component max value
-  a      : slope of the of the velocity function
-  b      : constant term of the velocity function
-  vertical_evaluated : flag to check if the vertical velocity has been evaluated
+    Class to evaluate symbolic and numeric linear velocity function and its derivatives in space.
+    The velocity field is defined as a linear function of the coordinates. 
+    It can be used for 2D and 3D domains.
+    Given a horizontal velocity field, the vertical velocity is computed by integrating the dot product of the velocity field with the normal vector over the faces of the domain.
+    The class inherits from :py:class:`Domain <bcpy.initial_conditions.domain.Domain>` and :py:class:`Rotation <bcpy.rotation.Rotation>`
 
-  Methods:
-  --------
-  __init__(Domain,u_norm,variation_dir:str,velocity_type:str,u_angle=0.0,Rotation=None) : constructor
-  __str__() : returns a string with the class name and attributes of the class
-  report_symbolic_functions(u,grad_u,uL) : returns a string with the symbolic velocity function, its derivatives and the boundary velocity orientation
-  boundary_vector() : computes the vector components
-  velocity_coefficients_1d(uO,uL,O,L) : computes velocity function coefficients such that u(x) = a*x + b
-  velocity_coefficients() : computes velocity function coefficients such that u(x) = a*x + b for all dimensions
-  linear_velocity_1d(x,a,b) : computes the linear velocity field in 1 direction (scalar valued function) such that u(x) = a*x + b
-  linear_velocity(x) : computes the linear velocity field (vector valued function) such that u(x) = a*x + b
-  evaluate_velocity_symbolic() : evaluates the velocity field in symbolic form returning a vector valued function
-  evaluate_derivatives(u) : evaluates the derivatives of the velocity function in symbolic form returning a matrix of the shape (dim,dim)
-  evaluate_velocity_and_derivatives_symbolic() : evaluates the velocity field and its derivatives in symbolic form returning a vector valued function and a matrix of the shape (dim,dim)
-  evaluate_u_dot_n(u=None) : evaluates the dot product of the velocity field with the normal vector in symbolic form
-  evaluate_int_u_dot_n_faces(u=None) : evaluates the integral of the dot product of the velocity field with the normal vector over the faces
-  evaluate_vertical_velocity_coefficients(u=None) : evaluates the coefficients of the vertical velocity component
-  evaluate_vertical_velocity(y,u=None) : evaluates the vertical velocity component
-  evaluate_velocity_numeric() : evaluates the velocity field in numeric form returning a vector valued function
-  get_velocity_orientation(horizontal=True,normalize=False) : returns the orientation (vector) of the velocity field at the boundary
-  plot_velocity_matplotlib() : plots the velocity field using matplotlib
+    :param Domain Domain: domain in which the velocity field is evaluated
+    :param float u_norm: velocity norm of the vector along boundaries
+    :param str variation_dir: direction in which the velocity varies (``"x"``, ``"y"``, ``"z"``)
+    :param str velocity_type: velocity field orientation, 
+                              ``"extension"`` velocity is directed outward the domain, 
+                              ``"compression"`` velocity is directed inward the domain
+    
+    **Optional**
+    
+    :param float u_angle: angle in radians of the velocity field with the z axis
+    :param Rotation Rotation: Rotation object to rotate the referential
+
+    Examples
+    --------
+    Assuming the class :class:`Domain <bcpy.initial_conditions.domain.Domain>` as been instanciated as ``Domain``
+    
+    **Without rotation** of the referential
+
+    .. code-block:: python
+
+      u_norm  = 1.0              # horizontal velocity norm
+      u_angle = np.deg2rad(45.0) # velocity angle \in [-pi/2, pi/2]. If 0, can be ommited
+      u_dir   = "z"              # direction in which velocity varies
+      u_type  = "extension"      # velocity orientation
+      # Create Velocity instance 
+      Vel = bcpy.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
+    
+    **With rotation** of the referential
+
+    .. code-block::  python
+
+      # Rotation of the referential
+      r_angle = np.deg2rad(-15.0)                   # Rotation angle
+      axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
+      # Create Rotation instance
+      Rotation = bp.Rotation(dim,r_angle,axis)
+      # Create Velocity instance 
+      Vel = bcpy.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
+
+    Attributes
+    ----------
+
+    .. py:attribute:: norm
+      :type: float
+      :canonical: bcpy.boundary_conditions.velocity.Velocity.norm
+
+      Velocity norm
+
+    .. py:attribute:: alpha
+      :type: float
+
+      Velocity angle with the z axis in radians
+    
+    .. py:attribute:: type
+      :type: str
+
+      Type of velocity field (``"extension"``, ``"compression"``)
+
+    .. py:attribute:: dir
+      :type: int
+
+      Direction in which the velocity varies (0, 1, 2)
+    
+    .. py:attribute:: uO
+      :type: numpy.ndarray
+      :canonical: bcpy.boundary_conditions.velocity.Velocity.uO
+
+      Velocity vector :math:`\\mathbf u_O` at :math:`\\mathbf x = \\mathbf O`. Shape ``(dim,)``.
+      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <bcpy.Velocity.boundary_vector>`.
+
+    .. py:attribute:: uL
+      :type: numpy.ndarray
+      :canonical: bcpy.boundary_conditions.velocity.Velocity.uL
+
+      Velocity vector :math:`\\mathbf u_L` at :math:`\\mathbf x = \\mathbf L`. Shape ``(dim,)``.
+      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <bcpy.Velocity.boundary_vector>`.
+    
+    .. py:attribute:: a
+      :type: numpy.ndarray
+      :canonical: bcpy.boundary_conditions.velocity.Velocity.a
+
+      Coefficients in vector form :math:`\\mathbf a` of the linear velocity function 
+      :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`. Shape ``(dim,)``.
+      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <bcpy.Velocity.velocity_coefficients>`.
+
+    .. py:attribute:: b
+      :type: numpy.ndarray
+      :canonical: bcpy.boundary_conditions.velocity.Velocity.b
+
+      Coefficients in vector form :math:`\\mathbf b` of the linear velocity function
+      :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`. Shape ``(dim,)``.
+      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <bcpy.Velocity.velocity_coefficients>`.
+
+    .. py:attribute:: vertical_evaluated
+      :type: bool
+
+      Flag to check if the vertical velocity has been evaluated
+    
+    Methods
+    -------
+
   """
+
   def __init__(self,Domain:domain.Domain,u_norm,variation_dir:str,velocity_type:str,u_angle:float=0.0,Rotation:rotation.Rotation=None) -> None:
     self.norm   = u_norm
     self.alpha  = u_angle
@@ -63,7 +137,6 @@ class Velocity(domain.Domain,rotation.Rotation):
     else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
 
     self.vertical_evaluated = False
-    self.prefix = "bc"
     self.velocity_coefficients()
 
   def __str__(self) -> str:
@@ -94,19 +167,16 @@ class Velocity(domain.Domain,rotation.Rotation):
   def report_symbolic_functions(self,u,grad_u,uL) -> str:
     """
     report_symbolic_functions(self,u,grad_u,uL)
-    ------------------------------------------
-    Returns a string with the symbolic velocity function, its derivatives and the boundary velocity orientation.
-    Can be used with the print() function.
+    Returns a string with the symbolic velocity function, 
+    its derivatives and the boundary velocity orientation.
+    Can be used with print() or written to a file.
 
-    Parameters:
-    -----------
-    u      : vector valued function of the velocity field
-    grad_u : matrix of the derivatives of the velocity field shape (dim,dim)
-    uL     : orientation of the velocity field at the boundary
+    :param numpy.ndarray u: sympy vector valued function of the velocity field
+    :param numpy.ndarray grad_u: sympy matrix of the derivatives of the velocity field shape (dim,dim)
+    :param numpy.ndarray uL: sympy orientation vector of the velocity field at the boundary
 
-    Returns:
-    --------
-    s : string with the symbolic velocity function, its derivatives and the boundary velocity orientation. 
+    :return: string with the symbolic velocity function, its derivatives and the boundary velocity orientation.
+    :rtype: str
     """
     s = f"Symbolic velocity function:\n"
     for i in range(self.dim):
@@ -123,15 +193,21 @@ class Velocity(domain.Domain,rotation.Rotation):
   def boundary_vector(self):
     """
     boundary_vector(self)
-    ---------------------
-    Computes the vector components
-    1D & 2D: only the norm is used
-    3D:      based on the norm and angle with z axis (North-South) 
-    Warning: these values are always positive, special attention is required if different signs are needed
+    Computes the vector horizontal components.
+    1D & 2D: only the norm is used,
+    3D:      based on the norm and angle with z axis (North-South) such that:
 
-    Returns:
-    --------
-    u : boundary velocity, shape (dim,)
+    .. math::
+      u_x &= \\sqrt{||\\mathbf u||^2 - u_z^2} \\\\
+      u_y &= 0 \\\\
+      u_z &= ||\\mathbf u|| \\cos(\\alpha)
+
+    .. warning:: 
+      These values are always positive, special attention is required 
+      if different signs are needed.
+
+    :return: boundary velocity, shape (dim,)
+    :rtype: numpy.ndarray
     """
     u = np.zeros(shape=(self.dim), dtype=np.float64)
     if self.dim == 1 or self.dim == 2: 
@@ -143,23 +219,24 @@ class Velocity(domain.Domain,rotation.Rotation):
   
   def velocity_coefficients_1d(self,uO,uL,O,L):
     """
-    velocity_coefficients_1d(self)
-    ------------------------------
-    computes velocity function coefficients such that
-      u(x) = a*x + b
-    for a given dimension
+    velocity_coefficients_1d(self,uO,uL,O,L)
+    computes velocity function coefficients :math:`a` and :math:`b` of the linear function 
+    :math:`u(x) = ax + b` for a given direction :math:`x \\in [O,L]` such that:
 
-    Parameters:
-    -----------
-    uO : velocity at the component origin
-    uL : velocity at the component max value
-    O  : origin of the component
-    L  : max value of the component
+    .. math::
+      a &= \\frac{u_L - u_O}{L - O} \\\\
+      b &= -aL + u_L
+    
+    with :math:`u_O` the velocity at :math:`x = O` 
+    and :math:`u_L` the velocity at :math:`x = L` .
 
-    Returns:
-    --------
-    a : slope of the component of the velocity
-    b : constant of the component of the velocity
+    :param float uO: velocity at the origin of the direction
+    :param float uL: velocity at the max value of the direction
+    :param float O: origin of the direction
+    :param float L: max value of the direction
+
+    :return: **a**: slope of the component of the velocity, 
+             **b**: constant of the component of the velocity
     """
     a = (uL - uO) / (L - O)
     b = -a*L + uL
@@ -168,10 +245,18 @@ class Velocity(domain.Domain,rotation.Rotation):
   def velocity_coefficients(self):
     """ 
     velocity_coefficients(self)
-    ---------------------------
-    computes velocity function coefficients such that
-      u(x) = a*x + b
-    for all dimensions
+    For the vector valued velocity function :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`,
+    computes coefficients :math:`\\mathbf a` and :math:`\\mathbf b` such that:
+
+    .. math:: 
+      \\mathbf a &= \\frac{\\mathbf u_L - \\mathbf u_O}{\\mathbf L - \\mathbf O} \\\\
+      \\mathbf b &= -\\mathbf a \\mathbf L + \\mathbf u_L
+    
+    with :math:`\\mathbf u_O` and :math:`\\mathbf u_L` computed by 
+    :py:meth:`boundary_vector() <bcpy.boundary_conditions.velocity.Velocity.boundary_vector>` 
+    and :math:`\\mathbf O` and :math:`\\mathbf L` the origin and max values of the domain.
+    Each component of the velocity field is computed by calling 
+    :py:meth:`velocity_coefficients_1d() <bcpy.boundary_conditions.velocity.Velocity.velocity_coefficients_1d>`.
     """
     self.a = np.zeros(shape=(self.dim), dtype=np.float64)
     self.b = np.zeros(shape=(self.dim), dtype=np.float64)
@@ -191,37 +276,30 @@ class Velocity(domain.Domain,rotation.Rotation):
   
   def linear_velocity_1d(self,x,a,b):
     """
-    linear_velocity_1d(self)
-    ------------------------
-    computes the linear velocity field in 1 direction (scalar valued function) such that
-      u(x) = a*x + b
+    linear_velocity_1d(self,x,a,b)
+    Computes the linear velocity field in 1 direction (scalar valued function) 
+    such that :math:`u(x) = ax + b` for the given direction :math:`x` and 
+    coefficients :math:`a` and :math:`b` computed by the method 
+    :meth:`velocity_coefficients_1d`.
 
-    Parameters:
-    -----------
-    x : coordinates of the direction in which the velocity varies
-    a : slope of the required component of the velocity
-    b : constant of the required component of the velocity
+    :param x: coordinate of the direction in which the velocity varies
+    :param a: slope of the component of the velocity
+    :param b: constant of the component of the velocity
 
-    Returns:
-    --------
-    u : scalar velocity function
+    :return: scalar valued function of the velocity field
     """
     return a*x + b
   
   def linear_velocity(self,x):
     """
-    linear_velocity(self)
-    ---------------------
-    computes the linear velocity field (vector valued function) such that
-      u(x) = a*x + b
+    linear_velocity(self,x)
+    computes the vector valued linear velocity function
+    such that :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`.
+    Calls the method :meth:`linear_velocity_1d` for each direction.
 
-    Parameters:
-    -----------
-    x : coordinates of the direction in which the velocity varies
+    :param x: coordinates of the direction in which the velocity varies
 
-    Returns:
-    --------
-    u : vector velocity function
+    :return: vector valued velocity function
     """
     u = []
     for d in range(self.dim):
@@ -231,10 +309,10 @@ class Velocity(domain.Domain,rotation.Rotation):
   def evaluate_velocity_symbolic(self):
     """
     evaluate_velocity_symbolic(self)
-    --------------------------------
-    Evaluates the velocity field in symbolic form returning a vector valued function of the form
-      u (x,y,z) = a*x + b*y + c*z + d
-    and shape (1,dim)
+    Evaluates the velocity field in symbolic form returning 
+    a vector valued function of the form :math:`\\mathbf u (x,y,z) = \\mathbf a x + \\mathbf b y + \\mathbf c z + \\mathbf d`
+    and shape ``(1,dim)``.
+    Calls the method :meth:`linear_velocity` to evaluate the velocity field.
     """
     # create a numpy array of shape (1,dim) with the symbolic coordinates
     coor = np.array([[*self.sym_coor]], dtype='object')
@@ -251,18 +329,16 @@ class Velocity(domain.Domain,rotation.Rotation):
   def evaluate_derivatives(self,u):
     """
     evaluate_derivatives(self,u)
-    ----------------------------
     Evaluates the derivatives of the velocity function in symbolic form 
-    returning a matrix of the shape (dim,dim) such that:
-      grad_u[i,j] = du_i/dx_j
-    
-    Parameters:
-    -----------
-    u : vector valued function of the velocity field
+    returning a matrix of the shape ``(dim,dim)`` such that:
+      
+    .. math:: 
+      \\nabla u_{ij} = \\frac{\\partial u_i}{\\partial x_j}
 
-    Returns:
-    --------
-    grad_u : matrix of the derivatives of the velocity field shape (dim,dim)
+    
+    :param u: vector valued function of the velocity field
+
+    :return: **grad_u**: matrix of the derivatives of the velocity field shape ``(dim,dim)``
     """
     grad_u = np.zeros(shape=(self.dim,self.dim), dtype='object')
     for i in range(self.dim):
@@ -273,17 +349,11 @@ class Velocity(domain.Domain,rotation.Rotation):
   def evaluate_velocity_and_derivatives_symbolic(self):
     """
     evaluate_velocity_and_derivatives_symbolic(self)
-    ------------------------------------------------
-    Evaluates the velocity field and its derivatives in symbolic form 
-    returning a vector valued function of the form
-      u (x,y,z) = a*x + b*y + c*z + d
-    and a matrix of the shape (dim,dim) such that:
-      grad_u[i,j] = du_i/dx_j
-
-    Returns:
-    --------
-    u : vector valued function of the velocity field
-    grad_u : matrix of the derivatives of the velocity field shape (dim,dim)
+    Calls the methods 
+    :meth:`evaluate_velocity_symbolic` 
+    and 
+    :meth:`evaluate_derivatives` 
+    to evaluate the velocity field and its derivatives in symbolic form
     """
     u      = self.evaluate_velocity_symbolic()
     u[0,1] = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
@@ -293,17 +363,16 @@ class Velocity(domain.Domain,rotation.Rotation):
   def evaluate_u_dot_n(self,u=None):
     """
     evaluate_u_dot_n(self,u=None)
-    Evaluates the dot product of the velocity field with the normal vector in symbolic form such that
-      u.n = n_x*u_x + n_y*u_y + n_z*u_z
+    Evaluates the dot product of the velocity field with the normal vector in symbolic form 
+    such that
+
+    .. math:: 
+      \\mathbf u \\cdot \\mathbf n = \\sum_{i=1}^{dim} u_i n_i
     
-    Parameters:
-    -----------
-    (Optional)
-    u : vector valued function of the velocity field
+    :param u: **(Optional)**, vector valued function of the velocity field.
+              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
     
-    Returns:
-    --------
-    u_dot_n : dot product of the velocity field with the normal vector
+    :return: **u_dot_n**: dot product of the velocity field with the normal vector
     """
     nmap = {1:'n_x',2:'n_x n_y',3:'n_x n_y n_z'}
     n = sp.symbols(nmap[self.dim])
@@ -316,6 +385,33 @@ class Velocity(domain.Domain,rotation.Rotation):
     return u_dot_n
 
   def evaluate_int_u_dot_n_faces(self,u=None):
+    """
+    evaluate_int_u_dot_n_faces(self,u=None)
+    Evaluates the integral of the dot product of the velocity field 
+    with the normal vector over the faces of the domain such that
+
+    .. math::
+      I = \\int_S \\mathbf u \\cdot \\mathbf n \\, dS
+
+    The integral is computed over each face of the domain and stored in a dictionary:
+
+    .. code-block:: python
+      
+        int_u_dot_n = {
+          'xmin': int_u_dot_n_dxmin,
+          'xmax': int_u_dot_n_dxmax,
+          'ymin': int_u_dot_n_dymin,
+          'ymax': int_u_dot_n_dymax,
+          'zmin': int_u_dot_n_dzmin,
+          'zmax': int_u_dot_n_dzmax
+        }
+    
+    :param u: **(Optional)**, vector valued function of the velocity field.
+              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
+
+    :return: **int_u_dot_n**: dictionary with the integral of the dot product of the velocity field with the normal vector over the faces of the domain
+    :rtype: dict
+    """
     # evaluate symbolic u.n
     u_dot_n = self.evaluate_u_dot_n(u=u)
     directions = ["x","y","z"]
@@ -363,6 +459,26 @@ class Velocity(domain.Domain,rotation.Rotation):
     return int_u_dot_n
   
   def evaluate_vertical_velocity_coefficients(self,u=None):
+    """
+    evaluate_vertical_velocity_coefficients(self,u=None)
+    Evaluates the coefficients of the vertical component of the velocity function
+    :math:`a` and :math:`b` such that :math:`u_y(y) = a y + b`
+    To evaluate the coefficients, the following boundary conditions are used
+
+    .. math::
+
+      u_y(L_y) &= 0 \\\\
+      u_y(O_y) &= \\frac{1}{S_{xz}} \\sum_f \\int_S \\mathbf u \\cdot \\mathbf n \\, dS \\\\
+
+    where :math:`S_{xz}` is the surface of the bottom face of the domain, 
+    :math:`O_y` and :math:`L_y` are the coordinates of the origin and max of the :math:`y` direction.
+
+    :param u: **(Optional)**, vector valued function of the velocity field.
+              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
+    
+    :return: **a**: slope of the vertical component of the velocity,
+             **b**: constant of the vertical component of the velocity
+    """
     if u is None:
       u = self.evaluate_velocity_symbolic()
     int_u_dot_n = self.evaluate_int_u_dot_n_faces(u=u)
@@ -379,12 +495,26 @@ class Velocity(domain.Domain,rotation.Rotation):
     return
 
   def evaluate_vertical_velocity(self,y,u=None):
+    """
+    :meth:`evaluate_vertical_velocity(self,y,u=None)`
+    Evaluates the vertical component of the velocity field
+
+    :param y: coordinate of the vertical direction
+    :param u: **(Optional)**, vector valued function of the velocity field.
+              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
+
+    :return: vertical component of the velocity field
+    """
     if self.vertical_evaluated == False:
       self.evaluate_vertical_velocity_coefficients(u=u)
     uy = self.linear_velocity_1d(y,self.a[1],self.b[1])
     return uy
   
   def evaluate_velocity_numeric(self):
+    """
+    evaluate_velocity_numeric(self)
+    Evaluates the velocity field numerically
+    """
     coor = self.shape_coor()
     # rotate referential
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
@@ -398,19 +528,15 @@ class Velocity(domain.Domain,rotation.Rotation):
     u_R[:,1] = self.evaluate_vertical_velocity(coor[:,1])
     return u_R
   
-  def get_velocity_orientation(self,horizontal=True,normalize=False):
+  def get_velocity_orientation(self,horizontal=True,normalize=True):
     """
     get_velocity_orientation(self,horizontal=True,normalize=False)
-    Returns the orientation (vector) of the velocity field at the boundary
+    Returns the orientation vector of the velocity field at the boundary
 
-    Parameters:
-    -----------
-    horizontal : if True, only the horizontal components are returned
-    normalize  : if True, the vector is normalized
+    :param bool horizontal: if True, only the horizontal components are returned (default: True)
+    :param bool normalize:  if True, the vector is normalized (default: True)
 
-    Returns:
-    --------
-    uL : orientation of the velocity field at the boundary
+    :return: **uL**: orientation of the velocity field at the boundary
     """
     if horizontal == True:
       uL = np.zeros(shape=(self.dim), dtype=np.float64)

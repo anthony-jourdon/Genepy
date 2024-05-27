@@ -5,11 +5,65 @@ class Softening(MaterialConstants):
     MaterialConstants.__init__(self,model_name,region)
 
 class SofteningNone(Softening):
+  """
+  .. py:class:: SofteningNone(model_name:str="model_GENE3D", region:int=0)
+
+    Class to apply no softening to a region of the model.
+    The given region will not have any softening.
+
+    :param str model_name: Name of the model to which the softening is applied. Default is "model_GENE3D".
+    :param int region: Region number to which the softening is applied. Default is 0.
+
+  """
   def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:
     self.softening_type = 0
     Softening.__init__(self,model_name,region)
 
 class SofteningLinear(Softening):
+  """
+  .. py:class:: SofteningLinear(strain_min:float, strain_max:float, model_name:str='model_GENE3D', region:int=0)
+
+    Class to apply linear softening to a region of the model.
+    Only applies to the plastic deformation.
+
+    :param float strain_min: Minimum strain value (:math:`\\epsilon_{min}`).
+    :param float strain_max: Maximum strain value (:math:`\\epsilon_{max}`).
+    :param str model_name: Name of the model to which the softening is applied. Default is "model_GENE3D".
+    :param int region: Region number to which the softening is applied. Default is 0.
+  
+    .. note:: 
+      The linear softening is defined by the minimum and maximum plastic strain values and influences the friction and/or the cohesion.
+      For :math:`t` the variable to be softened, the softening is given by:
+      
+      .. math::
+        t = t_0 - (t_0 - t_{\\infty}) \\frac{\\epsilon_p - \\epsilon_{min}}{\\epsilon_{max} - \\epsilon_{min}}
+      
+      where :math:`t_0` is the initial value of the variable, :math:`t_{\\infty}` is the final value of the variable, and :math:`\\epsilon_p` is the plastic strain.
+  
+    Attributes
+    ----------
+
+    .. py:attribute:: eps_min
+      :type: float
+        
+        Minimum strain value (:math:`\\epsilon_{min}`).
+
+    .. py:attribute:: eps_max
+      :type: float
+        
+        Maximum strain value (:math:`\\epsilon_{max}`).
+
+    .. py:attribute:: model_name
+      :type: str
+        
+        Name of the model to which the softening is applied.
+
+    .. py:attribute:: region
+      :type: int
+        
+        Region number to which the softening is applied.
+  
+  """
   def __init__(self, strain_min:float, strain_max:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.softening_type = 1
     self.eps_min        = strain_min
@@ -24,6 +78,50 @@ class SofteningLinear(Softening):
     return s
 
 class SofteningExponential(Softening):
+  """
+  .. py:class:: SofteningExponential(strain_min:float, strain_fold:float, model_name:str='model_GENE3D', region:int=0)
+
+    Class to apply exponential softening to a region of the model.
+    Only applies to the plastic deformation.
+
+    :param float strain_min: Minimum strain value (:math:`\\epsilon_{min}`).
+    :param float strain_fold: Fold strain value (:math:`\\epsilon_{fold}`).
+    :param str model_name: Name of the model to which the softening is applied. Default is "model_GENE3D".
+    :param int region: Region number to which the softening is applied. Default is 0.
+
+    
+    .. note:: 
+      The exponential softening is defined by the minimum and a fold plastic strain values and influences the friction and/or the cohesion.
+      For :math:`t` the variable to be softened, the softening is given by:
+        
+      .. math:: 
+        t = t_0 - (t_0 - t_{\\infty}) \\exp \\left(-\\frac{\\epsilon_p}{\\epsilon_{fold}} \\right)
+      
+      where :math:`t_0` is the initial value of the variable, :math:`t_{\\infty}` is the final value of the variable, and :math:`\\epsilon_p` is the plastic strain.
+
+    Attributes
+    ----------
+
+    .. py:attribute:: eps_min
+      :type: float
+        
+        Minimum strain value (\\epsilon_{min}).
+
+    .. py:attribute:: eps_fold
+      :type: float
+        
+        Fold strain value (\\epsilon_{fold}).
+
+    .. py:attribute:: model_name
+      :type: str
+        
+        Name of the model to which the softening is applied.
+
+    .. py:attribute:: region
+      :type: int
+
+        Region number to which the softening is applied.
+  """
   def __init__(self, strain_min:float, strain_fold:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.softening_type = 2
     self.eps_min        = strain_min

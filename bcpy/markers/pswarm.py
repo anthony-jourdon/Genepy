@@ -3,31 +3,24 @@ from bcpy import Markers
 
 class Pswarm(Markers):
   """
-  class Pswarm
-  ------------
-  Class to define passive swarms of markers in pTatin3d.
+  .. py:class:: Pswarm(layout:tuple[int,int,int]=(2,2,2),pressure:bool=False,temperature:bool=False,model_name:str="model_GENE3D")
 
-  Attributes:
-  -----------
-  layout: tuple[int, int, int]
-    Number of markers per element in each direction.
-    Default: (2,2,2)
-  pressure: bool
-    Activate pressure tracking.
-    Default: False
-  temperature: bool
-    Activate temperature tracking.
-    Default: False
-  model_name: str
-    Name of the model.
-    Default: "model_GENE3D"
-  
-  Methods:
-  --------
-  sprint_option():
-    Returns the string to be included in the input file.
-  __str__():
-    Returns the string representation of the object.
+    Class to define passive swarms of markers in `pTatin3d`_.
+    It is the parent class of the different types of passive marker layout:
+
+    - :py:class:`PswarmFillDomain`
+    - :py:class:`PswarmFillDomainWithinBoundingBox`
+    - :py:class:`PswarmFillBox`
+    - :py:class:`PswarmFromUserList`
+
+    :param layout: Number of markers per element in each direction. Default is (2,2,2).
+    :type layout: tuple[int,int,int]
+    :param pressure: Activate pressure tracking. Default is False.
+    :type pressure: bool
+    :param temperature: Activate temperature tracking. Default is False.
+    :type temperature: bool
+    :param model_name: Name of the model. Default is "model_GENE3D".
+    :type model_name: str
   """
   def __init__(self, layout:tuple[int, int, int]=(2,2,2), 
                pressure:bool=False,
@@ -66,32 +59,19 @@ class Pswarm(Markers):
     
 class PswarmFillDomain(Pswarm):
   """
-  class PswarmFillDomain
-  ----------------------
-  Class to define passive swarms of markers in pTatin3d.
-  PsawrmFillDomain generates options for a passive swarm that fills the entire physical domain.
+  .. py:class:: PswarmFillDomain(layout:tuple[int,int,int]=(2,2,2),pressure:bool=False,temperature:bool=False,model_name:str="model_GENE3D")
 
-  Attributes:
-  -----------
-  layout: tuple[int, int, int]
-    Number of markers per element in each direction.
-    Default: (2,2,2)
-  pressure: bool
-    Activate pressure tracking.
-    Default: False
-  temperature: bool
-    Activate temperature tracking.
-    Default: False
-  model_name: str
-    Name of the model.
-    Default: "model_GENE3D"
-  
-  Methods:
-  --------
-  sprint_option():
-    Returns the string to be included in the input file.
-  __str__():
-    Returns the string representation of the object.
+    Class to define passive swarms of markers in `pTatin3d`_.
+    Generates options for a passive swarm that fills the entire physical domain.
+
+    :param layout: Number of markers per element in each direction. Default is (2,2,2).
+    :type layout: tuple[int,int,int]
+    :param pressure: Activate pressure tracking. Default is False.
+    :type pressure: bool
+    :param temperature: Activate temperature tracking. Default is False.
+    :type temperature: bool
+    :param model_name: Name of the model. Default is "model_GENE3D".
+    :type model_name: str
   """
   def __init__(self, layout:tuple[int, int, int]=(2,2,2), 
                pressure:bool=False,
@@ -110,6 +90,25 @@ class PswarmFillDomain(Pswarm):
     return s
   
 class PswarmFillDomainWithinBoundingBox(Pswarm):
+  """
+  .. py:class:: PswamFillDomainWithinBoundingBox(minCoord:tuple[float,float,float],maxCoord:tuple[float,float,float],layout:tuple[int,int,int]=(2,2,2),pressure:bool=False,temperature:bool=False,model_name:str="model_GENE3D")
+
+    Class to define passive swarms of markers in `pTatin3d`_.
+    Generates options for a passive swarm that fills the physical domain within a given bounding box.
+
+    :param minCoord: Minimum coordinates of the bounding box.
+    :type minCoord: tuple[float,float,float]
+    :param maxCoord: Maximum coordinates of the bounding box.
+    :type maxCoord: tuple[float,float,float]
+    :param layout: Number of markers per element in each direction. Default is (2,2,2).
+    :type layout: tuple[int,int,int]
+    :param pressure: Activate pressure tracking. Default is False.
+    :type pressure: bool
+    :param temperature: Activate temperature tracking. Default is False.
+    :type temperature: bool
+    :param model_name: Name of the model. Default is "model_GENE3D".
+    :type model_name: str
+  """
   def __init__(self, minCoord:tuple[float,float,float],
                maxCoord:tuple[float,float,float], 
                layout:tuple[int, int, int]=(2,2,2), 
@@ -137,6 +136,29 @@ class PswarmFillDomainWithinBoundingBox(Pswarm):
     return s
 
 class PswarmFillBox(Pswarm):
+  """
+  .. py:class:: PswarmFillBox(minCoord:tuple[float,float,float],maxCoord:tuple[float,float,float],layout:tuple[int,int,int]=(2,2,2),pressure:bool=False,temperature:bool=False,model_name:str="model_GENE3D")
+
+    Class to define passive swarms of markers in `pTatin3d`_.
+    Generates options for a passive swarm that fills a given bounding box with a specified marker resolution.
+
+    .. warning:: 
+      Opposed to the other classes, the layout is not the number of markers 
+      per element in each direction but the total number of markers in each direction.
+
+    :param minCoord: Minimum coordinates of the bounding box.
+    :type minCoord: tuple[float,float,float]
+    :param maxCoord: Maximum coordinates of the bounding box.
+    :type maxCoord: tuple[float,float,float]
+    :param layout: Number of markers in each direction. Default is (2,2,2).
+    :type layout: tuple[int,int,int]
+    :param pressure: Activate pressure tracking. Default is False.
+    :type pressure: bool
+    :param temperature: Activate temperature tracking. Default is False.
+    :type temperature: bool
+    :param model_name: Name of the model. Default is "model_GENE3D".
+    :type model_name: str
+  """
   def __init__(self, minCoord:tuple[float,float,float],
                maxCoord:tuple[float,float,float], 
                layout:tuple[int, int, int] = (2, 2, 2), 
@@ -164,11 +186,30 @@ class PswarmFillBox(Pswarm):
     return s
 
 class PswarmFromUserList(Pswarm):
+  """
+  .. py:class:: PswarmFromUserList(markers_coor:np.ndarray,layout:tuple[int,int,int]=(2,2,2),pressure:bool=False,temperature:bool=False,model_name:str="model_GENE3D")
+
+    Class to define passive swarms of markers in `pTatin3d`_.
+    Generates options for a list of passive tracers. 
+    
+    .. note:: 
+      This layout should be used only when a small number of tracers are required
+      and that their initial coordinates are known.
+    
+    :param markers_coor: Coordinates of the markers.
+    :type markers_coor: np.ndarray
+    :param pressure: Activate pressure tracking. Default is False.
+    :type pressure: bool
+    :param temperature: Activate temperature tracking. Default is False.
+    :type temperature: bool
+    :param model_name: Name of the model. Default is "model_GENE3D".
+    :type model_name: str
+  """
   def __init__(self, markers_coor:np.ndarray, 
-               layout: tuple[int, int, int] = (2, 2, 2), 
                pressure: bool = False, 
                temperature: bool = False, 
                model_name: str = "model_GENE3D") -> None:
+    layout: tuple[int, int, int] = (2, 2, 2) # not used for this type of layout
     Pswarm.__init__(self,layout,pressure,temperature,model_name)
     # coor should be of the shape (npoints,3)
     self.coord_layout = 3

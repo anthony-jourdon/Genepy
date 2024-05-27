@@ -6,6 +6,72 @@ from bcpy import InitialConditions
 import numpy as np
 
 class Model:
+  """
+  .. py:class:: Model(model_ics:InitialConditions, model_regions:ModelRegions, model_bcs:ModelBCs, model_name:str="model_GENE3D", **kwargs)
+
+    Class to define the options for `pTatin3d`_ model.
+
+    :param InitialConditions model_ics: Initial conditions of the model.
+    :param ModelRegions model_regions: Material parameters of the model.
+    :param ModelBCs model_bcs: Boundary conditions of the model.
+    :param str model_name: Name of the model. Default is ``"model_GENE3D"``.
+    :param kwargs: Additional arguments for the model.
+
+    **Keyword arguments (optional)**
+
+    :param int output_frequency: Frequency of results output. Default is ``25``.
+    :param str output_path: Path of the output directory. Default is ``"output"``.
+    :param int checkpoint_ncpumins: Checkpoint every n cpu minutes. Default is ``230``.
+    :param int checkpoint_frequency: Checkpoint every n time step. Default is ``25``.
+    :param float length_bar: Length scaling. Default is ``1.0e5`` m.
+    :param float viscosity_bar: Viscosity scaling. Default is ``1.0e22`` Pa.s.
+    :param float velocity_bar: Velocity scaling. Default is ``1.0e-10`` m.s\ :sup`-1`.
+    :param int nsteps: Max number of time steps. Default is ``100000``.
+    :param float dtmin: Min time step. Default is ``1.0e-6``.
+    :param float dtmax: Max time step. Default is ``0.5``.
+    :param float max_surface_displacement: Max surface displacement per time step. Default is ``500.0`` m.
+    :param MarkersManagement markers: Markers layout and population control options.
+    :param float viscosity_min: Minimum viscosity value. Default is ``1.e+19`` Pa.s.
+    :param float viscosity_max: Maximum viscosity value. Default is ``1.e+25`` Pa.s.
+    :param SPMDiffusion spm: Surface processes SPMDiffusion class instance.
+    :param Pswarm pswarm: Passive tracers class instance.
+    :param int mpi_ranks: Number of MPI ranks, it is used to define the solver options. 
+                          However, only ``1`` and ``1024`` MPI ranks are actually supported.
+                          Any value other than ``1`` will set the solver options for ``1024`` MPI ranks.
+                          Default is ``1``. The solver options for ``1024`` MPI ranks 
+                          may not be the best for a particular problem.
+                          
+    Attributes
+    ----------
+
+    .. py:attribute:: name
+      :type: str
+
+        Name of the model. Default is ``"model_GENE3D"``.
+
+    .. py:attribute:: regions
+      :type: ModelRegions
+
+        Material parameters of the model.
+
+    .. py:attribute:: bcs
+      :type: ModelBCs
+
+        Boundary conditions of the model.
+
+    .. py:attribute:: ics
+      :type: InitialConditions
+
+        Initial conditions of the model.
+
+    .. py:attribute:: options
+      :type: str
+
+        Options for the model.
+
+    Example
+
+  """
   def __init__(self, model_ics:InitialConditions, 
                model_regions:ModelRegions, 
                model_bcs:ModelBCs,
@@ -50,6 +116,13 @@ class Model:
     viscosity_bar = kwargs.get("viscosity_bar", 1.0e22)
     velocity_bar  = kwargs.get("velocity_bar",  1.0e-10)
     self.scaling(length_bar, viscosity_bar, velocity_bar)
+
+    # time stepping options
+    nsteps = kwargs.get("nsteps", 100000)
+    dtmin  = kwargs.get("dtmin", 1.0e-6)
+    dtmax  = kwargs.get("dtmax", 0.5)
+    max_surface_displacement = kwargs.get("max_surface_displacement", 500.0) / length_bar
+    self.time_stepping(nsteps, dtmin, dtmax, max_surface_displacement)
     
     # passive swarm options
     if "pswarm" in kwargs:
@@ -117,6 +190,14 @@ class Model:
     self.options += f"-{self.name}_{prefix}_velocity {velocity_bar} # velocity scaling\n"
     return
   
+  def time_stepping(self, nsteps:int, dtmin:float, dtmax:float, max_surface_displacement:float) -> None:
+    self.options += "########### Time Stepping ###########\n"
+    self.options += f"-nsteps {nsteps} # max number of time steps\n"
+    self.options += f"-dt_min {dtmin} # min time step\n"
+    self.options += f"-dt_max {dtmax} # max time step\n"
+    self.options += f"-dt_max_surface_displacement {max_surface_displacement} # max surface displacement per time step\n"
+    return
+
   def solvers_1MPIrank(self) -> None:
     self.options += f"-{self.name}_output_markers\n"
     self.options += f"-{self.name}_bc_debug\n"

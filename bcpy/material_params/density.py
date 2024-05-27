@@ -5,6 +5,37 @@ class Density(MaterialConstants):
     MaterialConstants.__init__(self,model_name,region)
 
 class DensityConstant(Density):
+  """
+  .. py:class:: DensityConstant(density:float, model_name:str="model_GENE3D", region:int=0)
+
+    Class to apply a constant density to a region of the model.
+
+    :param float density: Constant density value in kg.m\ :sup:`-3` to be applied to the region.
+    :param str model_name: Name of the model to which the density is applied. Default is ``"model_GENE3D"``.
+    :param int region: Region number to which the density is applied. Default is 0.
+
+    .. note::
+      The density is given by:
+        :math:`\\rho(p,T) = \\rho_0`
+
+    Attributes
+    ----------
+    
+    .. py:attribute:: density
+      :type: float
+
+        Constant density value (:math:`\\rho_0`) in kg.m\ :sup:`-3` to be applied to the region.
+    
+    .. py:attribute:: model_name
+      :type: str
+
+        Name of the model to which the density is applied. Default is "model_GENE3D"
+
+    .. py:attribute:: region
+      :type: int
+
+        Region number to which the density is applied. Default is 0.
+  """
   def __init__(self, density:float, model_name:str="model_GENE3D", region:int=0) -> None:
     self.density_type = 0
     self.density      = density
@@ -17,6 +48,49 @@ class DensityConstant(Density):
     return s
   
 class DensityBoussinesq(Density):
+  """
+  .. py:class:: DensityBoussinesq(density:float, thermal_expansion:float=0.0, compressibility:float=0.0, model_name:str="model_GENE3D", region:int=0)
+
+    Class to apply a density using the Boussinesq approximation to a region of the model.
+
+    :param float density: Reference density value in kg.m\ :sup:`-3` (:math:`\\rho_0`).
+    :param float thermal_expansion: Thermal expansion coefficient in K\ :sup:`-1` (:math:`\\alpha`).
+    :param float compressibility: Compressibility coefficient in Pa\ :sup:`-1` (:math:`\\beta`).
+    :param str model_name: Name of the model to which the density is applied. Default is "model_GENE3D".
+    :param int region: Region number to which the density is applied. Default is 0.
+
+    .. note::
+      The density is given by:
+        :math:`\\rho(p,T) = \\rho_0 (1 - \\alpha T + \\beta p)`
+
+    Attributes
+    ----------
+
+    .. py:attribute:: density
+      :type: float
+
+        Reference density value in kg.m\ :sup:`-3` (:math:`\\rho_0`).
+
+    .. py:attribute:: thermal_expansion
+      :type: float
+
+        Thermal expansion coefficient in K\ :sup:`-1` (:math:`\\alpha`).
+
+    .. py:attribute:: compressibility
+      :type: float
+
+        Compressibility coefficient in Pa\ :sup:`-1` (:math:`\\beta`).
+
+    .. py:attribute:: model_name
+      :type: str
+
+        Name of the model to which the density is applied. Default is "model_GENE3D"
+
+    .. py:attribute:: region
+      :type: int
+
+        Region number to which the density is applied. Default is 0.
+  """
   def __init__(self, density:float, thermal_expansion:float=0.0, compressibility:float=0.0, model_name:str="model_GENE3D", region:int=0) -> None:
     self.density_type     = 1
     self.density          = density
@@ -34,6 +108,39 @@ class DensityBoussinesq(Density):
     return s
 
 class DensityTable(Density):
+  """
+  .. py:class:: DensityTable(density:float, map:str, model_name:str="model_GENE3D", region:int=0)
+
+    Class to apply a density read from a thermodynamic table to a region of the model.
+
+    :param float density: Density value in kg.m\ :sup:`-3` in case the map does not contain the :math:`p,T` conditions.
+    :param str map: Name of the file containing the density map.
+    :param str model_name: Name of the model to which the density is applied. Default is "model_GENE3D".
+    :param int region: Region number to which the density is applied. Default is 0.
+
+    Attributes
+    ----------
+
+    .. py:attribute:: density
+      :type: float
+
+        Density value in kg.m\ :sup:`-3` in case the map does not contain the :math:`p,T` conditions.
+
+    .. py:attribute:: map
+      :type: str
+
+        Name of the file containing the density map.
+
+    .. py:attribute:: model_name
+      :type: str
+
+        Name of the model to which the density is applied. Default is "model_GENE3D"
+
+    .. py:attribute:: region
+      :type: int
+
+        Region number to which the density is applied. Default is 0.
+  """
   def __init__(self, density:float, map:str, model_name:str="model_GENE3D", region:int=0) -> None:
     self.density_type = 2
     self.density      = density
@@ -47,19 +154,3 @@ class DensityTable(Density):
     s += f'\tDensity: {self.density}\n'
     s += f'\tMap:     {self.map}\n'
     return s
-
-def test():
-  region = 0
-  dt = DensityConstant("model_GENE3D",region,2700.0)
-  region = 1
-  db = DensityBoussinesq("model_GENE3D",region,2900.0,3e-5,1e-11)
-  region = 2
-  dtb = DensityTable("model_GENE3D",region,3300.0,"density_map.txt")
-
-  opt  = dt.sprint_option()
-  opt += db.sprint_option()
-  opt += dtb.sprint_option()
-  print(opt)
-
-if __name__ == "__main__":
-  test()

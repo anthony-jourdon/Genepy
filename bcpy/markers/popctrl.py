@@ -4,32 +4,20 @@ class Markers:
     
 class MarkersManagement(Markers):
   """
-  class MarkersManagement(Markers)
-  --------------------------------
-  MarkersManagement class is used to generate the options to manage the lagrangian markers in pTatin3d model.
+  .. py:class:: MarkersManagement(layout:tuple[int,int,int]=(8,8,8),popctrl_faces:tuple[int,...]=(0,1,4,5),popctrl_np_lower:int=8,popctrl_np_upper:int=128,popctrl_layout:tuple[int,int,int]=(2,2,2))
 
-  Attributes:
-  -----------
-  layout: tuple[int,int,int]
-    Number of markers per element in each direction.
-    Default: (8,8,8)
-  popctrl_faces: tuple[int,...]
-    Faces where markers are injected and not cleaned as long as they belong to an element connected to the face.
-    Default: (0,1,4,5) -> east, west, front, back
-  popctrl_np_lower: int
-    Minimum number of markers per element.
-    Default: 8
-  popctrl_np_upper: int
-    Maximum number of markers per element.
-    Default: 128
-  popctrl_layout: tuple[int,int,int]
-    Number of markers injected in each direction.
-    Default: (2,2,2)
-  
-  Methods:
-  --------
-  sprint_option():
-    Returns the string to be included in the input file.
+    Class to manage the lagrangian markers in `pTatin3d`_ model.
+
+    :param layout: Number of markers per element in each direction. Default is (8,8,8).
+    :type layout: tuple[int,int,int]
+    :param popctrl_faces: Faces where markers are injected and not cleaned as long as they belong to an element connected to the face. Default is (0,1,4,5).
+    :type popctrl_faces: tuple[int,...]
+    :param popctrl_np_lower: Minimum number of markers per element. Default is 8.
+    :type popctrl_np_lower: int
+    :param popctrl_np_upper: Maximum number of markers per element. Default is 128.
+    :type popctrl_np_upper: int
+    :param popctrl_layout: Number of markers injected in each direction. Default is (2,2,2).
+    :type popctrl_layout: tuple[int,int,int]
   """
   def __init__(self,layout:tuple[int,int,int]=(8,8,8),
                popctrl_faces:tuple[int,...]=(0,1,4,5),

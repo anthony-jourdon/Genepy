@@ -1,12 +1,13 @@
 # Boundary conditions pre-processing
 ## Presentation
-`bcpy` is a python module designed to evaluate symbolic (mathematic) expression to build analytical velocity functions varying in space and time.
-
-Its first goal is to be used as a pre-processing tool to get boundary conditions for long-term geodynamic thermo-mechanical models, in particular [pTatin3d](https://bitbucket.org/dmay/ptatin-total-dev).
+`bcpy` is a python module designed to evaluate symbolic (mathematic) expression to build analytical velocity functions varying in space and time, define the rheological parameters of a long-term geodynamic model, and generate input file for [pTatin3d](https://github.com/laetitialp/ptatin-gene).
+It is a pre-processing tool.
 
 This module can:
-- evaluate and print mathematical expression for the velocity 
-- allow visualisation of the velocity field using matplotlib if steady-state or paraview (.vts + timeseries.pvd files) for time varying velocities
+- evaluate and print mathematical expression for the velocity and initial plastic strain distribution 
+- attribute rheological parameters to regions identified by a tag (integer value)
+- handle simple mesh refinement for a structured mesh using linear interpolation
+- generate options file for pTatin3d simulations
 
 Some examples can be found in `scripts`  subdirectory.
 
@@ -31,3 +32,12 @@ This module requires the following dependencies that can all be installed using 
 - sympy
 - matplotlib
 - pyvista
+
+## Documentation
+To build the documentation of this package go to the root directory of the repository and type
+
+```
+sphinx-build -M html docs/source/ docs/build/
+```
+
+in docs/build/ you should find index.hmtl, open it with your web browser and navigate through the documentation!

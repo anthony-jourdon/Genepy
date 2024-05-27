@@ -6,6 +6,109 @@ from bcpy import rotation
 import matplotlib.pyplot as plt
 
 class Gaussian(domain.Domain,rotation.Rotation):
+  """
+  .. py:class:: Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+
+    Class to build a 2D gaussian distribution defined by:
+    
+    .. math:: 
+      u = A \\exp\\left( -\\left( a(x-x_0)^2 + 2b(x-x_0)(z-z_0) + c(z-z_0)^2 \\right) \\right)
+
+    The class inherits from :class:`bcpy.initial_conditions.domain.Domain` 
+    and :class:`bcpy.rotation.Rotation`.
+
+    
+
+    :param Domain Domain: instance of the Domain class
+    :param Rotation Rotation: instance of the Rotation class
+    :param int ng: number of gaussians
+    :param np.ndarray A: amplitude of the gaussian, shape: ``(ng,)``
+    :param np.ndarray a: gaussians coefficient, shape: ``(ng,)``
+    :param np.ndarray b: gaussian coefficient, shape: ``(ng,)``
+    :param np.ndarray c: gaussian coefficient, shape: ``(ng,)``
+    :param np.ndarray x0: x coordinate of the gaussian centre, shape: ``(ng,)``
+    :param np.ndarray z0: z coordinate of the gaussian centre, shape: ``(ng,)``
+
+    Example
+    -------
+    Assuming that instances of :class:`Domain` and :class:`Rotation` classes are already created
+    and that 2 gaussians are required:
+
+    .. code-block:: python
+
+      import numpy as np
+
+      ng = np.int32(2) # number of gaussians
+      A  = np.array([..., ...],dtype=np.float64)
+      # shape
+      a  = np.array([..., ...], dtype=np.float64)
+      b  = np.array([..., ...], dtype=np.float64)
+      c  = np.array([..., ...], dtype=np.float64)
+      x0 = np.array([..., ...], dtype=np.float64)
+      z0 = np.array([..., ...], dtype=np.float64)
+      # Create instance of the Gaussian class
+      g  = Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+    
+    Attributes
+    ----------
+
+    .. py:attribute:: ng
+      :type: int
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.ng
+
+      Number of gaussians
+
+    .. py:attribute:: A
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.A
+
+      Amplitude of the gaussian, shape: ``(ng,)``
+
+    .. py:attribute:: a
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.a
+
+      Gaussian coefficient, shape: ``(ng,)``
+
+    .. py:attribute:: b
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.b
+
+      Gaussian coefficient, shape: ``(ng,)``
+
+    .. py:attribute:: c
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.c
+
+      Gaussian coefficient, shape: ``(ng,)``
+
+    .. py:attribute:: x0
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.x0
+
+      x coordinate of the gaussian centre, shape: ``(ng,)``
+
+    .. py:attribute:: z0
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.z0
+
+      z coordinate of the gaussian centre, shape: ``(ng,)``
+
+    .. py:attribute:: gaussian_num
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.gaussian_num
+
+      Numerical values of the gaussians, shape: ``(ng,n[0],n[1])`` or ``(ng,n[0],n[1],n[2])``
+
+    .. py:attribute:: gaussian_sym
+      :type: np.ndarray
+      :canonical: bcpy.initial_conditions.gaussian.Gaussian.gaussian_sym
+
+      Symbolic values of the gaussians, shape: ``(ng,)``
+
+    Methods
+    -------
+  """
   def __init__(self,Domain,Rotation,ng:int,A,a,b,c,x0,z0) -> None:
     self.ng = ng
     self.A  = np.asarray(A,  dtype=np.float64) # amplitude of the gaussian
@@ -43,23 +146,21 @@ class Gaussian(domain.Domain,rotation.Rotation):
       s += f'\t\tCentre: [ {self.x0[n]},{self.z0[n]} ]\n'
     return s
 
-  def gaussian_2d(self,A,a,b,c,x,x0,z,z0):
+  def gaussian_2d(self,A:float,a:float,b:float,c:float,x,x0:float,z,z0:float):
     """
     gaussian_2d(A,a,b,c,x,x0,z,z0)
-    Computes a 2D gaussian distribution.
+    Computes a 2D gaussian distribution such that:
 
-    u = A * exp(-( a*(x-x0)^2 + 2*b*(x-x0)*(z-z0) + c*(z-z0)^2 ) )
+    .. math:: 
+      u = A \\exp\\left( -\\left( a(x-x_0)^2 + 2b(x-x_0)(z-z_0) + c(z-z_0)^2 \\right) \\right)
 
-    Parameters:
-    -----------
-    A     : amplitude of the gaussian
-    a,b,c : gaussian coefficients
-    x0,z0 : center of the gaussian
-    x,z   : coordinates
+    :param float A: amplitude of the gaussian
+    :param float a,b,c: gaussian coefficients
+    :param float x0: x coordinate of the centre of the gaussian
+    :param float z0: z coordinate of the centre of the gaussian
+    :param x,z: coordinates can be symbolic or numerical
 
-    Returns:
-    --------
-    u : the field with the 2D gaussian distribution
+    :return: **u**: the field with the 2D gaussian distribution
     """
     exponent = -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) )
     if type(x) == sp.core.symbol.Symbol: u = A * sp.exp( exponent )
@@ -67,14 +168,48 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return u
 
   def symbolic_gaussian(self,A,a,b,c,x0,z0):
+    """
+    symbolic_gaussian(A,a,b,c,x0,z0)
+    Computes the symbolic expression of a 2D gaussian distribution.
+    Calls :meth:`gaussian_2d` with symbolic coordinates.
+
+    :param float A: amplitude of the gaussian
+    :param float a,b,c: gaussian coefficients
+    :param float x0: x coordinate of the centre of the gaussian
+    :param float z0: z coordinate of the centre of the gaussian
+
+    :return: **u**: the symbolic expression of the field with the 2D gaussian distribution
+    """
     g = self.gaussian_2d(A,a,b,c,self.sym_coor[0],x0,self.sym_coor[self.dim-1],z0)
     return g
   
   def numerical_gaussian(self,A,a,b,c,x0,z0):
+    """
+    numerical_gaussian(A,a,b,c,x0,z0)
+    Computes the numerical values of a 2D gaussian distribution.
+    Calls :meth:`gaussian_2d` with numerical coordinates.
+
+    :param float A: amplitude of the gaussian
+    :param float a,b,c: gaussian coefficients
+    :param float x0: x coordinate of the centre of the gaussian
+    :param float z0: z coordinate of the centre of the gaussian
+
+    :return: **u**: the numerical values of the field with the 2D gaussian distribution
+    """
     g = self.gaussian_2d(A,a,b,c,self.num_coor[0],x0,self.num_coor[self.dim-1],z0)
     return g
   
   def evaluate_gaussians(self):
+    """
+    evaluate_gaussians(self)
+    Evaluate the symbolic and numerical values of the gaussians.
+    Calls :meth:`symbolic_gaussian` and :meth:`numerical_gaussian`.
+    Attach the results to the attributes 
+    :attr:`gaussian_sym <bcpy.initial_conditions.gaussian.Gaussian.gaussian_sym>` 
+    and :attr:`gaussian_num <bcpy.initial_conditions.gaussian.Gaussian.gaussian_num>`.
+
+    :return: None
+    """
     self.gaussian_sym = np.zeros(shape=(self.ng), dtype=object)
     self.gaussian_num = np.zeros(shape=(self.ng,*self.n), dtype=np.float64)
 
@@ -89,7 +224,14 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return 
   
   def report_symbolic_functions(self):
-    #s = super().report_symbolic_functions()
+    """
+    report_symbolic_functions(self)
+    Return a human readable string representation of
+    the symbolic gaussian functions and 
+    the coordinates of their centre.
+
+    :return: **s**: string that can be printed
+    """
     s = f"Symbolic gaussian functions:\n"
     for n in range(self.ng):
       s += f"\tGaussian [{n}]:\n"
@@ -98,6 +240,16 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return s
   
   def compute_field_distribution(self):
+    """
+    compute_field_distribution(self)
+    Compute the gaussian distribution of a field given the 
+    parameters attached to the instance of the class :class:`Gaussian`.
+
+    :return: **field**: the field with the gaussian distribution of the shape ``(nv,)``
+             with :attr:`nv <bcpy.initial_conditions.domain.Domain.nv>` the total number of nodes
+             in the domain.
+    :ret type: np.ndarray
+    """
     if self.gaussian_num is None:
       self.evaluate_gaussians()
     field = np.zeros(shape=(self.n), dtype=np.float64)
@@ -107,6 +259,12 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return field
   
   def plot_gaussians(self):
+    """
+    plot_gaussians(self)
+    Plot a 2D view of the gaussian distribution in the domain using `matplotlib <https://matplotlib.org/>`_.
+
+    :return: None
+    """
     _, ax = plt.subplots()
     field = np.zeros(shape=(self.n), dtype=np.float64)
     for n in range(self.ng):
@@ -122,6 +280,14 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return
   
   def sprint_option(self, model_name: str):
+    """
+    sprint_option(self,model_name:str)
+    Return a string formatted for `pTatin3d`_ input file using `PETSc`_ options format.
+
+    :param str model_name: name of the model
+
+    :return: string with the options
+    """
     prefix = "wz"
     s  = f"########### Initial plastic strain for weak zone ###########\n"
     s += f"-{model_name}_{prefix}_nwz {self.ng} # number of gaussians\n"

@@ -1,6 +1,52 @@
 from bcpy import StokesBoundaryCondition
 
 class Dirichlet(StokesBoundaryCondition):
+  """
+  .. py:class:: Dirichlet(tag:int, name:str, components, velocity, mesh_file:str="path_to_file", model_name:str="model_GENE3D")
+
+    Class to generate the options for `pTatin3d`_ for a Dirichlet type boundary condition.
+    Inherited from :py:class:`StokesBoundaryCondition`.
+
+    :param int tag: tag of the boundary condition given by gmsh
+    :param str name: name of the boundary condition in the model
+    :param list components: list of string of the velocity components on which to impose the Dirichlet condition. Possible values ``["x","y","z"]``
+    :param velocity: velocity to impose, expected shape: ``(1,dim)``
+    :param str mesh_file: path to the mesh file containing the facets of the boundary
+    :param str model_name: name of the model (default: model_GENE3D)
+
+    Attributes
+    ----------
+
+    .. py:attribute:: tag
+      :type: int
+      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.tag
+
+      Tag of the boundary condition
+    
+    .. py:attribute:: prefix
+      :type: str
+      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.prefix
+
+      Prefix: "bc_dirichlet" for the options
+
+    .. py:attribute:: bc_type
+      :type: int
+      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.bc_type
+
+      Type of the boundary condition in the model. For Dirichlet: 7
+    
+    .. py:attribute:: bc_name
+      :type: str
+      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.bc_name
+
+      Name of the boundary condition in the model, name is arbitrary but providing one is mandatory
+    
+    .. py:attribute:: mesh_file
+      :type: str
+      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.mesh_file
+
+      Path to the mesh file containing the facets of the boundary
+  """
   def __init__(self, tag:int, name:str, components, velocity, mesh_file:str="path_to_file", model_name:str="model_GENE3D") -> None:
     StokesBoundaryCondition.__init__(self,tag,mesh_file,model_name)
     self.prefix     = "bc_dirichlet"
@@ -10,6 +56,14 @@ class Dirichlet(StokesBoundaryCondition):
     self.components = components
   
   def sprint_option(self):
+    """
+    sprint_option(self)
+    Returns the string to be added to the options file descibing the Dirichlet boundary condition.
+    Calls :meth:`bcpy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
+
+    :return: string to be added to the options file
+    :rtype: str
+    """
     s = StokesBoundaryCondition.sprint_option(self)
     for d in self.components:
       if   d == "x": dim = 0
@@ -36,6 +90,53 @@ class Dirichlet(StokesBoundaryCondition):
     return s
 
 class DirichletUdotN(StokesBoundaryCondition):
+  """
+  .. py:class:: DirichletUdotN(tag:int, name:str, mesh_file:str="path_to_file", model_name:str="model_GENE3D")
+
+    Class to generate the options for `pTatin3d`_ for a special Dirichlet type boundary condition.
+    This boundary condition is used to impose a velocity on the basal face of the mesh such that the inflow and outflow of the entire domain are balanced.
+
+    :param int tag: tag of the boundary condition given by gmsh
+    :param str name: name of the boundary condition in the model
+    :param str mesh_file: path to the mesh file containing the facets of the boundary
+    :param str model_name: name of the model (default: model_GENE3D)
+
+    Attributes
+    ----------
+
+    .. py:attribute:: tag
+      :type: int
+      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.tag
+
+      Tag of the boundary condition
+
+    .. py:attribute:: prefix
+      :type: str
+      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.prefix
+
+      Prefix: "bc_dirichlet" for the options
+
+    .. py:attribute:: bc_type
+      :type: int
+      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.bc_type
+
+      Type of the boundary condition in the model. For Dirichlet: 7
+
+    .. py:attribute:: bc_name
+      :type: str
+      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.bc_name
+
+      Name of the boundary condition in the model, name is arbitrary but providing one is mandatory
+
+    .. py:attribute:: mesh_file
+      :type: str
+      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.mesh_file
+
+      Path to the mesh file containing the facets of the boundary
+
+    Methods
+    -------
+  """
   def __init__(self, tag:int, name:str, mesh_file:str="path_to_file",model_name:str="model_GENE3D") -> None:
     StokesBoundaryCondition.__init__(self,tag,mesh_file,model_name)
     self.prefix     = "bc_dirichlet"
@@ -43,6 +144,14 @@ class DirichletUdotN(StokesBoundaryCondition):
     self.bc_name    = name
     
   def sprint_option(self):
+    """
+    sprint_option(self)
+    Returns the string to be added to the options file descibing the special u.n Dirichlet boundary condition.
+    Calls :meth:`bcpy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
+
+    :return: string to be added to the options file
+    :rtype: str
+    """
     s = StokesBoundaryCondition.sprint_option(self)
     s += f"-{self.model_name}_{self.prefix}_bot_u.n_{self.tag}\n"
     return s

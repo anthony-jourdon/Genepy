@@ -2,6 +2,50 @@ import numpy as np
 import sympy as sp
 
 class Rotation:
+  """
+  .. py:class:: Rotation(dim,theta,axis=np.array([0,1,0]))
+
+    Class to perform rotation of a referential in 2D or 3D.
+
+    :param int dim: dimension of the rotation (can be 2 or 3)
+    :param float theta: angle of rotation in radians
+    :param np.ndarray axis: axis of rotation (default is y-axis)
+
+    Example
+    -------
+
+    .. code-block:: python
+      
+        dim   = 3
+        theta = np.deg2rad(-90.0)
+        axis  = np.array([0,1,0], dtype=np.float64)
+  
+        rot = bcpy.Rotation(dim,theta,axis)
+
+    Attributes
+    ----------
+
+    .. py:attribute:: dim
+      :type: int
+      :canonical: bcpy.rotation.Rotation.dim
+
+        Spatial dimension in which the rotation is performed
+      
+    .. py:attribute:: theta
+      :type: float
+      :canonical: bcpy.rotation.Rotation.theta
+
+        Angle of rotation in radians
+
+    .. py:attribute:: axis
+      :type: np.ndarray
+      :canonical: bcpy.rotation.Rotation.axis
+
+        Axis of rotation, expected shape: ``(dim,)`` and dtype: ``np.float64``
+
+    Methods
+    -------
+  """
   def __init__(self,dim,theta,axis=np.array([0,1,0])) -> None:
     self.dim   = dim
     self.theta = theta
@@ -17,16 +61,10 @@ class Rotation:
   
   def rotation_matrix_2d(self):
     """
-    rotation_matrix_2d()
-    computes the 2D rotation matrix given the angle theta.
+    rotation_matrix_2d(self)
+    computes the 2D rotation matrix given the angle :attr:`theta <bcpy.rotation.Rotation.theta>`.
   
-    Parameters:
-    -----------
-    theta : angle of rotation
-  
-    Returns:
-    --------
-    R : rotation matrix
+    :return: **R** rotation matrix in 2D of the shape ``(2,2)``
     """
     R = np.array([ [ np.cos(self.theta), -np.sin(self.theta) ],
                    [ np.sin(self.theta),  np.cos(self.theta) ] ], dtype=np.float64)
@@ -34,17 +72,10 @@ class Rotation:
   
   def rotation_matrix_3d(self):
     """
-    rotation_matrix_3d()
-    computes the 3D rotation matrix given the angle theta and the axis of rotation.
+    rotation_matrix_3d(self)
+    computes the 3D rotation matrix given the angle :attr:`theta <bcpy.rotation.Rotation.theta>` and the :attr:`axis <bcpy.rotation.Rotation.axis>` of rotation.
   
-    Parameters:
-    -----------
-    theta : angle of rotation
-    axis  : axis of rotation
-  
-    Returns:
-    --------
-    R : rotation matrix
+    :return: **R** rotation matrix in 3D of the shape ``(3,3)``
     """
     self.axis = self.axis/np.linalg.norm(self.axis)
     R = np.array([ [ np.cos(self.theta) + self.axis[0]**2*(1-np.cos(self.theta)), 
@@ -59,6 +90,13 @@ class Rotation:
     return R
   
   def rotation_matrix(self):
+    """
+    rotation_matrix(self)
+    Return the rotation matrix depending on the :attr:`spatial dimension <bcpy.rotation.Rotation.dim>`.
+    calls :meth:`rotation_matrix_2d() <bcpy.rotation.Rotation.rotation_matrix_2d>` or :meth:`rotation_matrix_3d() <bcpy.rotation.Rotation.rotation_matrix_3d>`.
+
+    :return: **R** rotation matrix in 2D or 3D of the shape ``(2,2)`` or ``(3,3)``
+    """
     if self.dim == 2:
       return self.rotation_matrix_2d()
     elif self.dim == 3:
@@ -67,6 +105,22 @@ class Rotation:
       raise RuntimeError(f'Rotation can only be performed in 2D or 3D, found {self.dim}')
   
   def rotate_vector(self,R,u,ccw=True):
+    """
+    rotate_vector(self,R,u,ccw=True)
+    Rotate vector(s) :math:`\\mathbf u` given the rotation matrix :math:`\\boldsymbol R`.
+
+    .. warning:: 
+
+      This is **not** a rotation of the vector field, but a rotation of the vectors themselves.
+      To rotate the vector field, have a look at how it is done in
+      :meth:`evaluate_velocity_numeric() <bcpy.Velocity.evaluate_velocity_numeric>`.
+
+    :param np.ndarray R: rotation matrix of the shape ``(dim,dim)``
+    :param np.ndarray u: vector(s) to be rotated of the shape ``(npoints,dim)``
+    :param bool ccw: rotate counter-clockwise (default is True)
+
+    :return: **u_R** rotated vector(s) of the shape ``(npoints,dim)``
+    """
     # u is expected to be in the form (npoints,dim)
     if ccw: # rotate couter-clockwise
       u_R = np.matmul(R,u.T).T
@@ -75,6 +129,23 @@ class Rotation:
     return u_R
 
   def rotate_referential(self,coor,O,L,ccw=True):
+    """
+    rotate_referential(self,coor,O,L,ccw=True)
+    Rotate the referential of the coordinates :math:`\\mathbf{x}` given the rotation matrix :math:`\\boldsymbol R`.
+    The referential is first translated to be centred on :math:`\\mathbf{0}`, then rotated and finally translated back to its original position.
+    
+    .. math:: 
+      \\mathbf x_T &= \\mathbf x - \\frac{1}{2}(\\mathbf L + \\mathbf O) \\\\
+      \\mathbf x_{TR} &= \\boldsymbol R \\mathbf x_T \\\\
+      \\mathbf x_R &= \\mathbf x_{TR} + \\frac{1}{2}(\\mathbf L + \\mathbf O)
+
+    :param np.ndarray coor: coordinates to be rotated of the shape ``(npoints,dim)``
+    :param np.ndarray O: origin of the referential of the shape ``(dim,)``
+    :param np.ndarray L: maximum coordinates of the referential of the shape ``(dim,)``
+    :param bool ccw: rotate counter-clockwise (default is True)
+
+    :return: **coorR** rotated coordinates of the shape ``(npoints,dim)``
+    """
     # coor is expected to be in the form (npoints,dim)
     if coor.shape[1] != self.dim:
       raise RuntimeError(f'Coordinate dimension must be (npoint,{self.dim}), found {coor.shape}')

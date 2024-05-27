@@ -17,6 +17,7 @@ from .boundary_conditions.velocity   import *
 from .boundary_conditions.bcs        import *
 from .boundary_conditions.dirichlet  import *
 from .boundary_conditions.navierslip import *
+from .boundary_conditions.neumann    import *
 
 # Markers
 from .markers.popctrl import *
