@@ -13,6 +13,44 @@ class Neumann(StokesBoundaryCondition):
     :param str mesh_file: path to the mesh file containing the facets of the boundary
     :param str model_name: name of the model (default: model_GENE3D)
 
+    .. note:: 
+      By default, when imposing a Neumann boundary condition such that the 
+      imposed traction :math:`\\mathbf T` is given by
+      
+      .. math::
+        \\mathbf T = \\boldsymbol \\sigma \\mathbf n
+      
+      with the **full** stress tensor
+
+      .. math::
+        \\boldsymbol \\sigma = \\boldsymbol \\tau - p \\boldsymbol I 
+
+      it is necessary to provide *at least* a traction vector capable to 
+      maintain the fluid (the rocks) inside the physical domain i.e. to 
+      provide the **part of the pressure related to the density structure and
+      the gravitational field**. For this purpose, `pTatin3d`_ computes
+
+      .. math::
+        \\nabla \\cdot \\nabla p_p = \\nabla \\cdot (\\rho \\mathbf g) 
+      
+      where :math:`\\rho` is the density, :math:`\\mathbf g` is the gravitational acceleration vector,
+      and :math:`p_p` is refered as the Poisson pressure.
+
+      If nothing more is provided, the Neumann boundary condition will be imposed as:
+
+      .. math::
+        \\mathbf T = -p_p \\mathbf n
+
+      as :math:`\\mathbf n` points outward the domain.
+      It is possible to add a scalar function (expression) :math:`\\tau(\\mathbf x,p_p,t)` 
+      with the syntax ``x,y,z,p,t`` for the textual variable names 
+      (any standard c math function can be used in the expression, see `this link <https://github.com/codeplea/tinyexpr>`_).
+      In this case, the Neumann boundary condition will be imposed as:
+
+      .. math::
+        \\mathbf T = (\\tau - p_p) \\mathbf n
+
+
     Attributes
     ----------
 
