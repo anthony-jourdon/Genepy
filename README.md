@@ -40,4 +40,4 @@ To build the documentation of this package go to the root directory of the repos
 sphinx-build -M html docs/source/ docs/build/
 ```
 
-in docs/build/ you should find index.hmtl, open it with your web browser and navigate through the documentation!
+in docs/build/html you should find index.hmtl, open it with your web browser and navigate through the documentation!
