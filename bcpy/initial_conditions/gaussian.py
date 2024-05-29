@@ -14,8 +14,8 @@ class Gaussian(domain.Domain,rotation.Rotation):
     .. math:: 
       u = A \\exp\\left( -\\left( a(x-x_0)^2 + 2b(x-x_0)(z-z_0) + c(z-z_0)^2 \\right) \\right)
 
-    The class inherits from :class:`bcpy.initial_conditions.domain.Domain` 
-    and :class:`bcpy.rotation.Rotation`.
+    The class inherits from :py:class:`Domain <bcpy.Domain>` 
+    and :py:class:`Rotation <bcpy.Rotation>`.
 
     
 
@@ -37,6 +37,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     .. code-block:: python
 
       import numpy as np
+      import bcpy as bp
 
       ng = np.int32(2) # number of gaussians
       A  = np.array([..., ...],dtype=np.float64)
@@ -47,7 +48,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
       x0 = np.array([..., ...], dtype=np.float64)
       z0 = np.array([..., ...], dtype=np.float64)
       # Create instance of the Gaussian class
-      g  = Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+      g  = bp.Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
     
     Attributes
     ----------

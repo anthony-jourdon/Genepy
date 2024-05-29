@@ -16,11 +16,11 @@ class Rotation:
 
     .. code-block:: python
       
-        dim   = 3
-        theta = np.deg2rad(-90.0)
-        axis  = np.array([0,1,0], dtype=np.float64)
-  
-        rot = bcpy.Rotation(dim,theta,axis)
+        dim   = 3                                   # dimension
+        theta = np.deg2rad(-90.0)                   # angle of rotation
+        axis  = np.array([0,1,0], dtype=np.float64) # axis of rotation
+        # Create class instance
+        Rotation = bcpy.Rotation(dim,theta,axis)
 
     Attributes
     ----------

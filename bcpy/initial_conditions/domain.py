@@ -163,10 +163,11 @@ class Domain:
   
   def symbolic_coordinates(self):
     """
-    symbolic_coordinates(self)
     Computes the symbolic coordinates of the domain.
     Works in 1D, 2D and 3D.
-    Attach the coordinates to the attribute :attr:`sym_coor <bcpy.initial_conditions.domain.Domain.sym_coor>` as a tuple ('x','y','z')
+    Attach the coordinates to the attribute 
+    :py:attr:`sym_coor <bcpy.initial_conditions.domain.Domain.sym_coor>` 
+    as a tuple (``"x"``, ``"y"``, ``"z"``)
     """
     variables = {1:'x', 2:'x y', 3:'x y z'}
     self.sym_coor = sp.symbols(variables[self.dim])
