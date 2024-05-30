@@ -4,16 +4,28 @@ on:
   push:
     branches: [master] # branch to trigger deployment
 
+permissions:
+  contents: write
+
 jobs:
-  pages:
+  docs:
     runs-on: ubuntu-20.04
     steps:
-    - id: deployment
-      uses: sphinx-notes/pages@v3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - name: Install dependencies
+      run: |
+        pip install sphinx sphinx-rtd-theme myst_parser
+    #- run: pip install -r docs/requirements.txt
+    - name: Build documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/html
+    - name: Deploy to GitHub pages
+      uses: peaceiris/actions-gh-pages@v3
+    - uses: actions/upload-artifact@v2
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       with:
-        publish: false
-    - uses: peaceiris/actions-gh-pages@v3
-      with:
+        publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ steps.deployment.outputs.artifact }}
-        documentation_path: ./docs/source
+        publish_dir: build/
+        force_orphan: true
