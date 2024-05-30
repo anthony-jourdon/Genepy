@@ -1,31 +1,27 @@
-name: Deploy Sphinx documentation to Pages
+name: documentation
 
-on:
-  push:
-    branches: [master] # branch to trigger deployment
+on: [push, pull_request, workflow_dispatch]
 
 permissions:
   contents: write
 
 jobs:
   docs:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
-    - name: Install dependencies
-      run: |
-        pip install sphinx sphinx-rtd-theme myst_parser
-    #- run: pip install -r docs/requirements.txt
-    - name: Build documentation
-      run: |
-        sphinx-build -b html docs/source docs/build/html
-    - name: Deploy to GitHub pages
-      uses: peaceiris/actions-gh-pages@v3
-    - uses: actions/upload-artifact@v2
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      with:
-        publish_branch: gh-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/
-        force_orphan: true
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - name: Install dependencies
+        run: |
+          pip install sphinx sphinx_rtd_theme myst_parser
+      - name: Sphinx build
+        run: |
+          sphinx-build doc _build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/
+          force_orphan: true
