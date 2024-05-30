@@ -610,16 +610,52 @@ Run pTatin3d
 
 .. warning:: This section **does not** cover the installation of `pTatin3d`_.
 
-To run the model, you need to have `pTatin3d`_ installed on your system.
-Once your model is built and the options file is saved, 
-you can run the model using the following command:
-
-.. warning:: All commands are given to run in serial (1 MPI rank) and using 
+  All commands are given to run in serial (1 MPI rank) and using 
   the standard bash command line arguments. For a parallel run on a HPC machine you need 
   to refer to the machine's documentation.
 
-.. note:: In the following examples, 
+  In the following examples, 
   the environment variable :code:`PETSC_ARCH` is assumed to be known.
+
+To run the model, you need to have `pTatin3d`_ installed on your system.
+Once your model is built and the options file is saved, 
+you can run the model using the commands presented below.
+
+Compute initial topography
+.......................... 
+If your problem involves a density distribution that should produce non-zero topography,
+`pTatin3d`_ provides an automatic method to compute an initial isostatic topography.
+Options related to this problem are provided by default and can be changed using the 
+corresponding keywords arguments found in the :py:class:`Model <bcpy.Model>` class.
+
+The option
+
+.. code-block:: bash
+
+  -model_GENE3D_isostatic_density_ref 3300
+  
+indicate the reference density in kg.m\ :sup:`-3` considered to compute the isostatic equilibrium and the option
+
+.. code-block:: bash
+
+  -model_GENE3D_isostatic_depth -40e3
+
+indicate the depth at which the compensation should be computed.
+
+.. note:: 
+  As a rule of thumb from experiments, the compensation depth should be chosen
+  near the transition from lower densities to the reference density.
+  As an exemple for lithospheric models, the approximate Moho depth is a decent candidate.  
+
+To compute this topography run the following:
+
+.. code-block:: bash
+
+  $PETSC_ARCH/bin/test_ptatin_driver_pressure_poisson.app -options_file path_to_file.opts -run -isostatic_remesh
+
+It will write a file named ``isostatic_displacement.pbvec`` that will be used by the next driver
+ran to adjust the topography, therefore to verify the generated topography you need to run another 
+driver among the ones presented below.
 
 Running initial conditions driver
 .................................
@@ -628,8 +664,8 @@ driver of `pTatin3d`_ to verify that the Stokes boundary conditions, the initial
 and the potential initial plastic strain are correctly defined.
 
 .. note::
-  If the viscosity type requested is non-linear and depends on the velocity, 
-  the viscosity may not be correct because the velocity and pressure fields 
+  If the viscosity type requested is non-linear and depends on the velocity and temperature, 
+  the viscosity may not be correct because the velocity, pressure and temperature fields 
   have not been solved for.
 
 .. code-block:: bash
@@ -654,12 +690,43 @@ If the problem is linear i.e., the viscosities are viscous linear you can run
 
   $PETSC_ARCH/bin/ptatin_driver_linear_ts.app -options_file path_to_file.opts
 
-Running non-linear driver with checkpointing
-............................................
-Finally, to run a non-linear problem with checkpointing capabilities you can run 
+Computing steady-state temperature
+...................................
+If your problem involves temperature, you can compute the initial temperature distribution
+using a steady-state solution of the heat equation.
+`pTatin3d`_ provides a driver to compute this solution.
+Run:
 
 .. code-block:: bash
 
   $PETSC_ARCH/bin/test_steady_state_diffusion_solve_TFV.app -options_file path_to_file.opts
+
+
+.. warning:: 
+  If your problem involves the asthenosphere, to produce a constant vertical temperature variation in the asthenosphere
+
+  .. math:: 
+    \frac{\partial T}{\partial y} = c
+
+  i.e., a linear temperature distribution in the asthenosphere, you need to provide a high conductivity value to your asthensophere.
+  However, be careful to set back a reasonable value for the conductivity before running the time dependant problem. 
+
+This will write a file named ``temperature_steady.pbvec`` and if your options file 
+contains the option (default):
+
+.. code-block:: bash
+
+  -view_ic
+
+it will also output a file named ``T_steady.vts`` that contains the solution. 
+
+Running non-linear driver with checkpointing
+............................................
+Finally, after computing the initial topography (if required) and 
+initial temperature distribution, 
+to run a non-linear problem with checkpointing capabilities you can run 
+
+.. code-block:: bash
+
   $PETSC_ARCH/bin/test_ptatin_driver_checkpoint_fv.app -options_file path_to_file.opts -init
   $PETSC_ARCH/bin/test_ptatin_driver_checkpoint_fv.app -options_file path_to_file.opts -run

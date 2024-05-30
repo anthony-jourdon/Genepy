@@ -29,6 +29,8 @@ class Model:
     :param int nsteps: Max number of time steps. Default is ``100000``.
     :param float dtmin: Min time step. Default is ``1.0e-6``.
     :param float dtmax: Max time step. Default is ``0.5``.
+    :param float isostatic_density: Density reference for initial isostatic topography. Default is ``3300`` kg.m\ :sup:`-3`.
+    :param float isostatic_depth: Depth of compensation for initial isostatic topography. Default is ``-40`` km.
     :param float max_surface_displacement: Max surface displacement per time step. Default is 500 m.
     :param MarkersManagement markers: Markers layout and population control options.
     :param float viscosity_min: Minimum viscosity value. Default is :math:`10^{19}` Pa.s.
@@ -101,6 +103,11 @@ class Model:
     # initial conditions options
     self.ics.model_name = self.name
     self.options += self.ics.sprint_option()
+
+    # initial topography options
+    density = kwargs.get("isostatic_density", 3300.0)
+    depth   = kwargs.get("isostatic_depth", -40.0e3)
+    self.isostatic_topography(density, depth)
     
     # spm options
     if "spm" in kwargs:
@@ -196,6 +203,13 @@ class Model:
     self.options += f"-dt_min {dtmin} # min time step\n"
     self.options += f"-dt_max {dtmax} # max time step\n"
     self.options += f"-dt_max_surface_displacement {max_surface_displacement} # max surface displacement per time step\n"
+    return
+  
+  def isostatic_topography(self, density:float, depth:float):
+    prefix = "isostatic"
+    self.options += f"########### {prefix} initial topography ###########\n"
+    self.options += f"-{self.name}_{prefix}_density_ref {density}\n"
+    self.options += f"-{self.name}_{prefix}_depth {depth}\n"
     return
 
   def solvers_1MPIrank(self) -> None:
