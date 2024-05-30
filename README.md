@@ -34,10 +34,4 @@ This module requires the following dependencies that can all be installed using 
 - pyvista
 
 ## Documentation
-To build the documentation of this package go to the root directory of the repository and type
-
-```
-sphinx-build -M html docs/source/ docs/build/
-```
-
-in docs/build/html you should find index.hmtl, open it with your web browser and navigate through the documentation!
+Access documentation with this [link](https://anthony-jourdon.github.io/bc-pre-processing/).
