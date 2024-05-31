@@ -35,3 +35,9 @@ This module requires the following dependencies that can all be installed using 
 
 ## Documentation
 Access documentation with this [link](https://anthony-jourdon.github.io/bc-pre-processing/).
+
+To update the documentation install `ghp-import` python package found [here](https://github.com/c-w/ghp-import) and use the following command
+
+```
+ghp-import docs/build/html -o -p -n
+```
