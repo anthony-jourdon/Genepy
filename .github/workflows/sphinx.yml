@@ -27,4 +27,4 @@ jobs:
           force_orphan: true
       - name: GH-import
         run: |
-          ghp-import docs/build/html/ -o -p -n
+          ghp-import docs/build/html/ -o -p -n -f
