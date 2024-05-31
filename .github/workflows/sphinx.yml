@@ -9,6 +9,9 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
+      - name: update gh-pages branch
+        run: |
+          ghp-import docs/build/html -o -p -n
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
       - name: Install dependencies
