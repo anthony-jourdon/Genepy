@@ -1,3 +1,25 @@
+.. 
+  ====================================================================================================
+  Copyright (c) 2024, 
+  Anthony Jourdon, 
+
+  project:  bc-pre-processing
+  filename: initial_conditions.rst
+
+  This file is part of bc-pre-processing.
+
+  bc-pre-processing is free software: you can redistribute it and/or modify it under the terms 
+  of the GNU General Public License as published by the Free Software Foundation, either 
+  version 3 of the License, or any later version.
+
+  bc-pre-processing is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along with bc-pre-processing. 
+  If not, see <https://www.gnu.org/licenses/>.
+  ====================================================================================================
+
 .. _pTatin3d: https://github.com/laetitialp/ptatin-gene
 .. _PETSc: https://petsc.org
 
