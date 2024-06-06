@@ -3,20 +3,20 @@
   Copyright (c) 2024, 
   Anthony Jourdon, 
 
-  project:  bc-pre-processing
+  project:  Genepy
   filename: usage.rst
 
-  This file is part of bc-pre-processing.
+  This file is part of Genepy.
 
-  bc-pre-processing is free software: you can redistribute it and/or modify it under the terms 
+  Genepy is free software: you can redistribute it and/or modify it under the terms 
   of the GNU General Public License as published by the Free Software Foundation, either 
   version 3 of the License, or any later version.
 
-  bc-pre-processing is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+  Genepy is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
   See the GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License along with bc-pre-processing. 
+  You should have received a copy of the GNU General Public License along with Genepy. 
   If not, see <https://www.gnu.org/licenses/>.
   ====================================================================================================
 
@@ -39,7 +39,7 @@ dependencies that can all be installed using pip
 
 To be able to import genepy module its location needs to be known by 
 the environment variable **$PYTHONPATH**. 
-To do so, move yourself in bc-pre-processing and type
+To do so, move yourself in Genepy and type
 
 .. code-block:: console
 

@@ -1,4 +1,4 @@
-# Boundary conditions pre-processing
+# Genepy
 ## Presentation
 `genepy` is a python module designed to evaluate symbolic (mathematic) expression to build analytical velocity functions varying in space and time, define the rheological parameters of a long-term geodynamic model, and generate input file for [pTatin3d](https://github.com/laetitialp/ptatin-gene).
 It is a pre-processing tool.
@@ -13,7 +13,7 @@ Some examples can be found in `scripts`  subdirectory.
 
 ## Installation
 To be able to import genepy module its location needs to be known by `PYTHONPATH`.
-To do so, move yourself in bc-pre-processing and type
+To do so, move yourself in Genepy and type
 
 `source bc-pre-proc.sh`
 
@@ -34,7 +34,7 @@ This module requires the following dependencies that can all be installed using 
 - pyvista
 
 ## Documentation
-Access documentation with this [link](https://anthony-jourdon.github.io/bc-pre-processing/).
+Access documentation with this [link](https://anthony-jourdon.github.io/Genepy/).
 
 To update the documentation install `ghp-import` python package found [here](https://github.com/c-w/ghp-import) and use the following command
 

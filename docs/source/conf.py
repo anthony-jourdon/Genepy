@@ -16,7 +16,7 @@ sys.path.insert(0, module_dir)
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'bc-pre-processing'
+project = 'Genepy'
 copyright = '2024, Anthony Jourdon'
 author = 'Anthony Jourdon'
 release = '0.1'
