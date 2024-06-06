@@ -70,7 +70,7 @@ class Velocity(domain.Domain,rotation.Rotation):
       r_angle = np.deg2rad(-15.0)                   # Rotation angle
       axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
       # Create Rotation instance
-      Rotation = bp.Rotation(dim,r_angle,axis)
+      Rotation = gp.Rotation(dim,r_angle,axis)
       # Create Velocity instance 
       Vel = genepy.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 

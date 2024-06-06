@@ -1,5 +1,5 @@
 import numpy as np
-import genepy as bp
+import genepy as gp
 
 def main():
   # domain
@@ -34,13 +34,13 @@ def main():
 
   domain = []
   phase = []
-  domain.append(bp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle_1))
-  domain.append(bp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle_2))
-  phase.append(bp.Velocity(u_norm_1,u_angle_1,u_dir_1,u_type_1,domain[0]))
-  phase.append(bp.Velocity(u_norm_2,u_angle_2,u_dir_2,u_type_2,domain[1]))
+  domain.append(gp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle_1))
+  domain.append(gp.Domain(minCoor=O,maxCoor=L,size=n,referential_angle=r_angle_2))
+  phase.append(gp.Velocity(u_norm_1,u_angle_1,u_dir_1,u_type_1,domain[0]))
+  phase.append(gp.Velocity(u_norm_2,u_angle_2,u_dir_2,u_type_2,domain[1]))
 
-  inversion = bp.BCInversion(phase[0],phase[1],breakpoints,slopes)
-  writer    = bp.WriteVTS(domain[0])
+  inversion = gp.BCInversion(phase[0],phase[1],breakpoints,slopes)
+  writer    = gp.WriteVTS(domain[0])
 
   inversion.symbolic_velocity_inversion()
   inversion.symbolic_boundary_velocity_inversion()

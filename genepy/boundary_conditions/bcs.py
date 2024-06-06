@@ -163,20 +163,20 @@ class ModelBCs:
 
     .. code-block:: python
 
-      import genepy as bp
+      import genepy as gp
     
       # Velocity boundary conditions
       bcs = [
-          bp.Dirichlet(23,"Zmax",["x","z"],u),
-          bp.Dirichlet(37,"Zmin",["x","z"],u),
-          bp.NavierSlip(32,"Xmax",grad_u,uL),
-          bp.NavierSlip(14,"Xmin",grad_u,uL),
-          bp.DirichletUdotN(33,"Bottom"),
+          gp.Dirichlet(23,"Zmax",["x","z"],u),
+          gp.Dirichlet(37,"Zmin",["x","z"],u),
+          gp.NavierSlip(32,"Xmax",grad_u,uL),
+          gp.NavierSlip(14,"Xmin",grad_u,uL),
+          gp.DirichletUdotN(33,"Bottom"),
       ]
       # Temperature boundary conditions
-      Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
+      Tbcs = gp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
       # collect all boundary conditions
-      all_bcs = bp.ModelBCs(bcs,Tbcs)
+      all_bcs = gp.ModelBCs(bcs,Tbcs)
   """
   def __init__(self, velocity_bcs:list[StokesBoundaryCondition], 
                energy_bc:TemperatureBC=None, 

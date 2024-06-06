@@ -58,7 +58,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     .. code-block:: python
 
       import numpy as np
-      import genepy as bp
+      import genepy as gp
 
       ng = np.int32(2) # number of gaussians
       A  = np.array([..., ...],dtype=np.float64)
@@ -69,7 +69,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
       x0 = np.array([..., ...], dtype=np.float64)
       z0 = np.array([..., ...], dtype=np.float64)
       # Create instance of the Gaussian class
-      g  = bp.Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+      g  = gp.Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
     
     Attributes
     ----------

@@ -43,7 +43,7 @@ To do so, move yourself in Genepy and type
 
 .. code-block:: console
 
-  source bc-pre-proc.sh
+  source genepy.sh
 
 This needs to be done every time a new terminal or python session is opened.
 Another possibility is to add it to your bashrc or zshrc but it may be erased by python virtual environment when loaded.
@@ -85,7 +85,7 @@ We define a 3D :py:class:`domain <genepy.Domain>` :math:`\Omega = [0,600]\times[
 
   import os
   import numpy as np
-  import genepy as bp
+  import genepy as gp
 
   # 3D domain
   dimensions = 3
@@ -93,7 +93,7 @@ We define a 3D :py:class:`domain <genepy.Domain>` :math:`\Omega = [0,600]\times[
   L = np.array([600e3,0,300e3], dtype=np.float64) # Length
   n = np.array([9,9,9],         dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
   # Create Domain class instance
-  Domain = bp.Domain(dimensions,O,L,n)
+  Domain = gp.Domain(dimensions,O,L,n)
 
 2. Velocity function
 ~~~~~~~~~~~~~~~~~~~~
@@ -107,7 +107,7 @@ We define a simple orthogonal shortening :py:class:`velocity <genepy.Velocity>` 
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "compression"                  # extension or compression
   # Create Velocity class instance
-  BCs = bp.Velocity(Domain,u_norm,u_dir,u_type)
+  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type)
 
   # Evaluate the velocity and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
@@ -123,7 +123,7 @@ They will be used to generate the options for `pTatin3d`_ model.
 .. code-block:: python
 
   # Initial conditions
-  model_ics = bp.InitialConditions(Domain,u)
+  model_ics = gp.InitialConditions(Domain,u)
 
 4. Boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -148,14 +148,14 @@ Details on the methods used to define the boundary conditions can be found in th
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
   # Velocity boundary conditions
   u_bcs = [
-    bp.Dirichlet(23,"Zmax",["z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")), # orthogonal shortening
-    bp.Dirichlet(37,"Zmin",["z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")), # orthogonal shortening
-    bp.Dirichlet(32,"Xmax",["x"],u, mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")), # free-slip
-    bp.Dirichlet(14,"Xmin",["x"],u, mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")), # free-slip
-    bp.DirichletUdotN(33,"Bottom",  mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")), # basal outflow
+    gp.Dirichlet(23,"Zmax",["z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")), # orthogonal shortening
+    gp.Dirichlet(37,"Zmin",["z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")), # orthogonal shortening
+    gp.Dirichlet(32,"Xmax",["x"],u, mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")), # free-slip
+    gp.Dirichlet(14,"Xmin",["x"],u, mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")), # free-slip
+    gp.DirichletUdotN(33,"Bottom",  mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")), # basal outflow
   ]
   # collect all boundary conditions
-  model_bcs = bp.ModelBCs(u_bcs)
+  model_bcs = gp.ModelBCs(u_bcs)
 
 5. Material parameters
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -172,15 +172,15 @@ In this example we use the default values for **all regions**:
 
   regions = [
     # Upper crust
-    bp.Region(38),
+    gp.Region(38),
     # Lower crust
-    bp.Region(39),
+    gp.Region(39),
     # Lithosphere mantle
-    bp.Region(40),
+    gp.Region(40),
     # Asthenosphere
-    bp.Region(41)
+    gp.Region(41)
   ]
-  model_regions = bp.ModelRegions(regions,
+  model_regions = gp.ModelRegions(regions,
                                   mesh_file=os.path.join(root,"box_ptatin_md.bin"),
                                   region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
 
@@ -192,7 +192,7 @@ the options to a file named ``simple_shortening_model.opts``.
 .. code-block:: python
 
   # create class instance
-  model = bp.Model(model_ics,model_regions,model_bcs)
+  model = gp.Model(model_ics,model_regions,model_bcs)
   # write the options for ptatin3d
   with open("simple_shortening_model.opts","w") as f:
     f.write(model.options)
@@ -220,7 +220,7 @@ We define a 3D domain :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :s
 
   import os
   import numpy as np
-  import genepy as bp
+  import genepy as gp
 
   # 3D domain
   dimensions = 3
@@ -228,7 +228,7 @@ We define a 3D domain :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :s
   L = np.array([600e3,0,300e3], dtype=np.float64) # Length
   n = np.array([9,9,9],         dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
   # Create Domain class instance
-  Domain = bp.Domain(dimensions,O,L,n)
+  Domain = gp.Domain(dimensions,O,L,n)
 
 2. Velocity function
 ~~~~~~~~~~~~~~~~~~~~
@@ -253,7 +253,7 @@ returns the orientation of the velocity field at the boundary.
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "extension"                    # extension or compression
   # Create Velocity class instance
-  BCs = bp.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
+  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
 
   # Evaluate the velocity and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
@@ -270,7 +270,7 @@ They will be used to generate the options for `pTatin3d`_ model.
 .. code-block:: python
 
   # Initial conditions
-  model_ics = bp.InitialConditions(Domain,u)
+  model_ics = gp.InitialConditions(Domain,u)
 
 4. Boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -292,16 +292,16 @@ Details on the methods used to define the boundary conditions can be found in th
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
   # Velocity boundary conditions
   u_bcs = [
-    bp.Dirichlet( 23,"Zmax",["x","z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
-    bp.Dirichlet( 37,"Zmin",["x","z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
-    bp.NavierSlip(32,"Xmax",grad_u,uL,   mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
-    bp.NavierSlip(14,"Xmin",grad_u,uL,   mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
-    bp.DirichletUdotN(33,"Bottom",       mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
+    gp.Dirichlet( 23,"Zmax",["x","z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
+    gp.Dirichlet( 37,"Zmin",["x","z"],u, mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
+    gp.NavierSlip(32,"Xmax",grad_u,uL,   mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
+    gp.NavierSlip(14,"Xmin",grad_u,uL,   mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
+    gp.DirichletUdotN(33,"Bottom",       mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
-  Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
+  Tbcs = gp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
   # collect all boundary conditions
-  model_bcs = bp.ModelBCs(u_bcs,Tbcs)
+  model_bcs = gp.ModelBCs(u_bcs,Tbcs)
 
 5. Material parameters
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -318,35 +318,35 @@ In this example we use the following material types:
 
   regions = [
     # Upper crust
-    bp.Region(38,                                          # region tag
-              bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
-              bp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
-              bp.SofteningLinear(0.0,0.5),                 # softening
-              bp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-              bp.Energy(1.5e-6,2.7)),                      # energy
+    gp.Region(38,                                          # region tag
+              gp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
+              gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
+              gp.SofteningLinear(0.0,0.5),                 # softening
+              gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
+              gp.Energy(1.5e-6,2.7)),                      # energy
     # Lower crust
-    bp.Region(39,
-              bp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
-              bp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
-              bp.SofteningLinear(strain_min=0.0,strain_max=0.5),
-              bp.PlasticDruckerPrager(),
-              bp.Energy(heat_source=0.5e-6,conductivity=2.85)),
+    gp.Region(39,
+              gp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
+              gp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
+              gp.SofteningLinear(strain_min=0.0,strain_max=0.5),
+              gp.PlasticDruckerPrager(),
+              gp.Energy(heat_source=0.5e-6,conductivity=2.85)),
     # Lithosphere mantle
-    bp.Region(40,
-              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
-              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.Energy(0.0,3.3)),
+    gp.Region(40,
+              gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              gp.SofteningLinear(0.0,0.5),
+              gp.PlasticDruckerPrager(),
+              gp.Energy(0.0,3.3)),
     # Asthenosphere
-    bp.Region(41,
-              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
-              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.Energy(0.0,3.3))
+    gp.Region(41,
+              gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              gp.SofteningLinear(0.0,0.5),
+              gp.PlasticDruckerPrager(),
+              gp.Energy(0.0,3.3))
   ]
-  model_regions = bp.ModelRegions(regions,
+  model_regions = gp.ModelRegions(regions,
                                   mesh_file=os.path.join(root,"box_ptatin_md.bin"),
                                   region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
 
@@ -358,7 +358,7 @@ the options to a file named ``oblique_extension_model.opts``.
 .. code-block:: python
 
   # create class instance
-  model = bp.Model(model_ics,model_regions,model_bcs)
+  model = gp.Model(model_ics,model_regions,model_bcs)
   # write the options for ptatin3d
   with open("oblique_extension_model.opts","w") as f:
     f.write(model.options)
@@ -385,7 +385,7 @@ We define a 3D :py:class:`Domain <genepy.Domain>` :math:`\Omega = [0,600]\times[
 
   import os
   import numpy as np
-  import genepy as bp
+  import genepy as gp
 
   # 3D domain
   dimensions = 3
@@ -393,7 +393,7 @@ We define a 3D :py:class:`Domain <genepy.Domain>` :math:`\Omega = [0,600]\times[
   L = np.array([600e3,0,300e3], dtype=np.float64) # Length
   n = np.array([9,9,9],         dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
   # Create Domain class instance
-  Domain = bp.Domain(dimensions,O,L,n)
+  Domain = gp.Domain(dimensions,O,L,n)
 
 2. Mesh refinement
 ~~~~~~~~~~~~~~~~~~
@@ -409,7 +409,7 @@ Note however that the mesh refinement can be done in any direction following the
                      "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)*1e3} # f(xp)
                }
   # Create MeshRefinement class instance
-  MshRef = bp.MeshRefinement(Domain,refinement)
+  MshRef = gp.MeshRefinement(Domain,refinement)
   # Refine the mesh
   MshRef.refine()
 
@@ -426,7 +426,7 @@ clockwise around the :math:`y` axis.
   r_angle = np.deg2rad(-15.0)                   # Rotation angle \in [-pi, pi]
   axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
   # Create instance of Rotation class
-  Rotation = bp.Rotation(dimensions,r_angle,axis)
+  Rotation = gp.Rotation(dimensions,r_angle,axis)
 
 4. Velocity field
 ~~~~~~~~~~~~~~~~~
@@ -453,7 +453,7 @@ returns the orientation of the velocity field at the boundary.
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "extension"                    # extension or compression, defines the sign
   # Create velocity class instance
-  BCs = bp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity function and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
@@ -493,10 +493,10 @@ We provide the parameters of the gaussians and their position in the domain.
   z0 = np.array([domain_centre[2] - dz, 
                  domain_centre[2] + dz], dtype=np.float64) 
   # centre of the gaussian in x direction
-  x0[0] = bp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
-  x0[1] = bp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
+  x0[0] = gp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
+  x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
   # Create instance of Gaussian class
-  Gaussian = bp.Gaussian(MshRef,Rotation,ng,A,a,b,c,x0,z0)
+  Gaussian = gp.Gaussian(MshRef,Rotation,ng,A,a,b,c,x0,z0)
   # Evaluate symbolic expression and numerical values of the gaussians
   Gaussian.evaluate_gaussians()
 
@@ -507,7 +507,7 @@ Gather the information defined previously to generate the options for the initia
 .. code-block:: python
 
   # Initial conditions
-  model_ics = bp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=IniStrain)
+  model_ics = gp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=IniStrain)
 
 7. Boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -523,16 +523,16 @@ Details on the methods used to define the boundary conditions can be found in th
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
   # Velocity boundary conditions
   u_bcs = [
-    bp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
-    bp.Dirichlet(37,"Zmin",["x","z"],u,mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
-    bp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL,mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
-    bp.NavierSlip(14,"Xmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
-    bp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
+    gp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
+    gp.Dirichlet(37,"Zmin",["x","z"],u,mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
+    gp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL,mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
+    gp.NavierSlip(14,"Xmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
+    gp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
-  Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
+  Tbcs = gp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
   # collect all boundary conditions
-  model_bcs = bp.ModelBCs(u_bcs,Tbcs)
+  model_bcs = gp.ModelBCs(u_bcs,Tbcs)
 
 8. Material parameters
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -547,38 +547,38 @@ The details on the methods can be found in the
   # Define the material parameters for the model as a list of Region objects
   regions = [
     # Upper crust
-    bp.Region(38,                                          # region tag
-              bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
-              bp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
-              bp.SofteningLinear(0.0,0.5),                 # softening
-              bp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-              bp.Energy(1.5e-6,2.7)),                      # energy
+    gp.Region(38,                                          # region tag
+              gp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
+              gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
+              gp.SofteningLinear(0.0,0.5),                 # softening
+              gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
+              gp.Energy(1.5e-6,2.7)),                      # energy
     # Lower crust
-    bp.Region(39,
-              bp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
-              bp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
-              bp.SofteningLinear(strain_min=0.0,strain_max=0.5),
-              bp.PlasticDruckerPrager(),
-              bp.Energy(heat_source=0.5e-6,conductivity=2.85)),
+    gp.Region(39,
+              gp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
+              gp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
+              gp.SofteningLinear(strain_min=0.0,strain_max=0.5),
+              gp.PlasticDruckerPrager(),
+              gp.Energy(heat_source=0.5e-6,conductivity=2.85)),
     # Lithosphere mantle
-    bp.Region(40,
-              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
-              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.Energy(0.0,3.3)),
+    gp.Region(40,
+              gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              gp.SofteningLinear(0.0,0.5),
+              gp.PlasticDruckerPrager(),
+              gp.Energy(0.0,3.3)),
     # Asthenosphere
-    bp.Region(41,
-              bp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
-              bp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
-              bp.SofteningLinear(0.0,0.5),
-              bp.PlasticDruckerPrager(),
-              bp.Energy(0.0,3.3))
+    gp.Region(41,
+              gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
+              gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
+              gp.SofteningLinear(0.0,0.5),
+              gp.PlasticDruckerPrager(),
+              gp.Energy(0.0,3.3))
   ]
 
   # path to mesh files (system dependent, change accordingly)
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
-  model_regions = bp.ModelRegions(regions,
+  model_regions = gp.ModelRegions(regions,
                                   mesh_file=os.path.join(root,"box_ptatin_md.bin"),
                                   region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
 
@@ -592,7 +592,7 @@ and we set the diffusivity to :math:`10^6` m\ :sup:`2`.s\ :sup:`-1`.
 .. code-block:: python
 
   # Add erosion-sedimentation with diffusion
-  spm = bp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
+  spm = gp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
 
 11. Add passive tracers
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -607,7 +607,7 @@ We activate the tracking of the pressure and temperature fields.
 .. code-block:: python
 
   # Add passive tracers
-  pswarm = bp.PswarmFillBox([0.0,-100.0e3,0.0],
+  pswarm = gp.PswarmFillBox([0.0,-100.0e3,0.0],
                             [600e3,-4.0e3,300.0e3],
                             layout=[30,5,15],
                             pressure=True,
@@ -620,10 +620,9 @@ The :py:class:`model <genepy.Model>` is created by gathering all the information
 .. code-block:: python
 
   # write the options for ptatin3d
-  model = bp.Model(model_ics,model_regions,model_bcs,
+  model = gp.Model(model_ics,model_regions,model_bcs,
                    model_name="model_GENE3D",
-                   spm=spm,pswarm=pswarm,
-                   mpi_ranks=1)
+                   spm=spm,pswarm=pswarm)
   with open("strike-slip.opts","w") as f:
     f.write(model.options)
 

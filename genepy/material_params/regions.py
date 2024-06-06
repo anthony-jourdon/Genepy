@@ -54,22 +54,22 @@ class Region:
     Default values for all material parameters
     ..........................................
 
-    >>> import genepy as bp
-    >>> region = bp.Region(1)
+    >>> import genepy as gp
+    >>> region = gp.Region(1)
 
     Custom values for material parameters
     .....................................
 
     .. code-block:: python
 
-      import genepy as bp
+      import genepy as gp
 
-      region1 = bp.Region(1,                                           # region tag
-                          bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
-                          bp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
-                          bp.SofteningLinear(0.0,0.5),                 # softening
-                          bp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-                          bp.Energy(1.0e-6,2.7)),                      # energy
+      region1 = gp.Region(1,                                           # region tag
+                          gp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
+                          gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
+                          gp.SofteningLinear(0.0,0.5),                 # softening
+                          gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
+                          gp.Energy(1.0e-6,2.7)),                      # energy
 
   """
   def __init__(self, region: int, 

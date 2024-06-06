@@ -1,5 +1,5 @@
 import numpy as np
-import genepy as bp
+import genepy as gp
 
 def main_2d():
   # domain
@@ -14,9 +14,9 @@ def main_2d():
   u_dir   = "y"
   u_type  = "compression"
 
-  d  = bp.Domain(2,O,L,n)
-  r  = bp.Rotation(2,r_angle)
-  bc = bp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
+  d  = gp.Domain(2,O,L,n)
+  r  = gp.Rotation(2,r_angle)
+  bc = gp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
 
   u,grad_u = bc.evaluate_velocity_and_gradient_symbolic()
 
@@ -33,7 +33,7 @@ def main_2d():
   print(u_num[:,2])
 
   point_data = {"u": u_num}
-  w  = bp.WriteVTS(d, vtk_fname="rotated_velocity_2d.vts", point_data=point_data)
+  w  = gp.WriteVTS(d, vtk_fname="rotated_velocity_2d.vts", point_data=point_data)
   bc.plot_velocity_vts(w)
   #bc.plot_velocity_matplotlib()
 
@@ -52,11 +52,11 @@ def main_3d():
   r_angle = np.deg2rad(-15.0)                   # rotation angle
   axis    = np.array([0,1,0], dtype=np.float64) # rotation axis
   # create domain object
-  d  = bp.Domain(3,O,L,n)
+  d  = gp.Domain(3,O,L,n)
   # create rotation object
-  r  = bp.Rotation(3,r_angle,axis)
+  r  = gp.Rotation(3,r_angle,axis)
   # create boundary conditions object
-  bc = bp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
+  bc = gp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
   
   # evaluate the velocity and its derivatives
   u,grad_u = bc.evaluate_velocity_and_gradient_symbolic()
@@ -66,7 +66,7 @@ def main_3d():
   print(bc.report_symbolic_functions(u,grad_u,uL))
   
   point_data = {"u": u_num}
-  w  = bp.WriteVTS(d, vtk_fname="rotated_velocity.vts", point_data=point_data)
+  w  = gp.WriteVTS(d, vtk_fname="rotated_velocity.vts", point_data=point_data)
   w.write_vts()
 
   """
