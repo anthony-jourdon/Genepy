@@ -18,7 +18,7 @@ def main_2d():
   r  = bp.Rotation(2,r_angle)
   bc = bp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
 
-  u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic()
+  u,grad_u = bc.evaluate_velocity_and_gradient_symbolic()
 
   print("Symbolic velocity function")
   print("ux(x,y) =",u[0,0])
@@ -59,7 +59,7 @@ def main_3d():
   bc = bp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
   
   # evaluate the velocity and its derivatives
-  u,grad_u = bc.evaluate_velocity_and_derivatives_symbolic()
+  u,grad_u = bc.evaluate_velocity_and_gradient_symbolic()
   uL       = bc.get_velocity_orientation(horizontal=True,normalize=True)
   u_num    = bc.evaluate_velocity_numeric()
   print(bc)

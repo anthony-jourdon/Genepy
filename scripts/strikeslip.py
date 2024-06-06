@@ -40,7 +40,7 @@ def velocity_bcs(Domain,Rotation,report=False):
   BCs = bp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_derivatives_symbolic() # symbolic
+  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
   u_num    = BCs.evaluate_velocity_numeric()                  # numeric
   uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
   if report:
@@ -92,7 +92,7 @@ def boundary_conditions(u,grad_u,uL):
     bp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
-  Tbcs = bp.TemperatureBC(faces=["ymax","ymin"],values=[0.0,1450.0])
+  Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
   # collect all boundary conditions
   all_bcs = bp.ModelBCs(bcs,Tbcs)
   return all_bcs

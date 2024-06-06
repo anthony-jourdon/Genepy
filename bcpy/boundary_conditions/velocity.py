@@ -29,7 +29,7 @@ class Velocity(domain.Domain,rotation.Rotation):
   """
   .. py:class:: Velocity(Domain, u_norm, variation_dir, velocity_type, u_angle=0.0, Rotation=None)
 
-    Class to evaluate symbolic and numeric linear velocity function and its derivatives in space.
+    Class to evaluate symbolic and numeric linear velocity function and its gradient in space.
     The velocity field is defined as a linear function of the coordinates. 
     It can be used for 2D and 3D domains.
     Given a horizontal velocity field, the vertical velocity is computed by integrating the dot product of the velocity field with the normal vector over the faces of the domain.
@@ -193,20 +193,20 @@ class Velocity(domain.Domain,rotation.Rotation):
     """
     report_symbolic_functions(self,u,grad_u,uL)
     Returns a string with the symbolic velocity function, 
-    its derivatives and the boundary velocity orientation.
+    its gradient and the boundary velocity orientation.
     Can be used with print() or written to a file.
 
     :param numpy.ndarray u: sympy vector valued function of the velocity field
-    :param numpy.ndarray grad_u: sympy matrix of the derivatives of the velocity field shape (dim,dim)
+    :param numpy.ndarray grad_u: sympy matrix of the gradient of the velocity field shape (dim,dim)
     :param numpy.ndarray uL: sympy orientation vector of the velocity field at the boundary
 
-    :return: string with the symbolic velocity function, its derivatives and the boundary velocity orientation.
+    :return: string with the symbolic velocity function, its gradient and the boundary velocity orientation.
     :rtype: str
     """
     s = f"Symbolic velocity function:\n"
     for i in range(self.dim):
       s += f"\tu{self.sym_coor[i]}{self.sym_coor} = {u[0,i]}\n"
-    s += f"Derivatives of the velocity function:\n"
+    s += f"Gradient of the velocity function:\n"
     for i in range(self.dim):
       for j in range(self.dim):
         s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(grad_u[i,j])+"\n"
@@ -372,10 +372,10 @@ class Velocity(domain.Domain,rotation.Rotation):
     u_R = self.rotate_vector(R,u,ccw=True)
     return u_R
   
-  def evaluate_derivatives(self,u):
+  def evaluate_gradient(self,u):
     """
-    evaluate_derivatives(self,u)
-    Evaluates the derivatives of the velocity function in symbolic form 
+    evaluate_gradient(self,u)
+    Evaluates the gradient of the velocity function in symbolic form 
     returning a matrix of the shape ``(dim,dim)`` such that:
       
     .. math:: 
@@ -384,7 +384,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     
     :param u: vector valued function of the velocity field
 
-    :return: **grad_u**: matrix of the derivatives of the velocity field shape ``(dim,dim)``
+    :return: **grad_u**: matrix of the gradient of the velocity field shape ``(dim,dim)``
     """
     grad_u = np.zeros(shape=(self.dim,self.dim), dtype='object')
     for i in range(self.dim):
@@ -392,20 +392,20 @@ class Velocity(domain.Domain,rotation.Rotation):
         grad_u[i,j] = u[i].diff(self.sym_coor[j])
     return grad_u
 
-  def evaluate_velocity_and_derivatives_symbolic(self):
+  def evaluate_velocity_and_gradient_symbolic(self):
     """
-    evaluate_velocity_and_derivatives_symbolic(self)
+    evaluate_velocity_and_gradient_symbolic(self)
     Calls the methods:
     
     - :meth:`evaluate_velocity_symbolic` to evaluate the horizontal components of the velocity 
     - :meth:`evaluate_vertical_velocity` to evaluate the vertical component of the velocity
-    - :meth:`evaluate_derivatives` to evaluate the derivative in space of the velocity vector  
+    - :meth:`evaluate_gradient` to evaluate the gradient of the velocity vector  
     
     in symbolic form.
     """
     u      = self.evaluate_velocity_symbolic()
     u[0,1] = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
-    grad_u = self.evaluate_derivatives(u[0,:])
+    grad_u = self.evaluate_gradient(u[0,:])
     return u,grad_u
   
   def evaluate_u_dot_n(self,u=None):

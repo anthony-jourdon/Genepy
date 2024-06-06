@@ -110,7 +110,7 @@ We define a simple orthogonal shortening :py:class:`velocity <bcpy.Velocity>` in
   BCs = bp.Velocity(Domain,u_norm,u_dir,u_type)
 
   # Evaluate the velocity and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_derivatives_symbolic() # symbolic
+  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
 
 .. note:: In this example, the derivatives of the velocity are not used.
 
@@ -235,7 +235,7 @@ We define a 3D domain :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :s
 We define an oblique extension :py:class:`velocity <bcpy.Velocity>` velocity field
 forming an angle of 30 degrees counter-clockwise with respect to the :math:`z` axis.
 The method 
-:py:meth:`evaluate_velocity_and_derivatives_symbolic() <bcpy.Velocity.evaluate_velocity_and_derivatives_symbolic>` 
+:py:meth:`evaluate_velocity_and_gradient_symbolic() <bcpy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
 returns the symbolic expression of the velocity field and its gradient.
 The method
 :py:meth:`evaluate_velocity_numeric() <bcpy.Velocity.evaluate_velocity_numeric>`
@@ -256,7 +256,7 @@ returns the orientation of the velocity field at the boundary.
   BCs = bp.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
 
   # Evaluate the velocity and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_derivatives_symbolic() # symbolic
+  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
   u_num    = BCs.evaluate_velocity_numeric()                  # numeric
   uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
 
@@ -299,7 +299,7 @@ Details on the methods used to define the boundary conditions can be found in th
     bp.DirichletUdotN(33,"Bottom",       mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
-  Tbcs = bp.TemperatureBC(faces=["ymax","ymin"],values=[0.0,1450.0])
+  Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
   # collect all boundary conditions
   model_bcs = bp.ModelBCs(u_bcs,Tbcs)
 
@@ -432,7 +432,7 @@ clockwise around the :math:`y` axis.
 ~~~~~~~~~~~~~~~~~
 Next, we create a strike-slip velocity field with a norm of 1 cm.a\ :sup:`-1`.
 The method 
-:py:meth:`evaluate_velocity_and_derivatives_symbolic() <bcpy.Velocity.evaluate_velocity_and_derivatives_symbolic>` 
+:py:meth:`evaluate_velocity_and_gradient_symbolic() <bcpy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
 returns the symbolic expression of the velocity field and its gradient.
 The method
 :py:meth:`evaluate_velocity_numeric() <bcpy.Velocity.evaluate_velocity_numeric>`
@@ -456,7 +456,7 @@ returns the orientation of the velocity field at the boundary.
   BCs = bp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity function and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_derivatives_symbolic() # symbolic
+  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
   u_num    = BCs.evaluate_velocity_numeric()                  # numeric
   # Get the orientation of the vectors at boundary (horizontal removes the vertical component)
   uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
@@ -530,7 +530,7 @@ Details on the methods used to define the boundary conditions can be found in th
     bp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
-  Tbcs = bp.TemperatureBC(faces=["ymax","ymin"],values=[0.0,1450.0])
+  Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
   # collect all boundary conditions
   model_bcs = bp.ModelBCs(u_bcs,Tbcs)
 

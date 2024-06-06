@@ -99,19 +99,18 @@ class StokesBoundaryCondition(BoundaryCondition):
     return s
 
 class TemperatureBC(BoundaryCondition):
-  def __init__(self, faces:list[str], values:list[float], model_name:str="model_GENE3D") -> None:
+  def __init__(self, conditions:dict, model_name:str="model_GENE3D") -> None:
     BoundaryCondition.__init__(self,model_name)
-    self.faces  = faces
-    self.values = values
+    self.conditions = conditions
   
   def sprint_option(self):
     s = f"###### Temperature boundary conditions ######\n"
-    for face,value in zip(self.faces,self.values):
+    for face in self.conditions:
       if face not in ['xmin','xmax','ymin','ymax','zmin','zmax']:
         err = f"Error: face {face} not recognized.\n"
         err += "Recognized faces are: xmin, xmax, ymin, ymax, zmin, zmax.\n"
         raise ValueError(err)
-      s += f"-{self.model_name}_bc_energy_{face} {value} # Temperature BC on face {face}\n"
+      s += f"-{self.model_name}_bc_energy_{face} {self.conditions[face]} # Temperature BC on face {face}\n"
     return s
   
   def __str__(self):
@@ -175,7 +174,7 @@ class ModelBCs:
           bp.DirichletUdotN(33,"Bottom"),
       ]
       # Temperature boundary conditions
-      Tbcs = bp.TemperatureBC(["ymax","ymin"],[0.0,1450.0])
+      Tbcs = bp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
       # collect all boundary conditions
       all_bcs = bp.ModelBCs(bcs,Tbcs)
   """
