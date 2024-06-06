@@ -46,7 +46,7 @@ class Model:
     :param int checkpoint_frequency: Checkpoint every n time step. Default is ``25``.
     :param float length_bar: Length scaling. Default is ``1.0e5`` m.
     :param float viscosity_bar: Viscosity scaling. Default is :math:`10^{22}` Pa.s.
-    :param float velocity_bar: Velocity scaling. Default is :math:`10^{-10}` m.s\ :sup`-1`.
+    :param float velocity_bar: Velocity scaling. Default is :math:`10^{-10}` m.s\ :sup:`-1`.
     :param int nsteps: Max number of time steps. Default is ``100000``.
     :param float dtmin: Min time step. Default is ``1.0e-6``.
     :param float dtmax: Max time step. Default is ``0.5``.
