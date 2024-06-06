@@ -19,11 +19,11 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import ModelRegions
-from bcpy import ModelBCs
-from bcpy import Domain
-from bcpy import MarkersManagement
-from bcpy import InitialConditions
+from genepy import ModelRegions
+from genepy import ModelBCs
+from genepy import Domain
+from genepy import MarkersManagement
+from genepy import InitialConditions
 import numpy as np
 
 class Model:

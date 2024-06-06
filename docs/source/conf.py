@@ -3,7 +3,7 @@ import sys
 
 # project root directory to the sys.path
 project_root = pathlib.Path(__file__).parents[2].resolve().as_posix()
-module_dir   = project_root + '/bcpy'
+module_dir   = project_root + '/genepy'
 
 sys.path.insert(0, project_root)
 sys.path.insert(0, module_dir)

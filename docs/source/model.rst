@@ -29,19 +29,19 @@ This class generates the options for `pTatin3d`_ model using
 the format of the `PETSc`_ library.
 It requires to have generated 
 
-  - the physical :py:class:`domain <bcpy.Domain>`
-  - the :py:class:`velocity <bcpy.Velocity>` field function.
-  - the :py:class:`initial conditions <bcpy.InitialConditions>`.
-  - the :py:class:`boundary conditions <bcpy.ModelBCs>`.
-  - the :py:class:`material parameters <bcpy.ModelRegions>`.
+  - the physical :py:class:`domain <genepy.Domain>`
+  - the :py:class:`velocity <genepy.Velocity>` field function.
+  - the :py:class:`initial conditions <genepy.InitialConditions>`.
+  - the :py:class:`boundary conditions <genepy.ModelBCs>`.
+  - the :py:class:`material parameters <genepy.ModelRegions>`.
 
-.. autoclass:: bcpy.Model
+.. autoclass:: genepy.Model
     :members:
 
 Markers management
 ==================
 
-.. autoclass:: bcpy.MarkersManagement
+.. autoclass:: genepy.MarkersManagement
     :members:
 
 Passive tracers
@@ -50,35 +50,35 @@ Passive tracers
 Pswarm
 ------
 
-.. autoclass:: bcpy.Pswarm
+.. autoclass:: genepy.Pswarm
     :members:
 
 Fill entire domain
 ------------------
 
-.. autoclass:: bcpy.PswarmFillDomain
+.. autoclass:: genepy.PswarmFillDomain
     :members:
 
 Fill domain within a bounding box
 ---------------------------------
 
-.. autoclass:: bcpy.PswarmFillDomainWithinBoundingBox
+.. autoclass:: genepy.PswarmFillDomainWithinBoundingBox
     :members:
 
 Fill domain within a bounding box with a given number of particles
 ------------------------------------------------------------------
 
-.. autoclass:: bcpy.PswarmFillBox
+.. autoclass:: genepy.PswarmFillBox
     :members:
 
 Place only selected tracers
 ---------------------------
 
-.. autoclass:: bcpy.PswarmFromUserList
+.. autoclass:: genepy.PswarmFromUserList
     :members:
 
 Surface processes
 =================
 
-.. autoclass:: bcpy.SPMDiffusion
+.. autoclass:: genepy.SPMDiffusion
     :members:

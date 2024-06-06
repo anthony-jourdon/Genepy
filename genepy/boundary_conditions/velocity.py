@@ -19,8 +19,8 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy.initial_conditions import domain
-from bcpy import rotation
+from genepy.initial_conditions import domain
+from genepy import rotation
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
@@ -33,7 +33,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     The velocity field is defined as a linear function of the coordinates. 
     It can be used for 2D and 3D domains.
     Given a horizontal velocity field, the vertical velocity is computed by integrating the dot product of the velocity field with the normal vector over the faces of the domain.
-    The class inherits from :py:class:`Domain <bcpy.initial_conditions.domain.Domain>` and :py:class:`Rotation <bcpy.rotation.Rotation>`
+    The class inherits from :py:class:`Domain <genepy.initial_conditions.domain.Domain>` and :py:class:`Rotation <genepy.rotation.Rotation>`
 
     :param Domain Domain: domain in which the velocity field is evaluated
     :param float u_norm: velocity norm of the vector along boundaries
@@ -49,7 +49,7 @@ class Velocity(domain.Domain,rotation.Rotation):
 
     Examples
     --------
-    Assuming the class :class:`Domain <bcpy.initial_conditions.domain.Domain>` as been instanciated as ``Domain``
+    Assuming the class :class:`Domain <genepy.initial_conditions.domain.Domain>` as been instanciated as ``Domain``
     
     **Without rotation** of the referential
 
@@ -60,7 +60,7 @@ class Velocity(domain.Domain,rotation.Rotation):
       u_dir   = "z"              # direction in which velocity varies
       u_type  = "extension"      # velocity orientation
       # Create Velocity instance 
-      Vel = bcpy.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
+      Vel = genepy.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
     
     **With rotation** of the referential
 
@@ -72,65 +72,65 @@ class Velocity(domain.Domain,rotation.Rotation):
       # Create Rotation instance
       Rotation = bp.Rotation(dim,r_angle,axis)
       # Create Velocity instance 
-      Vel = bcpy.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+      Vel = genepy.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
     Attributes
     ----------
 
     .. py:attribute:: norm
       :type: float
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.norm
+      :canonical: genepy.boundary_conditions.velocity.Velocity.norm
 
       Velocity norm
 
     .. py:attribute:: alpha
       :type: float
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.alpha
+      :canonical: genepy.boundary_conditions.velocity.Velocity.alpha
 
       Velocity angle with the :math:`z` axis in radians
     
     .. py:attribute:: type
       :type: str
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.type
+      :canonical: genepy.boundary_conditions.velocity.Velocity.type
 
       Type of velocity field (``"extension"`` or ``"compression"``)
 
     .. py:attribute:: dir
       :type: int
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.dir
+      :canonical: genepy.boundary_conditions.velocity.Velocity.dir
 
       Direction in which the velocity varies (``0``, ``1``, ``2``) defined from
       the given directions ``"x"``, ``"y"``, ``"z"`` respectively. 
     
     .. py:attribute:: uO
       :type: numpy.ndarray
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.uO
+      :canonical: genepy.boundary_conditions.velocity.Velocity.uO
 
       Velocity vector :math:`\\mathbf u_O` at :math:`\\mathbf x = \\mathbf O`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <bcpy.Velocity.boundary_vector>`.
+      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <genepy.Velocity.boundary_vector>`.
 
     .. py:attribute:: uL
       :type: numpy.ndarray
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.uL
+      :canonical: genepy.boundary_conditions.velocity.Velocity.uL
 
       Velocity vector :math:`\\mathbf u_L` at :math:`\\mathbf x = \\mathbf L`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <bcpy.Velocity.boundary_vector>`.
+      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <genepy.Velocity.boundary_vector>`.
     
     .. py:attribute:: a
       :type: numpy.ndarray
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.a
+      :canonical: genepy.boundary_conditions.velocity.Velocity.a
 
       Coefficients in vector form :math:`\\mathbf a` of the linear velocity function 
       :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <bcpy.Velocity.velocity_coefficients>`.
+      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <genepy.Velocity.velocity_coefficients>`.
 
     .. py:attribute:: b
       :type: numpy.ndarray
-      :canonical: bcpy.boundary_conditions.velocity.Velocity.b
+      :canonical: genepy.boundary_conditions.velocity.Velocity.b
 
       Coefficients in vector form :math:`\\mathbf b` of the linear velocity function
       :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <bcpy.Velocity.velocity_coefficients>`.
+      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <genepy.Velocity.velocity_coefficients>`.
 
     .. py:attribute:: vertical_evaluated
       :type: bool
@@ -220,9 +220,9 @@ class Velocity(domain.Domain,rotation.Rotation):
     boundary_vector(self)
     Computes a vector horizontal components from:
 
-    - 1D & 2D: only the :attr:`norm <bcpy.boundary_conditions.velocity.Velocity.norm>` is used,
-    - 3D: the :attr:`norm <bcpy.boundary_conditions.velocity.Velocity.norm>` 
-      and angle :attr:`alpha <bcpy.boundary_conditions.velocity.Velocity.alpha>` 
+    - 1D & 2D: only the :attr:`norm <genepy.boundary_conditions.velocity.Velocity.norm>` is used,
+    - 3D: the :attr:`norm <genepy.boundary_conditions.velocity.Velocity.norm>` 
+      and angle :attr:`alpha <genepy.boundary_conditions.velocity.Velocity.alpha>` 
       with the :math:`z` axis (North-South) such that:
 
     .. math::
@@ -233,7 +233,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     .. warning:: 
       These values are always positive, special attention is required 
       if different signs are needed. This is normally addressed with the 
-      :attr:`type <bcpy.boundary_conditions.velocity.Velocity.type>` class attribute.
+      :attr:`type <genepy.boundary_conditions.velocity.Velocity.type>` class attribute.
 
 
     :return: boundary velocity, shape (dim,)
@@ -283,10 +283,10 @@ class Velocity(domain.Domain,rotation.Rotation):
       \\mathbf b &= -\\mathbf a \\mathbf L + \\mathbf u_L
     
     with :math:`\\mathbf u_O` and :math:`\\mathbf u_L` computed by 
-    :py:meth:`boundary_vector() <bcpy.boundary_conditions.velocity.Velocity.boundary_vector>` 
+    :py:meth:`boundary_vector() <genepy.boundary_conditions.velocity.Velocity.boundary_vector>` 
     and :math:`\\mathbf O` and :math:`\\mathbf L` the origin and max values of the domain.
     Each component of the velocity field is computed by calling 
-    :py:meth:`velocity_coefficients_1d() <bcpy.boundary_conditions.velocity.Velocity.velocity_coefficients_1d>`.
+    :py:meth:`velocity_coefficients_1d() <genepy.boundary_conditions.velocity.Velocity.velocity_coefficients_1d>`.
     """
     self.a = np.zeros(shape=(self.dim), dtype=np.float64)
     self.b = np.zeros(shape=(self.dim), dtype=np.float64)
@@ -343,7 +343,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     a vector valued function of the form :math:`\\mathbf u (x,y,z) = \\mathbf a x + \\mathbf b y + \\mathbf c z + \\mathbf d`
     and shape ``(1,dim)``.
 
-    If a rotation is required i.e., an instance of the :py:class:`Rotation <bcpy.Rotation>`
+    If a rotation is required i.e., an instance of the :py:class:`Rotation <genepy.Rotation>`
     class with a non-zero angle is provided, the velocity is evaluated as:
 
     .. math::
@@ -356,9 +356,9 @@ class Velocity(domain.Domain,rotation.Rotation):
     :math:`\\mathbf u_R` is the rotated velocity field. 
 
     The rotation of the coordinate system is performed by the method 
-    :meth:`rotate_referential() <bcpy.Rotation.rotate_referential>`.
+    :meth:`rotate_referential() <genepy.Rotation.rotate_referential>`.
     The evaluation of the velocity field with the (rotated) coordinate system is done with
-    the method :meth:`linear_velocity() <bcpy.Velocity.linear_velocity>`.
+    the method :meth:`linear_velocity() <genepy.Velocity.linear_velocity>`.
     """
     # create a numpy array of shape (1,dim) with the symbolic coordinates
     coor = np.array([[*self.sym_coor]], dtype='object')
@@ -526,7 +526,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     of the domain in the :math:`y` direction. 
 
     :math:`a` and :math:`b` are then computed with 
-    :meth:`velocity_coefficients_1d() <bcpy.Velocity.velocity_coefficients_1d>` 
+    :meth:`velocity_coefficients_1d() <genepy.Velocity.velocity_coefficients_1d>` 
 
     :param u: **(Optional)**, vector valued function of the velocity field.
               If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
@@ -555,8 +555,8 @@ class Velocity(domain.Domain,rotation.Rotation):
     Can be used for numerical or symbolic evaluation.
     Calls the methods:
 
-    - :meth:`evaluate_vertical_velocity_coefficients() <bcpy.Velocity.evaluate_vertical_velocity_coefficients>`
-    - :meth:`linear_velocity_1d() <bcpy.Velocity.linear_velocity_1d>`
+    - :meth:`evaluate_vertical_velocity_coefficients() <genepy.Velocity.evaluate_vertical_velocity_coefficients>`
+    - :meth:`linear_velocity_1d() <genepy.Velocity.linear_velocity_1d>`
 
     :param y: coordinate of the vertical direction
     :param u: **(Optional)**, vector valued function of the velocity field.

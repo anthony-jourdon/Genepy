@@ -37,7 +37,7 @@ dependencies that can all be installed using pip
 - matplotlib
 - pyvista
 
-To be able to import bcpy module its location needs to be known by 
+To be able to import genepy module its location needs to be known by 
 the environment variable **$PYTHONPATH**. 
 To do so, move yourself in bc-pre-processing and type
 
@@ -52,7 +52,7 @@ Once your **$PYTHONPATH** has been appended check that it works correctly by typ
 
 .. code-block:: python
 
-  import bcpy
+  import genepy
 
 in a python terminal. If no error is raised, the module is correctly installed.
 
@@ -78,14 +78,14 @@ the thermal part of the model is not included.
 
 1. Create a domain
 ~~~~~~~~~~~~~~~~~~~
-We define a 3D :py:class:`domain <bcpy.Domain>` :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :sup:`3`
+We define a 3D :py:class:`domain <genepy.Domain>` :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :sup:`3`
 :math:`\in \mathbb R^3` discretized by a regular grid of 9x9x9 nodes.
 
 .. code-block:: python
 
   import os
   import numpy as np
-  import bcpy as bp
+  import genepy as bp
 
   # 3D domain
   dimensions = 3
@@ -97,7 +97,7 @@ We define a 3D :py:class:`domain <bcpy.Domain>` :math:`\Omega = [0,600]\times[-2
 
 2. Velocity function
 ~~~~~~~~~~~~~~~~~~~~
-We define a simple orthogonal shortening :py:class:`velocity <bcpy.Velocity>` in the :math:`z` direction.
+We define a simple orthogonal shortening :py:class:`velocity <genepy.Velocity>` in the :math:`z` direction.
 
 .. code-block:: python
 
@@ -117,7 +117,7 @@ We define a simple orthogonal shortening :py:class:`velocity <bcpy.Velocity>` in
 3. Initial conditions
 ~~~~~~~~~~~~~~~~~~~~~
 In this example we do not impose any initial plastic strain value nor mesh refinement.
-Therefore the :py:class:`initial conditions <bcpy.InitialConditions>` are only the Domain and the velocity function.
+Therefore the :py:class:`initial conditions <genepy.InitialConditions>` are only the Domain and the velocity function.
 They will be used to generate the options for `pTatin3d`_ model.
 
 .. code-block:: python
@@ -128,8 +128,8 @@ They will be used to generate the options for `pTatin3d`_ model.
 4. Boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~
 Because the imposed velocity is orthogonal to the boundary we can define the 
-velocity boundary conditions using :py:class:`Dirichlet <bcpy.Dirichlet>` type 
-:py:class:`boundary conditions <bcpy.ModelBCs>`.
+velocity boundary conditions using :py:class:`Dirichlet <genepy.Dirichlet>` type 
+:py:class:`boundary conditions <genepy.ModelBCs>`.
 
 .. note:: 
   In the following example a path to the mesh files describing the boundaries is provided.
@@ -159,14 +159,14 @@ Details on the methods used to define the boundary conditions can be found in th
 
 5. Material parameters
 ~~~~~~~~~~~~~~~~~~~~~~
-Next we define the material properties of each :py:class:`Region <bcpy.Region>` and 
-gather them all in a :py:class:`ModelRegions <bcpy.ModelRegions>` class instance.
+Next we define the material properties of each :py:class:`Region <genepy.Region>` and 
+gather them all in a :py:class:`ModelRegions <genepy.ModelRegions>` class instance.
 In this example we use the default values for **all regions**:
 
-- :py:class:`Constant viscosity <bcpy.ViscosityConstant>` of :math:`10^{22}` Pa.s.
-- :py:class:`Constant density <bcpy.DensityConstant>` of :math:`3300` kg.m\ :sup:`-3`.
-- :py:class:`No plasticity <bcpy.PlasticNone>`.
-- :py:class:`No softening <bcpy.SofteningNone>`.
+- :py:class:`Constant viscosity <genepy.ViscosityConstant>` of :math:`10^{22}` Pa.s.
+- :py:class:`Constant density <genepy.DensityConstant>` of :math:`3300` kg.m\ :sup:`-3`.
+- :py:class:`No plasticity <genepy.PlasticNone>`.
+- :py:class:`No softening <genepy.SofteningNone>`.
 
 .. code-block:: python
 
@@ -186,7 +186,7 @@ In this example we use the default values for **all regions**:
 
 6. Create the model and generate options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Finally, we create the :py:class:`model <bcpy.Model>` by gathering all the information defined previously and we save
+Finally, we create the :py:class:`model <genepy.Model>` by gathering all the information defined previously and we save
 the options to a file named ``simple_shortening_model.opts``.
 
 .. code-block:: python
@@ -202,10 +202,10 @@ Example: oblique model, non-linear rheology
 In this example we build a model with an oblique velocity field to impose 
 extension at 30 degrees (counter-clockwise) with respect to the :math:`z` axis 
 (can be seen as north-south direction).
-We use :py:class:`non-linear viscous <bcpy.ViscosityArrhenius2>` rheology, 
-:py:class:`Drucker-Prager plasticity <bcpy.PlasticDruckerPrager>` and
-a combination of :py:class:`Dirichlet <bcpy.Dirichlet>` and 
-:py:class:`Navier-slip <bcpy.NavierSlip>` type boundary conditions.
+We use :py:class:`non-linear viscous <genepy.ViscosityArrhenius2>` rheology, 
+:py:class:`Drucker-Prager plasticity <genepy.PlasticDruckerPrager>` and
+a combination of :py:class:`Dirichlet <genepy.Dirichlet>` and 
+:py:class:`Navier-slip <genepy.NavierSlip>` type boundary conditions.
 
 .. image:: figures/Oblique_extension.PNG
    :width: 400
@@ -220,7 +220,7 @@ We define a 3D domain :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :s
 
   import os
   import numpy as np
-  import bcpy as bp
+  import genepy as bp
 
   # 3D domain
   dimensions = 3
@@ -232,16 +232,16 @@ We define a 3D domain :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :s
 
 2. Velocity function
 ~~~~~~~~~~~~~~~~~~~~
-We define an oblique extension :py:class:`velocity <bcpy.Velocity>` velocity field
+We define an oblique extension :py:class:`velocity <genepy.Velocity>` velocity field
 forming an angle of 30 degrees counter-clockwise with respect to the :math:`z` axis.
 The method 
-:py:meth:`evaluate_velocity_and_gradient_symbolic() <bcpy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
+:py:meth:`evaluate_velocity_and_gradient_symbolic() <genepy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
 returns the symbolic expression of the velocity field and its gradient.
 The method
-:py:meth:`evaluate_velocity_numeric() <bcpy.Velocity.evaluate_velocity_numeric>`
+:py:meth:`evaluate_velocity_numeric() <genepy.Velocity.evaluate_velocity_numeric>`
 returns the numeric value of the velocity field evaluated at coordinates of the nodes.
 The method
-:py:meth:`get_velocity_orientation() <bcpy.Velocity.get_velocity_orientation>`
+:py:meth:`get_velocity_orientation() <genepy.Velocity.get_velocity_orientation>`
 returns the orientation of the velocity field at the boundary.
 
 .. code-block:: python
@@ -263,7 +263,7 @@ returns the orientation of the velocity field at the boundary.
 3. Initial conditions
 ~~~~~~~~~~~~~~~~~~~~~
 In this example we do not impose any initial plastic strain value nor mesh refinement.
-Therefore the :py:class:`initial conditions <bcpy.InitialConditions>` 
+Therefore the :py:class:`initial conditions <genepy.InitialConditions>` 
 are only the Domain and the velocity function.
 They will be used to generate the options for `pTatin3d`_ model.
 
@@ -275,8 +275,8 @@ They will be used to generate the options for `pTatin3d`_ model.
 4. Boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~
 Because the imposed velocity is oblique to the boundary we define the
-velocity boundary conditions using :py:class:`Dirichlet <bcpy.Dirichlet>` and
-:py:class:`Navier-slip <bcpy.NavierSlip>` type :py:class:`boundary conditions <bcpy.ModelBCs>`.
+velocity boundary conditions using :py:class:`Dirichlet <genepy.Dirichlet>` and
+:py:class:`Navier-slip <genepy.NavierSlip>` type :py:class:`boundary conditions <genepy.ModelBCs>`.
 Note that the Dirichlet conditions takes now the 2 horizontal components to impose the obliquity. 
 
 Moreover, we will use non-linear viscosities depending of the temperature 
@@ -305,14 +305,14 @@ Details on the methods used to define the boundary conditions can be found in th
 
 5. Material parameters
 ~~~~~~~~~~~~~~~~~~~~~~
-Next we define the material properties of each :py:class:`Region <bcpy.Region>` and
-gather them all in a :py:class:`ModelRegions <bcpy.ModelRegions>` class instance.
+Next we define the material properties of each :py:class:`Region <genepy.Region>` and
+gather them all in a :py:class:`ModelRegions <genepy.ModelRegions>` class instance.
 In this example we use the following material types:
 
-- :py:class:`Dislocation creep <bcpy.ViscosityArrhenius2>`.
-- :py:class:`Drucker-Prager <bcpy.PlasticDruckerPrager>` plastic yield criterion.
-- :py:class:`Linear softening <bcpy.SofteningLinear>`.
-- :py:class:`Boussinesq density <bcpy.DensityBoussinesq>`.
+- :py:class:`Dislocation creep <genepy.ViscosityArrhenius2>`.
+- :py:class:`Drucker-Prager <genepy.PlasticDruckerPrager>` plastic yield criterion.
+- :py:class:`Linear softening <genepy.SofteningLinear>`.
+- :py:class:`Boussinesq density <genepy.DensityBoussinesq>`.
 
 .. code-block:: python
 
@@ -352,7 +352,7 @@ In this example we use the following material types:
 
 6. Create the model and generate options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Finally, we create the :py:class:`model <bcpy.Model>` by gathering all the information defined previously and we save
+Finally, we create the :py:class:`model <genepy.Model>` by gathering all the information defined previously and we save
 the options to a file named ``oblique_extension_model.opts``.
 
 .. code-block:: python
@@ -366,11 +366,11 @@ the options to a file named ``oblique_extension_model.opts``.
 Example: strike-slip model, rotated velocity field and mesh refinement
 ......................................................................
 This example will build a 3D model with vertical 
-:py:class:`mesh refinement <bcpy.MeshRefinement>` 
+:py:class:`mesh refinement <genepy.MeshRefinement>` 
 and a strike-slip velocity field 
-:py:class:`rotated <bcpy.Rotation>` 
+:py:class:`rotated <genepy.Rotation>` 
 by 15 degrees as showed in the figure below.
-In addition, 2 :py:class:`gaussian <bcpy.Gaussian>` weak zones are added to the initial conditions of the model 
+In addition, 2 :py:class:`gaussian <genepy.Gaussian>` weak zones are added to the initial conditions of the model 
 
 .. image:: figures/Strike_slip-01.png
    :width: 600
@@ -378,14 +378,14 @@ In addition, 2 :py:class:`gaussian <bcpy.Gaussian>` weak zones are added to the 
 
 1. Create a domain
 ~~~~~~~~~~~~~~~~~~~
-We define a 3D :py:class:`Domain <bcpy.Domain>` :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :sup:`3` 
+We define a 3D :py:class:`Domain <genepy.Domain>` :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :sup:`3` 
 :math:`\in \mathbb R^3` discretized by a regular grid of 9x9x9 nodes. 
 
 .. code-block:: python
 
   import os
   import numpy as np
-  import bcpy as bp
+  import genepy as bp
 
   # 3D domain
   dimensions = 3
@@ -397,7 +397,7 @@ We define a 3D :py:class:`Domain <bcpy.Domain>` :math:`\Omega = [0,600]\times[-2
 
 2. Mesh refinement
 ~~~~~~~~~~~~~~~~~~
-In this step we :py:class:`refine the mesh <bcpy.MeshRefinement>` 
+In this step we :py:class:`refine the mesh <genepy.MeshRefinement>` 
 in the vertical direction (:math:`y`) using linear interpolation.
 Note however that the mesh refinement can be done in any direction following the same pattern.
 
@@ -416,7 +416,7 @@ Note however that the mesh refinement can be done in any direction following the
 3. Rotation
 ~~~~~~~~~~~
 To rotate the velocity field we first need to 
-set the parameters of this :py:class:`rotation <bcpy.Rotation>`.
+set the parameters of this :py:class:`rotation <genepy.Rotation>`.
 In this example we perform a rotation of 15 degrees 
 clockwise around the :math:`y` axis.
 
@@ -432,13 +432,13 @@ clockwise around the :math:`y` axis.
 ~~~~~~~~~~~~~~~~~
 Next, we create a strike-slip velocity field with a norm of 1 cm.a\ :sup:`-1`.
 The method 
-:py:meth:`evaluate_velocity_and_gradient_symbolic() <bcpy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
+:py:meth:`evaluate_velocity_and_gradient_symbolic() <genepy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
 returns the symbolic expression of the velocity field and its gradient.
 The method
-:py:meth:`evaluate_velocity_numeric() <bcpy.Velocity.evaluate_velocity_numeric>`
+:py:meth:`evaluate_velocity_numeric() <genepy.Velocity.evaluate_velocity_numeric>`
 returns the numeric value of the velocity field evaluated at coordinates of the nodes.
 The method
-:py:meth:`get_velocity_orientation() <bcpy.Velocity.get_velocity_orientation>`
+:py:meth:`get_velocity_orientation() <genepy.Velocity.get_velocity_orientation>`
 returns the orientation of the velocity field at the boundary.
 
 .. note:: The rotation of the velocity field is handled inside the velocity function evaluation
@@ -463,15 +463,15 @@ returns the orientation of the velocity field at the boundary.
 
 5. Define gaussian weak zones
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In this exemple we define two :py:class:`gaussian <bcpy.Gaussian>` weak zones.
+In this exemple we define two :py:class:`gaussian <genepy.Gaussian>` weak zones.
 We provide the parameters of the gaussians and their position in the domain.
 
 .. note:: 
   In this example we rotate the velocity field by 15 degrees.
   Therefore we also rotate the gaussians by 15 degrees.
   This is achieved by passing the 
-  :py:class:`Rotation <bcpy.Rotation>` class instance to the 
-  :py:class:`Gaussian <bcpy.Gaussian>` class constructor.
+  :py:class:`Rotation <genepy.Rotation>` class instance to the 
+  :py:class:`Gaussian <genepy.Gaussian>` class constructor.
 
 .. code-block:: python
 
@@ -584,7 +584,7 @@ The details on the methods can be found in the
 
 9. Add surface processes
 ~~~~~~~~~~~~~~~~~~~~~~~~
-In this example we add :py:class:`surface processes <bcpy.SPMDiffusion>`.
+In this example we add :py:class:`surface processes <genepy.SPMDiffusion>`.
 Surface processes are done by solving a diffusion equation. 
 Here we set ``"zmin"`` and ``"zmax"`` as Dirichlet boundary conditions for the diffusion equation
 and we set the diffusivity to :math:`10^6` m\ :sup:`2`.s\ :sup:`-1`.
@@ -602,7 +602,7 @@ of passive tracers with a layout of :math:`30 \times 5 \times 15` lagrangian mar
 We activate the tracking of the pressure and temperature fields.
 
 .. note:: Other types of passive tracers layout can be found in the 
-  :py:class:`passive tracers <bcpy.Pswarm>` section.
+  :py:class:`passive tracers <genepy.Pswarm>` section.
 
 .. code-block:: python
 
@@ -615,7 +615,7 @@ We activate the tracking of the pressure and temperature fields.
 
 12.  Create the model and generate options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The :py:class:`model <bcpy.Model>` is created by gathering all the information defined previously.
+The :py:class:`model <genepy.Model>` is created by gathering all the information defined previously.
 
 .. code-block:: python
 
@@ -648,7 +648,7 @@ Compute initial topography
 If your problem involves a density distribution that should produce non-zero topography,
 `pTatin3d`_ provides an automatic method to compute an initial isostatic topography.
 Options related to this problem are provided by default and can be changed using the 
-corresponding keywords arguments found in the :py:class:`Model <bcpy.Model>` class.
+corresponding keywords arguments found in the :py:class:`Model <genepy.Model>` class.
 
 The option
 

@@ -41,26 +41,26 @@ class Rotation:
         theta = np.deg2rad(-90.0)                   # angle of rotation
         axis  = np.array([0,1,0], dtype=np.float64) # axis of rotation
         # Create class instance
-        Rotation = bcpy.Rotation(dim,theta,axis)
+        Rotation = genepy.Rotation(dim,theta,axis)
 
     Attributes
     ----------
 
     .. py:attribute:: dim
       :type: int
-      :canonical: bcpy.rotation.Rotation.dim
+      :canonical: genepy.rotation.Rotation.dim
 
         Spatial dimension in which the rotation is performed
       
     .. py:attribute:: theta
       :type: float
-      :canonical: bcpy.rotation.Rotation.theta
+      :canonical: genepy.rotation.Rotation.theta
 
         Angle of rotation in radians
 
     .. py:attribute:: axis
       :type: np.ndarray
-      :canonical: bcpy.rotation.Rotation.axis
+      :canonical: genepy.rotation.Rotation.axis
 
         Axis of rotation, expected shape: ``(dim,)`` and dtype: ``np.float64``
 
@@ -83,7 +83,7 @@ class Rotation:
   def rotation_matrix_2d(self):
     """
     rotation_matrix_2d(self)
-    computes the 2D rotation matrix given the angle :attr:`theta <bcpy.rotation.Rotation.theta>`.
+    computes the 2D rotation matrix given the angle :attr:`theta <genepy.rotation.Rotation.theta>`.
   
     :return: **R** rotation matrix in 2D of the shape ``(2,2)``
     """
@@ -94,7 +94,7 @@ class Rotation:
   def rotation_matrix_3d(self):
     """
     rotation_matrix_3d(self)
-    computes the 3D rotation matrix given the angle :attr:`theta <bcpy.rotation.Rotation.theta>` and the :attr:`axis <bcpy.rotation.Rotation.axis>` of rotation.
+    computes the 3D rotation matrix given the angle :attr:`theta <genepy.rotation.Rotation.theta>` and the :attr:`axis <genepy.rotation.Rotation.axis>` of rotation.
   
     :return: **R** rotation matrix in 3D of the shape ``(3,3)``
     """
@@ -113,8 +113,8 @@ class Rotation:
   def rotation_matrix(self):
     """
     rotation_matrix(self)
-    Return the rotation matrix depending on the :attr:`spatial dimension <bcpy.rotation.Rotation.dim>`.
-    calls :meth:`rotation_matrix_2d() <bcpy.rotation.Rotation.rotation_matrix_2d>` or :meth:`rotation_matrix_3d() <bcpy.rotation.Rotation.rotation_matrix_3d>`.
+    Return the rotation matrix depending on the :attr:`spatial dimension <genepy.rotation.Rotation.dim>`.
+    calls :meth:`rotation_matrix_2d() <genepy.rotation.Rotation.rotation_matrix_2d>` or :meth:`rotation_matrix_3d() <genepy.rotation.Rotation.rotation_matrix_3d>`.
 
     :return: **R** rotation matrix in 2D or 3D of the shape ``(2,2)`` or ``(3,3)``
     """
@@ -134,7 +134,7 @@ class Rotation:
 
       This is **not** a rotation of the vector field, but a rotation of the vectors themselves.
       To rotate the vector field, have a look at how it is done in
-      :meth:`evaluate_velocity_numeric() <bcpy.Velocity.evaluate_velocity_numeric>`.
+      :meth:`evaluate_velocity_numeric() <genepy.Velocity.evaluate_velocity_numeric>`.
 
     :param np.ndarray R: rotation matrix of the shape ``(dim,dim)``
     :param np.ndarray u: vector(s) to be rotated of the shape ``(npoints,dim)``

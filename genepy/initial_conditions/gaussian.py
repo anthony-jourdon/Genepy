@@ -21,8 +21,8 @@
 
 import numpy as np
 import sympy as sp
-from bcpy.initial_conditions import domain
-from bcpy import rotation
+from genepy.initial_conditions import domain
+from genepy import rotation
 
 import matplotlib.pyplot as plt
 
@@ -35,8 +35,8 @@ class Gaussian(domain.Domain,rotation.Rotation):
     .. math:: 
       u = A \\exp\\left( -\\left( a(x-x_0)^2 + 2b(x-x_0)(z-z_0) + c(z-z_0)^2 \\right) \\right)
 
-    The class inherits from :py:class:`Domain <bcpy.Domain>` 
-    and :py:class:`Rotation <bcpy.Rotation>`.
+    The class inherits from :py:class:`Domain <genepy.Domain>` 
+    and :py:class:`Rotation <genepy.Rotation>`.
 
     
 
@@ -58,7 +58,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     .. code-block:: python
 
       import numpy as np
-      import bcpy as bp
+      import genepy as bp
 
       ng = np.int32(2) # number of gaussians
       A  = np.array([..., ...],dtype=np.float64)
@@ -76,55 +76,55 @@ class Gaussian(domain.Domain,rotation.Rotation):
 
     .. py:attribute:: ng
       :type: int
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.ng
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.ng
 
       Number of gaussians
 
     .. py:attribute:: A
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.A
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.A
 
       Amplitude of the gaussian, shape: ``(ng,)``
 
     .. py:attribute:: a
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.a
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.a
 
       Gaussian coefficient, shape: ``(ng,)``
 
     .. py:attribute:: b
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.b
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.b
 
       Gaussian coefficient, shape: ``(ng,)``
 
     .. py:attribute:: c
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.c
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.c
 
       Gaussian coefficient, shape: ``(ng,)``
 
     .. py:attribute:: x0
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.x0
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.x0
 
       x coordinate of the gaussian centre, shape: ``(ng,)``
 
     .. py:attribute:: z0
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.z0
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.z0
 
       z coordinate of the gaussian centre, shape: ``(ng,)``
 
     .. py:attribute:: gaussian_num
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.gaussian_num
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.gaussian_num
 
       Numerical values of the gaussians, shape: ``(ng,n[0],n[1])`` or ``(ng,n[0],n[1],n[2])``
 
     .. py:attribute:: gaussian_sym
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.gaussian.Gaussian.gaussian_sym
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.gaussian_sym
 
       Symbolic values of the gaussians, shape: ``(ng,)``
 
@@ -227,8 +227,8 @@ class Gaussian(domain.Domain,rotation.Rotation):
     Evaluate the symbolic and numerical values of the gaussians.
     Calls :meth:`symbolic_gaussian` and :meth:`numerical_gaussian`.
     Attach the results to the attributes 
-    :attr:`gaussian_sym <bcpy.initial_conditions.gaussian.Gaussian.gaussian_sym>` 
-    and :attr:`gaussian_num <bcpy.initial_conditions.gaussian.Gaussian.gaussian_num>`.
+    :attr:`gaussian_sym <genepy.initial_conditions.gaussian.Gaussian.gaussian_sym>` 
+    and :attr:`gaussian_num <genepy.initial_conditions.gaussian.Gaussian.gaussian_num>`.
 
     :return: None
     """
@@ -268,7 +268,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     parameters attached to the instance of the class :class:`Gaussian`.
 
     :return: **field**: the field with the gaussian distribution of the shape ``(nv,)``
-             with :attr:`nv <bcpy.initial_conditions.domain.Domain.nv>` the total number of nodes
+             with :attr:`nv <genepy.initial_conditions.domain.Domain.nv>` the total number of nodes
              in the domain.
     :ret type: np.ndarray
     """
@@ -322,7 +322,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     return s
   
 def test():
-  from bcpy import utils
+  from genepy import utils
   # Domain
   O = np.array([ 0.0, 0.0 ],    dtype=np.float64)
   L = np.array([ 600e3, 300e3 ],dtype=np.float64)
@@ -362,8 +362,8 @@ def test():
   return
 
 def test3d():
-  from bcpy import utils
-  from bcpy import writers
+  from genepy import utils
+  from genepy import writers
   # Domain
   O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
   L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)

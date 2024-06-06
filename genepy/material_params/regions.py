@@ -19,11 +19,11 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import MaterialConstants
-from bcpy import PlasticNone
-from bcpy import DensityConstant
-from bcpy import ViscosityConstant
-from bcpy import SofteningNone
+from genepy import MaterialConstants
+from genepy import PlasticNone
+from genepy import DensityConstant
+from genepy import ViscosityConstant
+from genepy import SofteningNone
 
 # This file contains the Region class which is used to store the material parameters for a given region of the model.
 class Region:
@@ -43,10 +43,10 @@ class Region:
     .. note::
       If the user does not provide any material parameter, the default values are set to:
       
-      - :py:class:`Constant Density <bcpy.material_params.density.DensityConstant>` : 3300 kg/m\ :sup:`3`
-      - :py:class:`Constant Viscosity <bcpy.material_params.viscosity.ViscosityConstant>` : 10\ :sup:`22` Pa.s
-      - :py:class:`No Plasticity <bcpy.material_params.plasticity.PlasticNone>` 
-      - :py:class:`No Softening <bcpy.material_params.softening.SofteningNone>` 
+      - :py:class:`Constant Density <genepy.material_params.density.DensityConstant>` : 3300 kg/m\ :sup:`3`
+      - :py:class:`Constant Viscosity <genepy.material_params.viscosity.ViscosityConstant>` : 10\ :sup:`22` Pa.s
+      - :py:class:`No Plasticity <genepy.material_params.plasticity.PlasticNone>` 
+      - :py:class:`No Softening <genepy.material_params.softening.SofteningNone>` 
     
     Example
     -------
@@ -54,7 +54,7 @@ class Region:
     Default values for all material parameters
     ..........................................
 
-    >>> import bcpy as bp
+    >>> import genepy as bp
     >>> region = bp.Region(1)
 
     Custom values for material parameters
@@ -62,7 +62,7 @@ class Region:
 
     .. code-block:: python
 
-      import bcpy as bp
+      import genepy as bp
 
       region1 = bp.Region(1,                                           # region tag
                           bp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density

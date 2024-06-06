@@ -19,7 +19,7 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import Domain
+from genepy import Domain
 
 class InitialConditions:
   """
@@ -39,31 +39,31 @@ class InitialConditions:
 
     .. py:attribute:: model_name
       :type: str
-      :canonical: bcpy.initial_conditions.ics.InitialConditions.model_name
+      :canonical: genepy.initial_conditions.ics.InitialConditions.model_name
 
         Name of the model to include in the options
 
     .. py:attribute:: Domain
       :type: Domain
-      :canonical: bcpy.initial_conditions.ics.InitialConditions.Domain
+      :canonical: genepy.initial_conditions.ics.InitialConditions.Domain
 
         Instance of the Domain class
 
     .. py:attribute:: u
       :type: velocity
-      :canonical: bcpy.initial_conditions.ics.InitialConditions.u
+      :canonical: genepy.initial_conditions.ics.InitialConditions.u
 
         Velocity function (str or sympy expression)
 
     .. py:attribute:: kwargs
       :type: dict
-      :canonical: bcpy.initial_conditions.ics.InitialConditions.kwargs
+      :canonical: genepy.initial_conditions.ics.InitialConditions.kwargs
 
         Keyword arguments
 
     .. py:attribute:: possible_kwargs
       :type: list
-      :canonical: bcpy.initial_conditions.ics.InitialConditions.possible_kwargs
+      :canonical: genepy.initial_conditions.ics.InitialConditions.possible_kwargs
 
         Possible keyword arguments
 

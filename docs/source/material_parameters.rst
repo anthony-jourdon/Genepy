@@ -31,19 +31,19 @@ Region
 This class is a wrapper for material parameters. 
 It is used to set all material parameters of a given region at once.
 
-.. autoclass:: bcpy.Region
+.. autoclass:: genepy.Region
     :members:
 
 Model regions
 .............
 
-.. autoclass:: bcpy.ModelRegions
+.. autoclass:: genepy.ModelRegions
     :members:
 
 Parent class for all material parameters.
 -----------------------------------------
 
-.. autoclass:: bcpy.MaterialConstants
+.. autoclass:: genepy.MaterialConstants
     :members:
 
 .. _density:
@@ -54,19 +54,19 @@ Density
 Constant density
 ................ 
 
-.. autoclass:: bcpy.DensityConstant
+.. autoclass:: genepy.DensityConstant
     :members:
 
 Boussinesq approximation
 ........................ 
 
-.. autoclass:: bcpy.DensityBoussinesq
+.. autoclass:: genepy.DensityBoussinesq
     :members:
 
 Thermodynamic table
 ...................
 
-.. autoclass:: bcpy.DensityTable
+.. autoclass:: genepy.DensityTable
     :members:
 
 .. _viscosity:
@@ -77,31 +77,31 @@ Viscosity
 Constant viscosity
 ..................
 
-.. autoclass:: bcpy.ViscosityConstant
+.. autoclass:: genepy.ViscosityConstant
     :members:
 
 Frank-Kamenetskii viscosity
 ............................
 
-.. autoclass:: bcpy.ViscosityFrankK
+.. autoclass:: genepy.ViscosityFrankK
     :members:
 
 Depth-dependent viscosity
 ..........................
 
-.. autoclass:: bcpy.ViscosityZ
+.. autoclass:: genepy.ViscosityZ
     :members:
 
 Arrhenius viscosity
 ....................
 
-.. autoclass:: bcpy.ViscosityArrhenius
+.. autoclass:: genepy.ViscosityArrhenius
     :members:
 
-.. autoclass:: bcpy.ViscosityArrhenius2
+.. autoclass:: genepy.ViscosityArrhenius2
     :members:
 
-.. autoclass:: bcpy.ViscosityArrheniusDislDiff
+.. autoclass:: genepy.ViscosityArrheniusDislDiff
     :members:
 
 .. _plasticity:
@@ -112,19 +112,19 @@ Pasticity
 No plasticity
 .............
 
-.. autoclass:: bcpy.PlasticNone
+.. autoclass:: genepy.PlasticNone
     :members:
 
 VonMises plasticity
 ....................
 
-.. autoclass:: bcpy.PlasticMises
+.. autoclass:: genepy.PlasticMises
     :members:
 
 Drucker-Prager plasticity
 ..........................
 
-.. autoclass:: bcpy.PlasticDruckerPrager
+.. autoclass:: genepy.PlasticDruckerPrager
     :members:
 
 .. _softening:
@@ -135,19 +135,19 @@ Plastic strain softening
 No softening
 .............
 
-.. autoclass:: bcpy.SofteningNone
+.. autoclass:: genepy.SofteningNone
     :members:
 
 Linear softening
 ................
 
-.. autoclass:: bcpy.SofteningLinear
+.. autoclass:: genepy.SofteningLinear
     :members:
 
 Exponential softening
 .....................
 
-.. autoclass:: bcpy.SofteningExponential
+.. autoclass:: genepy.SofteningExponential
     :members:
 
 .. _energy:
@@ -155,5 +155,5 @@ Exponential softening
 Energy
 ------
 
-.. autoclass:: bcpy.Energy
+.. autoclass:: genepy.Energy
     :members:

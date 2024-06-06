@@ -20,7 +20,7 @@
 #====================================================================================================
 
 import numpy as np
-from bcpy import MaterialConstants
+from genepy import MaterialConstants
 
 class Plasticity(MaterialConstants):
   def __init__(self, model_name:str="model_GENE3D", region:int=0) -> None:

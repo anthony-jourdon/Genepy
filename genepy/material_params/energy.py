@@ -19,7 +19,7 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import MaterialConstants
+from genepy import MaterialConstants
 
 class Energy(MaterialConstants):
   """

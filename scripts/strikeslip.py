@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import bcpy as bp
+import genepy as bp
 
 def model_domain():
   # 3D domain

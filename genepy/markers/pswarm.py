@@ -20,7 +20,7 @@
 #====================================================================================================
 
 import numpy as np
-from bcpy import Markers
+from genepy import Markers
 
 class Pswarm(Markers):
   """

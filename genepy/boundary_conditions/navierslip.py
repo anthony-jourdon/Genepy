@@ -19,7 +19,7 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import StokesBoundaryCondition
+from genepy import StokesBoundaryCondition
 
 class NavierSlip(StokesBoundaryCondition):
   """
@@ -40,31 +40,31 @@ class NavierSlip(StokesBoundaryCondition):
 
     .. py:attribute:: tag
       :type: int
-      :canonical: bcpy.boundary_conditions.navierslip.NavierSlip.tag
+      :canonical: genepy.boundary_conditions.navierslip.NavierSlip.tag
 
       Tag of the boundary condition
 
     .. py:attribute:: prefix 
       :type: str
-      :canonical: bcpy.boundary_conditions.navierslip.NavierSlip.prefix
+      :canonical: genepy.boundary_conditions.navierslip.NavierSlip.prefix
 
       Prefix: "bc_navier" for the options
 
     .. py:attribute:: bc_type
       :type: int
-      :canonical: bcpy.boundary_conditions.navierslip.NavierSlip.bc_type
+      :canonical: genepy.boundary_conditions.navierslip.NavierSlip.bc_type
 
       Type of the boundary condition in the model. For Navier-slip: 6
 
     .. py:attribute:: bc_name
       :type: str
-      :canonical: bcpy.boundary_conditions.navierslip.NavierSlip.bc_name
+      :canonical: genepy.boundary_conditions.navierslip.NavierSlip.bc_name
 
       Name of the boundary condition in the model, name is arbitrary but providing one is mandatory
 
     .. py:attribute:: mesh_file
       :type: str
-      :canonical: bcpy.boundary_conditions.navierslip.NavierSlip.mesh_file
+      :canonical: genepy.boundary_conditions.navierslip.NavierSlip.mesh_file
 
       Path to the mesh file containing the facets of the boundary
 

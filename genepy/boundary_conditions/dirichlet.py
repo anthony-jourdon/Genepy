@@ -19,7 +19,7 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import StokesBoundaryCondition
+from genepy import StokesBoundaryCondition
 
 class Dirichlet(StokesBoundaryCondition):
   """
@@ -40,31 +40,31 @@ class Dirichlet(StokesBoundaryCondition):
 
     .. py:attribute:: tag
       :type: int
-      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.tag
+      :canonical: genepy.boundary_conditions.dirichlet.Dirichlet.tag
 
       Tag of the boundary condition
     
     .. py:attribute:: prefix
       :type: str
-      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.prefix
+      :canonical: genepy.boundary_conditions.dirichlet.Dirichlet.prefix
 
       Prefix: "bc_dirichlet" for the options
 
     .. py:attribute:: bc_type
       :type: int
-      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.bc_type
+      :canonical: genepy.boundary_conditions.dirichlet.Dirichlet.bc_type
 
       Type of the boundary condition in the model. For Dirichlet: 7
     
     .. py:attribute:: bc_name
       :type: str
-      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.bc_name
+      :canonical: genepy.boundary_conditions.dirichlet.Dirichlet.bc_name
 
       Name of the boundary condition in the model, name is arbitrary but providing one is mandatory
     
     .. py:attribute:: mesh_file
       :type: str
-      :canonical: bcpy.boundary_conditions.dirichlet.Dirichlet.mesh_file
+      :canonical: genepy.boundary_conditions.dirichlet.Dirichlet.mesh_file
 
       Path to the mesh file containing the facets of the boundary
   """
@@ -80,7 +80,7 @@ class Dirichlet(StokesBoundaryCondition):
     """
     sprint_option(self)
     Returns the string to be added to the options file descibing the Dirichlet boundary condition.
-    Calls :meth:`bcpy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
+    Calls :meth:`genepy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
 
     :return: string to be added to the options file
     :rtype: str
@@ -127,31 +127,31 @@ class DirichletUdotN(StokesBoundaryCondition):
 
     .. py:attribute:: tag
       :type: int
-      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.tag
+      :canonical: genepy.boundary_conditions.dirichlet.DirichletUdotN.tag
 
       Tag of the boundary condition
 
     .. py:attribute:: prefix
       :type: str
-      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.prefix
+      :canonical: genepy.boundary_conditions.dirichlet.DirichletUdotN.prefix
 
       Prefix: "bc_dirichlet" for the options
 
     .. py:attribute:: bc_type
       :type: int
-      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.bc_type
+      :canonical: genepy.boundary_conditions.dirichlet.DirichletUdotN.bc_type
 
       Type of the boundary condition in the model. For Dirichlet: 7
 
     .. py:attribute:: bc_name
       :type: str
-      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.bc_name
+      :canonical: genepy.boundary_conditions.dirichlet.DirichletUdotN.bc_name
 
       Name of the boundary condition in the model, name is arbitrary but providing one is mandatory
 
     .. py:attribute:: mesh_file
       :type: str
-      :canonical: bcpy.boundary_conditions.dirichlet.DirichletUdotN.mesh_file
+      :canonical: genepy.boundary_conditions.dirichlet.DirichletUdotN.mesh_file
 
       Path to the mesh file containing the facets of the boundary
 
@@ -168,7 +168,7 @@ class DirichletUdotN(StokesBoundaryCondition):
     """
     sprint_option(self)
     Returns the string to be added to the options file descibing the special u.n Dirichlet boundary condition.
-    Calls :meth:`bcpy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
+    Calls :meth:`genepy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
 
     :return: string to be added to the options file
     :rtype: str

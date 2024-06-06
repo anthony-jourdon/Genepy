@@ -30,7 +30,7 @@
 
 Welcome to bc-pre-processing's documentation!
 =============================================
-`bcpy` is a python module designed to evaluate symbolic (mathematic) 
+`genepy` is a python module designed to evaluate symbolic (mathematic) 
 expression to build analytical velocity functions varying in space and time, 
 define the rheological parameters of a long-term geodynamic model, 
 and generate input file for `pTatin3d`_.
@@ -63,4 +63,4 @@ Contents
 .. toctree:: 
 
    usage
-   bcpy_docs
+   genepy_docs

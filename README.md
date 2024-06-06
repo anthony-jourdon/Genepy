@@ -1,6 +1,6 @@
 # Boundary conditions pre-processing
 ## Presentation
-`bcpy` is a python module designed to evaluate symbolic (mathematic) expression to build analytical velocity functions varying in space and time, define the rheological parameters of a long-term geodynamic model, and generate input file for [pTatin3d](https://github.com/laetitialp/ptatin-gene).
+`genepy` is a python module designed to evaluate symbolic (mathematic) expression to build analytical velocity functions varying in space and time, define the rheological parameters of a long-term geodynamic model, and generate input file for [pTatin3d](https://github.com/laetitialp/ptatin-gene).
 It is a pre-processing tool.
 
 This module can:
@@ -12,7 +12,7 @@ This module can:
 Some examples can be found in `scripts`  subdirectory.
 
 ## Installation
-To be able to import bcpy module its location needs to be known by `PYTHONPATH`.
+To be able to import genepy module its location needs to be known by `PYTHONPATH`.
 To do so, move yourself in bc-pre-processing and type
 
 `source bc-pre-proc.sh`
@@ -24,7 +24,7 @@ Once your `PYTHONPATH` has been appended check that it works correctly with
 
 ```
 $ python
->> import bcpy
+>> import genepy
 ```
 
 This module requires the following dependencies that can all be installed using pip

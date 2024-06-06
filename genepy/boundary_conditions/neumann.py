@@ -19,7 +19,7 @@
 #  If not, see <https://www.gnu.org/licenses/>.
 #====================================================================================================
 
-from bcpy import StokesBoundaryCondition
+from genepy import StokesBoundaryCondition
 
 class Neumann(StokesBoundaryCondition):
   """
@@ -77,37 +77,37 @@ class Neumann(StokesBoundaryCondition):
 
     .. py:attribute:: tag
       :type: int
-      :canonical: bcpy.boundary_conditions.neumann.Neumann.tag
+      :canonical: genepy.boundary_conditions.neumann.Neumann.tag
 
       Tag of the boundary condition
 
     .. py:attribute:: prefix
       :type: str
-      :canonical: bcpy.boundary_conditions.neumann.Neumann.prefix
+      :canonical: genepy.boundary_conditions.neumann.Neumann.prefix
 
       Prefix: "bc_neumann" for the options
 
     .. py:attribute:: bc_type
       :type: int
-      :canonical: bcpy.boundary_conditions.neumann.Neumann.bc_type
+      :canonical: genepy.boundary_conditions.neumann.Neumann.bc_type
 
       Type of the boundary condition in the model. For Neumann: 1
 
     .. py:attribute:: bc_name
       :type: str
-      :canonical: bcpy.boundary_conditions.neumann.Neumann.bc_name
+      :canonical: genepy.boundary_conditions.neumann.Neumann.bc_name
 
       Name of the boundary condition in the model, name is arbitrary but providing one is mandatory
 
     .. py:attribute:: mesh_file
       :type: str
-      :canonical: bcpy.boundary_conditions.neumann.Neumann.mesh_file
+      :canonical: genepy.boundary_conditions.neumann.Neumann.mesh_file
 
       Path to the mesh file containing the facets of the boundary
 
     .. py:attribute:: dev_stress
       :type: str
-      :canonical: bcpy.boundary_conditions.neumann.Neumann.dev_stress
+      :canonical: genepy.boundary_conditions.neumann.Neumann.dev_stress
 
       Expression for the deviatoric stress. Can be None, in that case no deviatoric stress 
       is imposed, only the pressure.

@@ -39,31 +39,31 @@ class StokesBoundaryCondition(BoundaryCondition):
 
     .. py:attribute:: tag
       :type: int
-      :canonical: bcpy.boundary_conditions.bcs.StokesBoundaryCondition.tag
+      :canonical: genepy.boundary_conditions.bcs.StokesBoundaryCondition.tag
 
       Tag of the boundary condition
 
     .. py:attribute:: prefix
       :type: str
-      :canonical: bcpy.boundary_conditions.bcs.StokesBoundaryCondition.prefix
+      :canonical: genepy.boundary_conditions.bcs.StokesBoundaryCondition.prefix
 
       Prefix: "bc" for the options
 
     .. py:attribute:: bc_type
       :type: int
-      :canonical: bcpy.boundary_conditions.bcs.StokesBoundaryCondition.bc_type
+      :canonical: genepy.boundary_conditions.bcs.StokesBoundaryCondition.bc_type
 
       Type of the boundary condition in the model
 
     .. py:attribute:: bc_name
       :type: str
-      :canonical: bcpy.boundary_conditions.bcs.StokesBoundaryCondition.bc_name
+      :canonical: genepy.boundary_conditions.bcs.StokesBoundaryCondition.bc_name
 
       Name of the boundary condition in the model
 
     .. py:attribute:: mesh_file
       :type: str
-      :canonical: bcpy.boundary_conditions.bcs.StokesBoundaryCondition.mesh_file
+      :canonical: genepy.boundary_conditions.bcs.StokesBoundaryCondition.mesh_file
 
       Path to the mesh file containing the facets of the boundary
   """
@@ -138,20 +138,20 @@ class ModelBCs:
     ----------
     .. py:attribute:: model_name
       :type: str
-      :canonical: bcpy.boundary_conditions.bcs.ModelBCs.model_name
+      :canonical: genepy.boundary_conditions.bcs.ModelBCs.model_name
 
       Name of the model
 
     .. py:attribute:: u_bcs
       :type: list[StokesBoundaryCondition]
-      :canonical: bcpy.boundary_conditions.bcs.ModelBCs.u_bcs
+      :canonical: genepy.boundary_conditions.bcs.ModelBCs.u_bcs
 
       List of instances of class :py:class:`StokesBoundaryCondition` (and its children) 
       for the Stokes problem boundary conditions.
 
     .. py:attribute:: energy_bc
       :type: TemperatureBC
-      :canonical: bcpy.boundary_conditions.bcs.ModelBCs.energy_bc
+      :canonical: genepy.boundary_conditions.bcs.ModelBCs.energy_bc
 
       Instance of class :py:class:`TemperatureBC` for the energy boundary conditions
 
@@ -163,7 +163,7 @@ class ModelBCs:
 
     .. code-block:: python
 
-      import bcpy as bp
+      import genepy as bp
     
       # Velocity boundary conditions
       bcs = [

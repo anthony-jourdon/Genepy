@@ -46,52 +46,52 @@ class Domain:
       maxCoord = np.array([1,0,0.5], dtype=np.float64)
       size     = np.array([9,5,17], dtype=np.int32)
 
-      domain   = bcpy.Domain(dim,minCoord,maxCoord,size)
+      domain   = genepy.Domain(dim,minCoord,maxCoord,size)
 
     Attributes
     ----------
 
     .. py:attribute:: dim
       :type: int
-      :canonical: bcpy.initial_conditions.domain.Domain.dim
+      :canonical: genepy.initial_conditions.domain.Domain.dim
 
         Dimension of the domain
     
     .. py:attribute:: O
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.domain.Domain.O
+      :canonical: genepy.initial_conditions.domain.Domain.O
 
       Minimum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
 
     .. py:attribute:: L
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.domain.Domain.L
+      :canonical: genepy.initial_conditions.domain.Domain.L
 
       Maximum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
     
     .. py:attribute:: n
       :type: np.ndarray
-      :canonical: bcpy.initial_conditions.domain.Domain.n
+      :canonical: genepy.initial_conditions.domain.Domain.n
 
       Size of the domain (number of nodes in each direction), expected shape: ``(dim,)`` and dtype: ``np.int32``
 
     .. py:attribute:: nv
       :type: int
-      :canonical: bcpy.initial_conditions.domain.Domain.nv
+      :canonical: genepy.initial_conditions.domain.Domain.nv
 
       Total number of nodes in the domain
 
     .. py:attribute:: num_coor
       :type: tuple
-      :canonical: bcpy.initial_conditions.domain.Domain.num_coor
+      :canonical: genepy.initial_conditions.domain.Domain.num_coor
 
-      Numerical coordinates of the domain created by :py:meth:`numerical_coordinates() <bcpy.Domain.numerical_coordinates>` . 
+      Numerical coordinates of the domain created by :py:meth:`numerical_coordinates() <genepy.Domain.numerical_coordinates>` . 
       Tuple ``(X)``, ``(X,Y)`` or ``(X,Y,Z)`` (depending on the number of dimensions)
       with each direction being of type ndarray and shape ``X.shape = (*n)``.
 
     .. py:attribute:: sym_coor
       :type: tuple
-      :canonical: bcpy.initial_conditions.domain.Domain.sym_coor
+      :canonical: genepy.initial_conditions.domain.Domain.sym_coor
 
       Symbolic coordinates of the domain. 
       Tuple ``('x')``, ``('x','y')`` or ``('x','y','z')``
@@ -171,7 +171,7 @@ class Domain:
     Computes the numerical coordinates of the domain as a uniform grid. 
     Compatible with 1D, 2D and 3D.
     Attach the coordinates to the attribute 
-    :attr:`num_coor <bcpy.initial_conditions.domain.Domain.num_coor>` 
+    :attr:`num_coor <genepy.initial_conditions.domain.Domain.num_coor>` 
     as a tuple: ``self.num_coor = (X,Y,Z)`` 
     with each direction being of the shape ``X.shape = (self.n[0],self.n[1],self.n[2])``.
     Tuples are immutable, so to modify the coordinates, convert them to a list first and restore them as tuple once done.
@@ -187,7 +187,7 @@ class Domain:
     Computes the symbolic coordinates of the domain.
     Works in 1D, 2D and 3D.
     Attach the coordinates to the attribute 
-    :py:attr:`sym_coor <bcpy.initial_conditions.domain.Domain.sym_coor>` 
+    :py:attr:`sym_coor <genepy.initial_conditions.domain.Domain.sym_coor>` 
     as a tuple (``"x"``, ``"y"``, ``"z"``)
     """
     variables = {1:'x', 2:'x y', 3:'x y z'}

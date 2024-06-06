@@ -4,7 +4,7 @@
   Anthony Jourdon, 
 
   project:  bc-pre-processing
-  filename: bcpy_docs.rst
+  filename: genepy_docs.rst
 
   This file is part of bc-pre-processing.
 
@@ -20,8 +20,8 @@
   If not, see <https://www.gnu.org/licenses/>.
   ====================================================================================================
 
-Module bcpy
-===========
+Module genepy
+=============
 
 .. toctree:: 
   :maxdepth: 3

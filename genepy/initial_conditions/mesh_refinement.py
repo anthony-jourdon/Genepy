@@ -20,7 +20,7 @@
 #====================================================================================================
 
 import numpy as np
-from bcpy.initial_conditions import domain
+from genepy.initial_conditions import domain
 
 class MeshRefinement(domain.Domain):
   """
@@ -28,7 +28,7 @@ class MeshRefinement(domain.Domain):
 
     Class to refine a mesh in one or more directions. 
     The refinement is done by linear interpolation of the coordinates of the mesh in the specified directions.
-    The class is a subclass of :py:class:`Domain <bcpy.initial_conditions.domain.Domain>`
+    The class is a subclass of :py:class:`Domain <genepy.initial_conditions.domain.Domain>`
 
     :param Domain Domain: domain to refine
     :param dict refinement_params: dictionary containing the refinement parameters. The dictionary must have the following structure:
@@ -48,7 +48,7 @@ class MeshRefinement(domain.Domain):
     
     .. py:attribute:: params
       :type: dict
-      :canonical: bcpy.initial_conditions.mesh_refinement.MeshRefinement.params
+      :canonical: genepy.initial_conditions.mesh_refinement.MeshRefinement.params
 
       Refinement parameters
 
@@ -102,7 +102,7 @@ class MeshRefinement(domain.Domain):
     """
     refine_direction(dim,x_initial,x_refined)
     Refine the mesh in the specified direction using linear interpolation.
-    :attr:`num_coor <bcpy.initial_conditions.domain.Domain.num_coor>` is updated with the refined coordinates.
+    :attr:`num_coor <genepy.initial_conditions.domain.Domain.num_coor>` is updated with the refined coordinates.
 
     :param int dim:              direction of the mesh to refine (``0:x``, ``1:y``, ``2:z``)
     :param np.ndarray x_initial: initial coordinates 
@@ -186,7 +186,7 @@ class MeshRefinement(domain.Domain):
     return s
 
 def test():
-  from bcpy import writers
+  from genepy import writers
   O = np.array([0,-250,0],dtype=np.float64)
   L = np.array([600,0,600],dtype=np.float64)
   n = np.array([45,18,33],dtype=np.int32)

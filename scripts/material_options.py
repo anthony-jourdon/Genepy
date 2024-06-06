@@ -1,5 +1,5 @@
 import numpy as np
-import bcpy as bp
+import genepy as bp
 
 def main():
   region = 1

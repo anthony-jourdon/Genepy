@@ -32,7 +32,7 @@ Velocity
 --------
 This module contains the class evaluating symbolic and numeric velocity field.
 
-.. autoclass:: bcpy.Velocity
+.. autoclass:: genepy.Velocity
     :members:
 
 Options generation
@@ -44,7 +44,7 @@ Bounary conditions wrapper
 This class is a wrapper to generate options of the boundary conditions 
 for input files of `pTatin3d`_.
 
-.. autoclass:: bcpy.ModelBCs
+.. autoclass:: genepy.ModelBCs
     :members:
 
 
@@ -52,33 +52,33 @@ Stokes boundary conditions
 .......................... 
 This class is parent of all Stokes boundary conditions classes:
 
-  - :py:class:`Dirichlet <bcpy.boundary_conditions.dirichlet.Dirichlet>`
-  - :py:class:`NavierSlip <bcpy.boundary_conditions.navierslip.NavierSlip>`
-  - :py:class:`Neumann <bcpy.boundary_conditions.neumann.Neumann>`
+  - :py:class:`Dirichlet <genepy.boundary_conditions.dirichlet.Dirichlet>`
+  - :py:class:`NavierSlip <genepy.boundary_conditions.navierslip.NavierSlip>`
+  - :py:class:`Neumann <genepy.boundary_conditions.neumann.Neumann>`
 
-.. autoclass:: bcpy.StokesBoundaryCondition
+.. autoclass:: genepy.StokesBoundaryCondition
     :members:
 
 Dirichlet
 .......... 
 Classes to generate options for Dirichlet boundary conditions.
-Inherits from class :py:class:`StokesBoundaryCondition <bcpy.boundary_conditions.bcs.StokesBoundaryCondition>`.
+Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditions.bcs.StokesBoundaryCondition>`.
 
-.. autoclass:: bcpy.Dirichlet
+.. autoclass:: genepy.Dirichlet
     :members:
 
 Navier-slip
 ...........
 Class to generate options for Navier-slip boundary conditions.
-Inherits from class :py:class:`StokesBoundaryCondition <bcpy.boundary_conditions.bcs.StokesBoundaryCondition>`.
+Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditions.bcs.StokesBoundaryCondition>`.
 
-.. autoclass:: bcpy.NavierSlip
+.. autoclass:: genepy.NavierSlip
     :members:
 
 Neumann
 ........
 Class to generate options for Neumann boundary conditions.
-Inherits from class :py:class:`StokesBoundaryCondition <bcpy.boundary_conditions.bcs.StokesBoundaryCondition>`.
+Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditions.bcs.StokesBoundaryCondition>`.
 
-.. autoclass:: bcpy.Neumann
+.. autoclass:: genepy.Neumann
     :members:
