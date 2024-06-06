@@ -9,14 +9,11 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - name: update gh-pages branch
-        run: |
-          ghp-import docs/build/html -o -p -n
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
       - name: Install dependencies
         run: |
-          pip install sphinx sphinx_rtd_theme myst_parser
+          pip install sphinx sphinx_rtd_theme myst_parser ghp-import
       - name: Sphinx build
         run: |
           sphinx-build -M html docs/source/ docs/build/
@@ -28,3 +25,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/build/html/
           force_orphan: true
+      - name: GH-import
+        run: |
+          ghp-import docs/build/html/ -o -p -n -f
