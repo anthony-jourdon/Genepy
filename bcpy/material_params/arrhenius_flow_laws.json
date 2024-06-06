@@ -11,7 +11,7 @@
     "nexp":3.0, 
     "entalpy":345.0e3, 
     "Ascale":1.0e6,
-    "reference":"Rybackiand and Dresen (2000).Dislocation and diffusion creep of synthetic anorthite aggregates. Journal of Geophysical Research, 105, B11, 26,017-26,036. doi:10.1029/2000JB900223"
+    "reference":"Rybacki and Dresen (2000).Dislocation and diffusion creep of synthetic anorthite aggregates. Journal of Geophysical Research, 105, B11, 26,017-26,036. doi:10.1029/2000JB900223"
   },
   "Plagioclase(An75)": {
     "preexpA":3.3e-4, 
