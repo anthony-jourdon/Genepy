@@ -57,8 +57,8 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 25.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(83.0)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 40.0e3                            # distance from the domain centre in z direction
+  angle = np.deg2rad(70.0)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -180,8 +180,8 @@ def strikeslip():
   model = gp.Model(ics,regions,bcs,
                    model_name="model_GENE3D",
                    spm=spm,pswarm=pswarm,
-                   mpi_ranks=1)
-  print(model.options)
+                   mpi_ranks=1024)
+  #print(model.options)
   with open("strike-slip.sh","w") as f:
     f.write(model.options)
 

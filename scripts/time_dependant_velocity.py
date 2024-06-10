@@ -2,30 +2,54 @@ import numpy as np
 import genepy as gp
 
 def main():
-  # domain
-  O = np.array([0,0],     dtype=np.float64)     # Origin
-  L = np.array([600e3,300e3], dtype=np.float64) # Length
-  n = np.array([16,16],   dtype=np.int32)       # size
+  # 3D domain
+  dimensions = 3
+  O = np.array([0,-100e3,0],    dtype=np.float64) # Origin
+  L = np.array([600e3,0,300e3], dtype=np.float64) # Length
+  n = np.array([9,9,9],         dtype=np.int32)   # Number of Q1 nodes i.e. elements + 1
+  # Create Domain class instance
+  Domain = gp.Domain(dimensions,O,L,n)
+
   # cm/a to m/s conversion
   cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0)
-  # velocity phase 1
-  r_angle_1 = np.deg2rad(0.0)                   # rotation angle
-  u_norm_1  = 1.0 * cma2ms                      # norm of the velocity on boundary
-  u_angle_1 = np.deg2rad(90.0)                  # angle of the velocity vector
-  u_dir_1   = 0                                 # direction in which velocity varies (0 (x) or 1 (z))
-  u_type_1  = "extension"                       # extension or compression (because norm > 0)
-  # velocity phase 2
-  r_angle_2 = np.deg2rad(0.0)
-  u_norm_2  = 3.0 * cma2ms
-  u_angle_2 = np.deg2rad(45.0)
-  u_dir_2   = 0
-  u_type_2  = "compression"
+
+  # velocity phase 1 : Orthogonal extension
+  velo1 = {"norm"  : 1.0 * cma2ms,     # norm of the velocity on boundary
+           "angle" : np.deg2rad(90.0), # angle of the velocity vector
+           "dir"   : "x",              # direction in which velocity varies 
+           "type"  : "extension"       # extension or compression (because norm > 0)
+          }
+  phase_1   = gp.Velocity(Domain,velo1["norm"],velo1["dir"],velo1["type"],velo1["angle"])
+
+  # velocity phase 2 : Compression at 45°
+  velo2 = {"norm"  : 3.0 * cma2ms,     # norm of the velocity on boundary
+           "angle" : np.deg2rad(45.0), # angle of the velocity vector
+           "dir"   : "x",              # direction in which velocity varies 
+           "type"  : "compression"     # extension or compression (because norm > 0)
+          }
+  phase_2   = gp.Velocity(Domain,velo2["norm"],velo2["dir"],velo2["type"],velo2["angle"])
+
   # time inversion parameters
   Ma2s = (3600.0 * 24.0 * 365.0) * 1e6
   t1 = 5.0 * Ma2s
   t2 = 10.0 * Ma2s
   breakpoints = np.array([ t1, t2 ], dtype=np.float64)  # breakpoints in time (where atan(t-t0)=0 )
   slopes = np.array([ 5e-13, 5e-13 ], dtype=np.float64) # rate of change of the atan() function
+
+  bc_inv = gp.VelocityInversion(phase_1,phase_2,breakpoints,slopes)
+  # space and time dependant velocity function
+  u_t = bc_inv.symbolic_velocity_inversion()
+  # gradient
+  
+
+
+  time = np.linspace(0, 20, 21) * Ma2s # time array for plots
+  root = "./"
+  pvd = "timeseries.pvd"
+  writer = gp.WriteVTS(Domain)
+  bc_inv.paraview_velocity_inversion(writer,time,root,pvd)
+
+  """
   time_plot = np.linspace(0, 20, 201) * Ma2s # time array for 1D plot
   time_pv   = np.linspace(0, 20, 21) * Ma2s # time array for paraview output (less step to avoid too much files)
   # paraview output
@@ -47,6 +71,7 @@ def main():
   
   inversion.paraview_velocity_inversion(writer,time_pv,root,pvd_fname)
   inversion.plot_1d_velocity_inversion(-u_norm_1,u_norm_2,time_plot)
+  """
 
 
 if __name__ == "__main__":
