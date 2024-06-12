@@ -21,13 +21,184 @@
 
 from genepy.initial_conditions import domain
 from genepy import rotation
+from genepy import writers
+from genepy.utils import newton_raphson
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 
 class Velocity(domain.Domain,rotation.Rotation):
   """
-  .. py:class:: Velocity(Domain, u_norm, variation_dir, velocity_type, u_angle=0.0, Rotation=None)
+  .. py:class:: Velocity(Domain, Rotation=None)
+
+    Class to evaluate symbolic and numeric velocity function and its gradient.
+    This class is the parent class of the different velocity classes and contains methods shared by all.
+    Case specific methods are implemented in the corresponding child classes.
+    The class inherits from :py:class:`Domain <genepy.Domain>` and :py:class:`Rotation <genepy.Rotation>` classes.
+
+    Methods
+    -------
+  """
+  def __init__(self,Domain:domain.Domain,Rotation:rotation.Rotation=None) -> None:
+    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n,coor=Domain.num_coor)
+    # set rotation angle to zero if Rotation class is not provided
+    if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
+    else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
+    return
+
+  def report_symbolic_functions(self,u,grad_u=None) -> str:
+    """
+    report_symbolic_functions(self,u,grad_u,uL)
+    Returns a string with the symbolic velocity function, 
+    its gradient and the boundary velocity orientation.
+    Can be used with print() or written to a file.
+
+    :param numpy.ndarray u: sympy vector valued function of the velocity field
+    :param numpy.ndarray grad_u: sympy matrix of the gradient of the velocity field shape (dim,dim)
+
+    :return: string with the symbolic velocity function, its gradient and the boundary velocity orientation.
+    :rtype: str
+    """
+    s = f"Symbolic velocity function:\n"
+    for i in range(self.dim):
+      s += f"\tu{self.sym_coor[i]}{self.sym_coor} = {u[i]}\n"
+    if grad_u is not None:
+      s += f"Gradient of the velocity function:\n"
+      for i in range(self.dim):
+        for j in range(self.dim):
+          s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(grad_u[i,j])+"\n"
+    return s
+  
+  def velocity_function(self):
+    s = "velocity_function(self)\n"
+    s += "This method is implemented in the child classes.\n"
+    s += "Use one of the child classes to evaluate the velocity field."
+    raise NotImplementedError(s)
+
+  def evaluate_gradient(self,u):
+    """
+    evaluate_gradient(self,u)
+    Evaluates the gradient of the velocity function in symbolic form 
+    returning a matrix of the shape ``(dim,dim)`` such that:
+      
+    .. math:: 
+      \\left( \\nabla \\mathbf u \\right)_{ij} = \\frac{\\partial u_i}{\\partial x_j}
+
+    
+    :param u: vector valued function of the velocity field
+
+    :return: **grad_u**: matrix of the gradient of the velocity field shape ``(dim,dim)``
+    """
+    grad_u = np.zeros(shape=(self.dim,self.dim), dtype='object')
+    for i in range(self.dim):
+      for j in range(self.dim):
+        grad_u[i,j] = u[i].diff(self.sym_coor[j])
+    return grad_u
+  
+  def evaluate_u_dot_n(self,u):
+    """
+    evaluate_u_dot_n(self,u)
+    Evaluates the dot product of the velocity field with the normal vector in symbolic form 
+    such that
+
+    .. math:: 
+      \\mathbf u \\cdot \\mathbf n = \\sum_{i=1}^{d} u_i n_i
+    
+    with :math:`\\mathbf u` the vector valued velocity function, 
+    :math:`\\mathbf n` the normal vector to the boundary pointing outward the domain and
+    :math:`d` the number of spatial dimensions.  
+    
+    :param u: Vector valued function of the velocity field.
+              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
+    
+    :return: **u_dot_n**: dot product of the velocity field with the normal vector
+    """
+    nmap = {1:'n_x',2:'n_x n_y',3:'n_x n_y n_z'}
+    n = sp.symbols(nmap[self.dim])
+    
+    u = sp.Matrix(u)
+    n = sp.Matrix([n])
+    u_dot_n = u.dot(n)
+    return u_dot_n
+
+  def evaluate_int_u_dot_n_faces(self,u):
+    """
+    evaluate_int_u_dot_n_faces(self,u)
+    Evaluates the integral of the dot product of the velocity field 
+    with the normal vector over the faces of the domain such that
+
+    .. math::
+      I = \\int_S \\mathbf u \\cdot \\mathbf n \\, dS
+
+    The integral is computed over each face of the domain and stored in a dictionary:
+
+    .. code-block:: python
+      
+        int_u_dot_n = {
+          'xmin': int_u_dot_n_dxmin,
+          'xmax': int_u_dot_n_dxmax,
+          'ymin': int_u_dot_n_dymin,
+          'ymax': int_u_dot_n_dymax,
+          'zmin': int_u_dot_n_dzmin,
+          'zmax': int_u_dot_n_dzmax
+        }
+    
+    :param u: Vector valued function of the velocity field.
+              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
+
+    :return: **int_u_dot_n**: dictionary with the integral of the dot product of the velocity field with the normal vector over the faces of the domain
+    :rtype: dict
+    """
+    # evaluate symbolic u.n
+    u_dot_n = self.evaluate_u_dot_n(u)
+    directions = ["x","y","z"]
+    faces      = ["min","max"]
+    
+    int_u_dot_n = {}
+    for d in range(self.dim): # loop over each direction
+      for f in range(2): # loop over faces (min,max)
+        # initialize normal to zero
+        normal = np.zeros(shape=(self.dim), dtype=np.float64)
+        # construct face name
+        face = directions[d]+faces[f]
+        # set non zero component of the normal vector -1 if min face, 1 if max face 
+        normal[d] = (-1)**(f+1)
+        # substitute the normal vector components by numerical values
+        n_num = {'n_x':normal[0],'n_y':normal[1]}
+        if self.dim == 3: n_num['n_z'] = normal[2]
+        # evaluate u.n
+        udn = u_dot_n.subs(n_num)
+
+        # substitute the coordinate components by numerical values corresponding to the face
+        _x = np.zeros(shape=(self.dim), dtype=np.float64)
+        if faces[f] == "min": _x[d] = self.O[d]
+        if faces[f] == "max": _x[d] = self.L[d]
+        # evaluate u.n at the face
+        udn = udn.subs({self.sym_coor[d]:_x[d]})
+
+        # integrate u.n over the face: simple integral if 2d, double integral if 3d
+        if d == 0:
+          # I2 = int_Oy^Ly u.n dy
+          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[1],self.O[1],self.L[1]))
+          if self.dim == 3: 
+            # I3 = int_Oz^Lz I2 dz
+            integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
+        if d == 1:
+          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
+          if self.dim == 3: 
+            integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
+        if d == 2:
+          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
+          integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[1],self.O[1],self.L[1]))
+        
+
+        int_u_dot_n[face] = integral_u_dot_n
+    return int_u_dot_n
+
+
+class VelocityLinear(Velocity):
+  """
+  .. py:class:: VelocityLinear(Domain, u_norm, variation_dir, velocity_type, u_angle=0.0, Rotation=None)
 
     Class to evaluate symbolic and numeric linear velocity function and its gradient in space.
     The velocity field is defined as a linear function of the coordinates. 
@@ -59,8 +230,8 @@ class Velocity(domain.Domain,rotation.Rotation):
       u_angle = np.deg2rad(45.0) # velocity angle \in [-pi/2, pi/2]. If 0, can be ommited
       u_dir   = "z"              # direction in which velocity varies
       u_type  = "extension"      # velocity orientation
-      # Create Velocity instance 
-      Vel = genepy.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
+      # Create VelocityLinear instance 
+      Vel = genepy.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle)
     
     **With rotation** of the referential
 
@@ -71,66 +242,66 @@ class Velocity(domain.Domain,rotation.Rotation):
       axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
       # Create Rotation instance
       Rotation = gp.Rotation(dim,r_angle,axis)
-      # Create Velocity instance 
-      Vel = genepy.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+      # Create VelocityLinear instance 
+      Vel = genepy.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
     Attributes
     ----------
 
     .. py:attribute:: norm
       :type: float
-      :canonical: genepy.boundary_conditions.velocity.Velocity.norm
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.norm
 
       Velocity norm
 
     .. py:attribute:: alpha
       :type: float
-      :canonical: genepy.boundary_conditions.velocity.Velocity.alpha
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.alpha
 
       Velocity angle with the :math:`z` axis in radians
     
     .. py:attribute:: type
       :type: str
-      :canonical: genepy.boundary_conditions.velocity.Velocity.type
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.type
 
       Type of velocity field (``"extension"`` or ``"compression"``)
 
     .. py:attribute:: dir
       :type: int
-      :canonical: genepy.boundary_conditions.velocity.Velocity.dir
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.dir
 
       Direction in which the velocity varies (``0``, ``1``, ``2``) defined from
       the given directions ``"x"``, ``"y"``, ``"z"`` respectively. 
     
     .. py:attribute:: uO
       :type: numpy.ndarray
-      :canonical: genepy.boundary_conditions.velocity.Velocity.uO
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.uO
 
       Velocity vector :math:`\\mathbf u_O` at :math:`\\mathbf x = \\mathbf O`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <genepy.Velocity.boundary_vector>`.
+      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <genepy.VelocityLinear.boundary_vector>`.
 
     .. py:attribute:: uL
       :type: numpy.ndarray
-      :canonical: genepy.boundary_conditions.velocity.Velocity.uL
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.uL
 
       Velocity vector :math:`\\mathbf u_L` at :math:`\\mathbf x = \\mathbf L`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <genepy.Velocity.boundary_vector>`.
+      Its value is computed at class initialization by the method :py:meth:`boundary_vector() <genepy.VelocityLinear.boundary_vector>`.
     
     .. py:attribute:: a
       :type: numpy.ndarray
-      :canonical: genepy.boundary_conditions.velocity.Velocity.a
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.a
 
       Coefficients in vector form :math:`\\mathbf a` of the linear velocity function 
       :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <genepy.Velocity.velocity_coefficients>`.
+      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <genepy.VelocityLinear.velocity_coefficients>`.
 
     .. py:attribute:: b
       :type: numpy.ndarray
-      :canonical: genepy.boundary_conditions.velocity.Velocity.b
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinear.b
 
       Coefficients in vector form :math:`\\mathbf b` of the linear velocity function
       :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`. Shape ``(dim,)``.
-      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <genepy.Velocity.velocity_coefficients>`.
+      Its value is computed at class initialization by the method :py:meth:`velocity_coefficients() <genepy.VelocityLinear.velocity_coefficients>`.
 
     .. py:attribute:: vertical_evaluated
       :type: bool
@@ -143,6 +314,7 @@ class Velocity(domain.Domain,rotation.Rotation):
   """
 
   def __init__(self,Domain:domain.Domain,u_norm,variation_dir:str,velocity_type:str,u_angle:float=0.0,Rotation:rotation.Rotation=None) -> None:
+    Velocity.__init__(self,Domain,Rotation)
     self.norm   = u_norm
     self.alpha  = u_angle
     self.type   = velocity_type
@@ -155,11 +327,6 @@ class Velocity(domain.Domain,rotation.Rotation):
       elif d == "y": self.dir = 1
       elif d == "z": self.dir = 2
       else: raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {d}")
-
-    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n,coor=Domain.num_coor)
-    # set rotation angle to zero if Rotation class is not provided
-    if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
-    else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
 
     self.vertical_evaluated = False
     self.velocity_coefficients()
@@ -203,13 +370,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     :return: string with the symbolic velocity function, its gradient and the boundary velocity orientation.
     :rtype: str
     """
-    s = f"Symbolic velocity function:\n"
-    for i in range(self.dim):
-      s += f"\tu{self.sym_coor[i]}{self.sym_coor} = {u[0,i]}\n"
-    s += f"Gradient of the velocity function:\n"
-    for i in range(self.dim):
-      for j in range(self.dim):
-        s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(grad_u[i,j])+"\n"
+    s = super().report_symbolic_functions(u,grad_u)
     s += f"Boundary velocity orientation:\n"
     for i in range(self.dim):
       s += f"\tuL{self.sym_coor[i]} = {uL[i]}\n"
@@ -220,9 +381,9 @@ class Velocity(domain.Domain,rotation.Rotation):
     boundary_vector(self)
     Computes a vector horizontal components from:
 
-    - 1D & 2D: only the :attr:`norm <genepy.boundary_conditions.velocity.Velocity.norm>` is used,
-    - 3D: the :attr:`norm <genepy.boundary_conditions.velocity.Velocity.norm>` 
-      and angle :attr:`alpha <genepy.boundary_conditions.velocity.Velocity.alpha>` 
+    - 1D & 2D: only the :attr:`norm <genepy.boundary_conditions.velocity.VelocityLinear.norm>` is used,
+    - 3D: the :attr:`norm <genepy.boundary_conditions.velocity.VelocityLinear.norm>` 
+      and angle :attr:`alpha <genepy.boundary_conditions.velocity.VelocityLinear.alpha>` 
       with the :math:`z` axis (North-South) such that:
 
     .. math::
@@ -233,7 +394,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     .. warning:: 
       These values are always positive, special attention is required 
       if different signs are needed. This is normally addressed with the 
-      :attr:`type <genepy.boundary_conditions.velocity.Velocity.type>` class attribute.
+      :attr:`type <genepy.boundary_conditions.velocity.VelocityLinear.type>` class attribute.
 
 
     :return: boundary velocity, shape (dim,)
@@ -283,10 +444,10 @@ class Velocity(domain.Domain,rotation.Rotation):
       \\mathbf b &= -\\mathbf a \\mathbf L + \\mathbf u_L
     
     with :math:`\\mathbf u_O` and :math:`\\mathbf u_L` computed by 
-    :py:meth:`boundary_vector() <genepy.boundary_conditions.velocity.Velocity.boundary_vector>` 
+    :py:meth:`boundary_vector() <genepy.VelocityLinear.boundary_vector>` 
     and :math:`\\mathbf O` and :math:`\\mathbf L` the origin and max values of the domain.
     Each component of the velocity field is computed by calling 
-    :py:meth:`velocity_coefficients_1d() <genepy.boundary_conditions.velocity.Velocity.velocity_coefficients_1d>`.
+    :py:meth:`velocity_coefficients_1d() <genepy.VelocityLinear.velocity_coefficients_1d>`.
     """
     self.a = np.zeros(shape=(self.dim), dtype=np.float64)
     self.b = np.zeros(shape=(self.dim), dtype=np.float64)
@@ -304,13 +465,13 @@ class Velocity(domain.Domain,rotation.Rotation):
       self.a[d], self.b[d] = self.velocity_coefficients_1d(self.uO[d],self.uL[d],self.O[self.dir],self.L[self.dir])
     return
   
-  def linear_velocity_1d(self,x,a,b):
+  def velocity_function_1d(self,x,a,b):
     """
-    linear_velocity_1d(self,x,a,b)
+    velocity_function_1d(self,x,a,b)
     Computes the linear velocity field in 1 direction (scalar valued function) 
     such that :math:`u(x) = ax + b` for the given direction :math:`x` and 
     coefficients :math:`a` and :math:`b` computed by the method 
-    :meth:`velocity_coefficients_1d`.
+    :py:meth:`velocity_coefficients_1d <genepy.VelocityLinear.velocity_coefficients_1d>`.
 
     :param x: coordinate of the direction in which the velocity varies
     :param a: slope of the component of the velocity
@@ -320,12 +481,12 @@ class Velocity(domain.Domain,rotation.Rotation):
     """
     return a*x + b
   
-  def linear_velocity(self,x):
+  def velocity_function(self,x):
     """
-    linear_velocity(self,x)
+    velocity_function(self,x)
     computes the vector valued linear velocity function
     such that :math:`\\mathbf u(x) = \\mathbf a x + \\mathbf b`.
-    Calls the method :meth:`linear_velocity_1d` for each direction.
+    Calls the method :meth:`velocity_function_1d` for each direction.
 
     :param x: coordinates of the direction in which the velocity varies
 
@@ -333,7 +494,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     """
     u = []
     for d in range(self.dim):
-      u.append(self.linear_velocity_1d(x,self.a[d],self.b[d]))
+      u.append(self.velocity_function_1d(x,self.a[d],self.b[d]))
     return u
   
   def evaluate_velocity_symbolic(self):
@@ -358,7 +519,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     The rotation of the coordinate system is performed by the method 
     :meth:`rotate_referential() <genepy.Rotation.rotate_referential>`.
     The evaluation of the velocity field with the (rotated) coordinate system is done with
-    the method :meth:`linear_velocity() <genepy.Velocity.linear_velocity>`.
+    the method :meth:`velocity_function() <genepy.VelocityLinear.velocity_function>`.
     """
     # create a numpy array of shape (1,dim) with the symbolic coordinates
     coor = np.array([[*self.sym_coor]], dtype='object')
@@ -366,40 +527,23 @@ class Velocity(domain.Domain,rotation.Rotation):
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
     # evaluate velocity with the rotated coordinate
     u = np.zeros(shape=(1,self.dim), dtype='object')
-    u[0,:] = self.linear_velocity(coor_R[0,self.dir])
+    u[0,:] = self.velocity_function(coor_R[0,self.dir])
     # rotate the velocity field
     R   = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
     return u_R
   
-  def evaluate_gradient(self,u):
-    """
-    evaluate_gradient(self,u)
-    Evaluates the gradient of the velocity function in symbolic form 
-    returning a matrix of the shape ``(dim,dim)`` such that:
-      
-    .. math:: 
-      \\left( \\nabla \\mathbf u \\right)_{ij} = \\frac{\\partial u_i}{\\partial x_j}
-
-    
-    :param u: vector valued function of the velocity field
-
-    :return: **grad_u**: matrix of the gradient of the velocity field shape ``(dim,dim)``
-    """
-    grad_u = np.zeros(shape=(self.dim,self.dim), dtype='object')
-    for i in range(self.dim):
-      for j in range(self.dim):
-        grad_u[i,j] = u[i].diff(self.sym_coor[j])
-    return grad_u
-
   def evaluate_velocity_and_gradient_symbolic(self):
     """
     evaluate_velocity_and_gradient_symbolic(self)
     Calls the methods:
     
-    - :meth:`evaluate_velocity_symbolic` to evaluate the horizontal components of the velocity 
-    - :meth:`evaluate_vertical_velocity` to evaluate the vertical component of the velocity
-    - :meth:`evaluate_gradient` to evaluate the gradient of the velocity vector  
+    - :py:meth:`evaluate_velocity_symbolic <genepy.VelocityLinear.evaluate_velocity_symbolic>` 
+      to evaluate the horizontal components of the velocity 
+    - :py:meth:`evaluate_vertical_velocity <genepy.VelocityLinear.evaluate_vertical_velocity>` 
+      to evaluate the vertical component of the velocity
+    - :py:meth:`evaluate_gradient <genepy.Velocity.evaluate_gradient>` 
+      to evaluate the gradient of the velocity vector  
     
     in symbolic form.
     """
@@ -407,108 +551,6 @@ class Velocity(domain.Domain,rotation.Rotation):
     u[0,1] = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
     grad_u = self.evaluate_gradient(u[0,:])
     return u,grad_u
-  
-  def evaluate_u_dot_n(self,u=None):
-    """
-    evaluate_u_dot_n(self,u=None)
-    Evaluates the dot product of the velocity field with the normal vector in symbolic form 
-    such that
-
-    .. math:: 
-      \\mathbf u \\cdot \\mathbf n = \\sum_{i=1}^{d} u_i n_i
-    
-    with :math:`\\mathbf u` the vector valued velocity function, 
-    :math:`\\mathbf n` the normal vector to the boundary pointing outward the domain and
-    :math:`d` the number of spatial dimensions.  
-    
-    :param u: **(Optional)**, vector valued function of the velocity field.
-              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
-    
-    :return: **u_dot_n**: dot product of the velocity field with the normal vector
-    """
-    nmap = {1:'n_x',2:'n_x n_y',3:'n_x n_y n_z'}
-    n = sp.symbols(nmap[self.dim])
-    if u is None:
-      u = self.evaluate_velocity_symbolic()
-    
-    u = sp.Matrix(u[0,:])
-    n = sp.Matrix([n])
-    u_dot_n = u.dot(n)
-    return u_dot_n
-
-  def evaluate_int_u_dot_n_faces(self,u=None):
-    """
-    evaluate_int_u_dot_n_faces(self,u=None)
-    Evaluates the integral of the dot product of the velocity field 
-    with the normal vector over the faces of the domain such that
-
-    .. math::
-      I = \\int_S \\mathbf u \\cdot \\mathbf n \\, dS
-
-    The integral is computed over each face of the domain and stored in a dictionary:
-
-    .. code-block:: python
-      
-        int_u_dot_n = {
-          'xmin': int_u_dot_n_dxmin,
-          'xmax': int_u_dot_n_dxmax,
-          'ymin': int_u_dot_n_dymin,
-          'ymax': int_u_dot_n_dymax,
-          'zmin': int_u_dot_n_dzmin,
-          'zmax': int_u_dot_n_dzmax
-        }
-    
-    :param u: **(Optional)**, vector valued function of the velocity field.
-              If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
-
-    :return: **int_u_dot_n**: dictionary with the integral of the dot product of the velocity field with the normal vector over the faces of the domain
-    :rtype: dict
-    """
-    # evaluate symbolic u.n
-    u_dot_n = self.evaluate_u_dot_n(u=u)
-    directions = ["x","y","z"]
-    faces      = ["min","max"]
-    
-    int_u_dot_n = {}
-    for d in range(self.dim): # loop over each direction
-      for f in range(2): # loop over faces (min,max)
-        # initialize normal to zero
-        normal = np.zeros(shape=(self.dim), dtype=np.float64)
-        # construct face name
-        face = directions[d]+faces[f]
-        # set non zero component of the normal vector -1 if min face, 1 if max face 
-        normal[d] = (-1)**(f+1)
-        # substitute the normal vector components by numerical values
-        n_num = {'n_x':normal[0],'n_y':normal[1]}
-        if self.dim == 3: n_num['n_z'] = normal[2]
-        # evaluate u.n
-        udn = u_dot_n.subs(n_num)
-
-        # substitute the coordinate components by numerical values corresponding to the face
-        _x = np.zeros(shape=(self.dim), dtype=np.float64)
-        if faces[f] == "min": _x[d] = self.O[d]
-        if faces[f] == "max": _x[d] = self.L[d]
-        # evaluate u.n at the face
-        udn = udn.subs({self.sym_coor[d]:_x[d]})
-
-        # integrate u.n over the face: simple integral if 2d, double integral if 3d
-        if d == 0:
-          # I2 = int_Oy^Ly u.n dy
-          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[1],self.O[1],self.L[1]))
-          if self.dim == 3: 
-            # I3 = int_Oz^Lz I2 dz
-            integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
-        if d == 1:
-          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
-          if self.dim == 3: 
-            integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[2],self.O[2],self.L[2]))
-        if d == 2:
-          integral_u_dot_n = sp.integrate(udn,(self.sym_coor[0],self.O[0],self.L[0]))
-          integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[1],self.O[1],self.L[1]))
-        
-
-        int_u_dot_n[face] = integral_u_dot_n
-    return int_u_dot_n
   
   def evaluate_vertical_velocity_coefficients(self,u=None):
     """
@@ -526,7 +568,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     of the domain in the :math:`y` direction. 
 
     :math:`a` and :math:`b` are then computed with 
-    :meth:`velocity_coefficients_1d() <genepy.Velocity.velocity_coefficients_1d>` 
+    :meth:`velocity_coefficients_1d() <genepy.VelocityLinear.velocity_coefficients_1d>` 
 
     :param u: **(Optional)**, vector valued function of the velocity field.
               If not provided, the symbolic velocity field is evaluated with :meth:`evaluate_velocity_symbolic`
@@ -536,7 +578,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     """
     if u is None:
       u = self.evaluate_velocity_symbolic()
-    int_u_dot_n = self.evaluate_int_u_dot_n_faces(u=u)
+    int_u_dot_n = self.evaluate_int_u_dot_n_faces(u[0,:])
     iudn = 0.0
     for face in int_u_dot_n:
       iudn += int_u_dot_n[face]
@@ -555,8 +597,8 @@ class Velocity(domain.Domain,rotation.Rotation):
     Can be used for numerical or symbolic evaluation.
     Calls the methods:
 
-    - :meth:`evaluate_vertical_velocity_coefficients() <genepy.Velocity.evaluate_vertical_velocity_coefficients>`
-    - :meth:`linear_velocity_1d() <genepy.Velocity.linear_velocity_1d>`
+    - :py:meth:`evaluate_vertical_velocity_coefficients() <genepy.VelocityLinear.evaluate_vertical_velocity_coefficients>`
+    - :py:meth:`velocity_function_1d() <genepy.VelocityLinear.velocity_function_1d>`
 
     :param y: coordinate of the vertical direction
     :param u: **(Optional)**, vector valued function of the velocity field.
@@ -566,7 +608,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     """
     if self.vertical_evaluated == False:
       self.evaluate_vertical_velocity_coefficients(u=u)
-    uy = self.linear_velocity_1d(y,self.a[1],self.b[1])
+    uy = self.velocity_function_1d(y,self.a[1],self.b[1])
     return uy
   
   def evaluate_velocity_numeric(self):
@@ -578,7 +620,7 @@ class Velocity(domain.Domain,rotation.Rotation):
     # rotate referential
     coor_R = self.rotate_referential(coor,self.O,self.L,ccw=False)
     # evaluate velocity with the rotated coordinate
-    u = self.linear_velocity(coor_R[:,self.dir])
+    u = self.velocity_function(coor_R[:,self.dir])
     # convert to numpy array of shape (npoints, dim)
     u = np.asarray(u, dtype=np.float64).T
     # rotate the velocity field
@@ -622,4 +664,300 @@ class Velocity(domain.Domain,rotation.Rotation):
     ax.quiver(X,Z,ux,uz)
     ax.axis('equal')
     plt.show()
+    return
+
+class VelocityTimeDependant(Velocity):
+  """
+  .. py:class:: VelocityTimeDependant(Domain, Rotation=None)
+
+    Class to construct and evaluate time dependant velocity function.
+    This class is the parent class of all time dependant velocity classes 
+    and inherits from the class :py:class:`Velocity <genepy.Velocity>`.
+
+    :param Domain Domain: domain in which the velocity field is evaluated
+    :param Rotation Rotation: **(Optional)** Rotation class instance to rotate the referential
+
+    Methods
+    -------
+  """
+  def __init__(self, Domain:domain.Domain, Rotation:rotation.Rotation=None) -> None:
+    Velocity.__init__(self, Domain, Rotation)
+    self.time_sym = sp.symbols('t')
+    return
+
+  def sum_functions(self,user_func:list,user_args:list):
+    """
+    sum_functions(self,user_func,user_args)
+    Abstract method to sum user defined functions. 
+    The functions to sum should return objects of the same shape and type.
+
+    Considering the functions :math:`f_1(x), f_2(x), \\ldots , f_n(x)` this method computes:
+    
+    .. math:: 
+      u(x) = \sum_{i=1}^{n} f_i(x)
+    
+    where :math:`x` represents the variable(s) of the function.
+
+    :param list user_func: list of user defined functions
+    :param list user_args: list of arguments to pass to the functions
+    """
+    u = user_func[0](*(user_args[0]))
+    nf = len(user_func)
+    if nf > 1:
+      for n in range(1,nf):
+        u += user_func[n](*(user_args[n]))
+    return u
+  
+class VelocityInversion(VelocityTimeDependant):
+  """
+  .. py:class:: VelocityInversion(Domain, phase1, phase2, breakpoints, slopes, Rotation=None)
+
+    Class to construct and evaluate a time dependant velocity function with two phases by summing
+    two :py:meth:`arctangent functions <genepy.VelocityInversion.velocity_function>`.
+    
+    :param Domain Domain: domain in which the velocity field is evaluated
+    :param VelocityLinear phase1: :py:class:`Velocity <genepy.VelocityLinear>` class instance of the first phase
+    :param VelocityLinear phase2: :py:class:`Velocity <genepy.VelocityLinear>` class instance of the second phase
+    :param list breakpoints: list of two breakpoints in time
+    :param list slopes: list of two slopes at the breakpoints
+    :param Rotation Rotation: **(Optional)** Rotation class instance to rotate the referential
+
+    Methods
+    -------
+  """
+  def __init__(self, Domain:domain.Domain, 
+               phase1:VelocityLinear, 
+               phase2:VelocityLinear, 
+               breakpoints, 
+               slopes,
+               Rotation:rotation.Rotation=None) -> None:
+    VelocityTimeDependant.__init__(self, Domain, Rotation)
+    self.phases      = [phase1, phase2]
+    self.breakpoints = breakpoints
+    self.slopes      = slopes
+    return
+
+  def velocity_function(self, time, bound, **kwargs):
+    """
+    velocity_function(self, time, bound)
+    Evaluates a time dependant velocity function with two phases by summing two arctangent functions such that
+
+    .. math::
+      f_1(t) &= b_1 \\left( \\frac{1}{2} - \\frac{\\tan^{-1} \\left(s_1(t-t_1) \\right)}{\\pi} \\right) \\\\
+      f_2(t) &= b_2 \\left( \\frac{1}{2} + \\frac{\\tan^{-1} \\left(s_2(t-t_2) \\right)}{\\pi} \\right)
+
+    where :math:`t_i` are the breakpoints in time, :math:`s_i` are the arctangent slopes at the breakpoints 
+    and :math:`b_i` are the bounds of the functions (min and max values i.e., the steady state velocities of each phase).
+
+    :param float time: time at which the velocity function is evaluated, can be symbolic or numeric
+    :param list bound: list of two bounds of the velocity function
+
+    :return: time-dependant velocity function
+    """
+    def phase_1(t, t0, s, b):
+      fac = 2.0/np.pi
+      func = 0.5*( -fac*b*sp.atan(s*(t-t0)) + b )
+      return func
+    
+    def phase_2(t, t0, s, b):
+      fac = 2.0/np.pi
+      func = 0.5*( fac*b*sp.atan(s*(t-t0)) + b )
+      return func
+    
+    user_func = [phase_1, phase_2]
+    user_args = [(time, self.breakpoints[0], self.slopes[0], bound[0]), (time, self.breakpoints[1], self.slopes[1], bound[1])]
+    u_t = self.sum_functions(user_func, user_args)
+    return u_t
+  
+  def velocity_function_derivative(self,time,bound,**kwargs):
+    """
+    velocity_function_derivative(self,time,bound)
+    Evaluates the derivative with respect to time of the velocity function.
+    The derivative is computed by summing the derivatives of the two arctangent functions defined in 
+    :py:meth:`velocity_function <genepy.VelocityInversion.velocity_function>` such that
+
+    .. math:: 
+      f'_1(t) &= -\\frac{b_1 s_1}{\\pi (1 + (s_1(t-t_1))^2)} \\\\
+      f'_2(t) &=  \\frac{b_2 s_2}{\\pi (1 + (s_2(t-t_2))^2)}
+
+    :param float time: time at which the function is evaluated, can be symbolic or numeric
+    :param list bound: list of two bounds of the stady-state velocity functions
+
+    :return: derivative with respect to time of the velocity function
+    """
+    def phase_1_derivative(t, t0, s, b):
+      fac = 1.0/np.pi
+      func = -fac*b*s/(1.0 + (s*(t-t0))**2)
+      return func
+
+    def phase_2_derivative(t, t0, s, b):
+      fac = 1.0/np.pi
+      func = fac*b*s/(1.0 + (s*(t-t0))**2)
+      return func
+    
+    user_func = [phase_1_derivative, phase_2_derivative]
+    user_args = [(time, self.breakpoints[0], self.slopes[0], bound[0]), 
+                 (time, self.breakpoints[1], self.slopes[1], bound[1])]
+    du_dt = self.sum_functions(user_func, user_args)
+    return du_dt
+
+  def evaluate_velocity_symbolic(self):
+    """
+    evaluate_velocity_symbolic(self)
+    Evaluates the time dependant velocity function in symbolic form.
+    Calls the methods :py:meth:`evaluate_velocity_symbolic <genepy.VelocityLinear.evaluate_velocity_symbolic>` 
+    and :py:meth:`evaluate_vertical_velocity <genepy.VelocityLinear.evaluate_vertical_velocity>` for each phase.
+    Then evaluates the time dependant velocity function with the method 
+    :py:meth:`velocity_function <genepy.VelocityInversion.velocity_function>`.
+
+    :return: time dependant velocity function
+    """
+    # Evaluate the steady-state symbolic function of each phase
+    u1 = self.phases[0].evaluate_velocity_symbolic()
+    u2 = self.phases[1].evaluate_velocity_symbolic()
+
+    # If not 1D, evaluate the vertical velocity
+    if self.phases[0].dim > 1:
+      u1[0,1] = self.phases[0].evaluate_vertical_velocity(self.phases[0].sym_coor[1],u=u1)
+      u2[0,1] = self.phases[1].evaluate_vertical_velocity(self.phases[1].sym_coor[1],u=u2)
+
+    u_t = []
+    for d in range(self.phases[0].dim):
+      u_bounds = [ u1[0,d], u2[0,d] ]
+      u_t.append(self.velocity_function(self.time_sym,u_bounds))
+    return u_t
+  
+  def evaluate_velocity_and_gradient_symbolic(self):
+    """
+    evaluate_velocity_and_gradient_symbolic(self)
+    Calls the methods:
+
+    - :meth:`evaluate_velocity_symbolic <genepy.VelocityInversion.evaluate_velocity_symbolic>` 
+      to evaluate the time dependant velocity function
+    - :meth:`evaluate_gradient <genepy.Velocity.evaluate_gradient>` 
+      to evaluate the gradient of the velocity function
+
+    :return: ``u, grad_u``, time dependant velocity function and its gradient
+    """
+    u = self.evaluate_velocity_symbolic()
+    grad_u = self.evaluate_gradient(u)
+    return u,grad_u
+  
+  def get_velocity_orientation(self,horizontal=True,normalize=True):
+    """
+    get_velocity_orientation(self,horizontal=True,normalize=False)
+    Returns the orientation vector of the velocity field at the boundary for each phase.
+    The orientation is **not** evaluated in time.
+
+    :param bool horizontal: if True, only the horizontal components are returned (default: ``True``)
+    :param bool normalize:  if True, the vector is normalized (default: ``True``)
+    """
+    uL_1 = self.phases[0].get_velocity_orientation(horizontal=horizontal,normalize=normalize)
+    uL_2 = self.phases[1].get_velocity_orientation(horizontal=horizontal,normalize=normalize)
+    return uL_1,uL_2
+
+  def get_time_zero_velocity(self,report=False):
+    """
+    get_time_zero_velocity(self,report=False)
+    Computes the time at which the velocity function evaluates to zero.
+    The result is obtained by solving the equation :math:`f(t) = 0` with the iterative Newton-Raphson method.
+    The initial guess is set to the first breakpoint in time because it is the most likely to converge (steep part of the function).
+
+    :param bool report: if True, the Newton-Raphson method reports the convergence of the solution (default: ``False``)
+
+    :return: time at which the velocity function evaluates to zero
+    """
+    # evaluate 1D function
+    u_1 = self.phases[0].norm
+    if self.phases[0].type == "compression": u_1 = -u_1
+    u_2 = self.phases[1].norm
+    if self.phases[1].type == "compression": u_2 = -u_2
+
+    u_bounds = [u_1, u_2]
+    # scale for numerical stability
+    u_scale = 10**(-np.floor(np.log10(u_1)))
+    # use one of the breakpoint as initial guess, it should converge fast
+    t_guess  = self.breakpoints[0]
+    t0 = newton_raphson(self.velocity_function,
+                        self.velocity_function_derivative,
+                        t_guess,tol=1.0e-6,max_iter=10,scaling=u_scale,report=report,
+                        bound=u_bounds)
+    return t0
+
+  def plot_1D_velocity(self,time):
+    """
+    plot_1D_velocity(self,time)
+    Plots the velocity function in 1D over time.
+    If the spatial dimension is more than 1 (i.e., 2D and 3D)
+    only the norm of the velocity function is evaluated to allow plotting.
+    The sign convention for the plot is:
+
+    - extension: positive velocity
+    - compression: negative velocity
+
+    Displays two plots:
+
+    - the velocity over time in m/s
+    - the velocity over time in cm/a
+
+    On both plots the point at which the velocity evaluates to zero is marked with a red circle.
+
+    :param numpy.ndarray time: time array
+    """
+    # evaluate 1D function
+    u_1 = self.phases[0].norm
+    if self.phases[0].type == "compression": u_1 = -u_1
+    u_2 = self.phases[1].norm
+    if self.phases[1].type == "compression": u_2 = -u_2
+
+    u_bounds = [u_1, u_2]
+    u_t = np.zeros(shape=(len(time)), dtype=np.float64)
+    for i,t in enumerate(time):
+      u_t[i] = self.velocity_function(t,u_bounds)
+    
+    t0 = self.get_time_zero_velocity()
+
+    _,ax = plt.subplots(1,2)
+    ax[0].plot(time,u_t,'tab:blue')
+    ax[0].plot(t0,0.0,'ro',markeredgecolor='black')
+    ax[0].set_xlabel('Time (s)')
+    ax[0].set_ylabel('Velocity (m/s)')
+    ax[0].set_title('Velocity in m/s over time in s')
+
+    Myr2sec = (3600.0 * 24.0 * 365.0) * 1e6
+    cma2mps = 1e-2 / (3600.0 * 24.0 * 365.0)
+    ax[1].plot(time/Myr2sec,u_t/cma2mps,'tab:green')
+    ax[1].plot(t0/Myr2sec,0.0,'ro',markeredgecolor='black')
+    ax[1].set_xlabel('Time (Myr)')
+    ax[1].set_ylabel('Velocity (cm/a)')
+    ax[1].set_title('Velocity in cm/a over time in Myr')
+
+    plt.show()
+    return
+  
+  def paraview_velocity_inversion(self,writer:writers.WriteVTS,time,root:str,pvd:str):
+    import os
+    u1 = self.phases[0].evaluate_velocity_numeric()
+    u2 = self.phases[1].evaluate_velocity_numeric()
+
+    u_bounds = []
+    for d in range(self.phases[0].dim):
+      u_bounds.append([ u1[:,d], u2[:,d] ])
+
+    step = 0
+    writer.pvd_fname = os.path.join(root,pvd)
+    writer.open_pvd()
+    for t in time:
+      output = f"velocity_{step}.vts"
+      writer.vtk_fname = os.path.join(root,output)
+
+      u_t = []
+      for d in range(self.phases[0].dim):
+        u_t.append(self.velocity_function(t,u_bounds[d]))
+      u_t = np.asarray(u_t, dtype=np.float64).T
+      writer.point_data = { "u": u_t }
+      writer.write_vts()
+      writer.append_pvd(t,output)
+      step += 1
+    writer.close_pvd()                                          
     return

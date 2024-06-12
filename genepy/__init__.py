@@ -38,7 +38,6 @@ from .boundary_conditions.bcs        import *
 from .boundary_conditions.dirichlet  import *
 from .boundary_conditions.navierslip import *
 from .boundary_conditions.neumann    import *
-from .boundary_conditions.bc_inversion    import *
 
 # Markers
 from .markers.popctrl import *

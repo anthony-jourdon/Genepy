@@ -63,3 +63,35 @@ def x_centre_from_angle(z,angle,domain_centre):
   """
   x = np.tan(angle) * (z - domain_centre[1]) + domain_centre[0]
   return x
+
+def newton_raphson(f,df,x0,tol=1.0e-6,max_iter=100,scaling=1.0,report=False,**kwargs):
+  """
+  newton_raphson(f,df,x0,tol=1.0e-6,max_iter=100)
+  Newton-Raphson method to find the root of a function.
+
+  Parameters:
+  -----------
+  f        : function to find the root of
+  df       : derivative of the function
+  x0       : initial guess
+  tol      : tolerance
+  max_iter : maximum number of iterations
+
+  Returns:
+  --------
+  x : root of the function
+  """
+  if report: print("Newton-Raphson method started")
+  res = 1e32
+  it  = 0
+  x   = x0
+  while res > tol:
+    if report: print(f"Iteration: {it}")
+    x = x - f(x,**kwargs)/df(x,**kwargs)
+    res = np.abs(f(x,**kwargs)*scaling)
+    if report: print(f"Residual: {res:g} - x: {x:g}")
+    it += 1
+    if it > max_iter:
+      print("Newton-Raphson method did not converge")
+      break
+  return x

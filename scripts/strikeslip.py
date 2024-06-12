@@ -37,14 +37,14 @@ def velocity_bcs(Domain,Rotation,report=False):
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "extension"                    # extension or compression
   # Create boundary conditions object
-  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+  BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
   u_num    = BCs.evaluate_velocity_numeric()                  # numeric
   uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
   if report:
-    print(BCs.report_symbolic_functions(u,grad_u,uL))
+    print(BCs.report_symbolic_functions(u[0,:],grad_u,uL))
   return BCs,u,grad_u,u_num,uL
 
 def initial_strain(Domain,MshRef,Rotation,report=False):
@@ -57,8 +57,8 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 40.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(70.0)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 50.0e3                            # distance from the domain centre in z direction
+  angle = np.deg2rad(77.5)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -157,11 +157,11 @@ def strikeslip():
   # rotation of the referential, if not needed, the Velocity object can be created without it
   Rotation = domain_rotation()
   # boundary conditions
-  BCs,u,grad_u,u_num,uL = velocity_bcs(Domain,Rotation,report=False)
+  BCs,u,grad_u,u_num,uL = velocity_bcs(Domain,Rotation,report=True)
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
-  Gaussian,strain = initial_strain(Domain,MshRef,Rotation,report=False)
+  Gaussian,strain = initial_strain(Domain,MshRef,Rotation,report=True)
 
   # write the results to a vts file for visualization
   point_data = {"u": u_num, "strain": strain}
@@ -180,7 +180,7 @@ def strikeslip():
   model = gp.Model(ics,regions,bcs,
                    model_name="model_GENE3D",
                    spm=spm,pswarm=pswarm,
-                   mpi_ranks=1024)
+                   mpi_ranks=1)
   #print(model.options)
   with open("strike-slip.sh","w") as f:
     f.write(model.options)

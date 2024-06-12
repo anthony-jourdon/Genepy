@@ -16,7 +16,7 @@ def main_2d():
 
   d  = gp.Domain(2,O,L,n)
   r  = gp.Rotation(2,r_angle)
-  bc = gp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
+  bc = gp.VelocityLinear(d,u_norm,u_dir,u_type,u_angle,r)
 
   u,grad_u = bc.evaluate_velocity_and_gradient_symbolic()
 
@@ -56,7 +56,7 @@ def main_3d():
   # create rotation object
   r  = gp.Rotation(3,r_angle,axis)
   # create boundary conditions object
-  bc = gp.Velocity(d,u_norm,u_dir,u_type,u_angle,r)
+  bc = gp.VelocityLinear(d,u_norm,u_dir,u_type,u_angle,r)
   
   # evaluate the velocity and its derivatives
   u,grad_u = bc.evaluate_velocity_and_gradient_symbolic()
