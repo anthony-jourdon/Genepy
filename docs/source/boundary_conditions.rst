@@ -35,6 +35,21 @@ This module contains the class evaluating symbolic and numeric velocity field.
 .. autoclass:: genepy.Velocity
     :members:
 
+Linear velocity function
+........................
+
+.. autoclass:: genepy.VelocityLinear
+    :members:
+
+Time dependant velocity function
+................................
+
+.. autoclass:: genepy.VelocityTimeDependant
+    :members:
+
+.. autoclass:: genepy.VelocityInversion
+    :members:
+
 Options generation
 ------------------
 

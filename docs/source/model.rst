@@ -30,7 +30,7 @@ the format of the `PETSc`_ library.
 It requires to have generated 
 
   - the physical :py:class:`domain <genepy.Domain>`
-  - the :py:class:`velocity <genepy.Velocity>` field function.
+  - the :py:class:`velocity <genepy.VelocityLinear>` field function.
   - the :py:class:`initial conditions <genepy.InitialConditions>`.
   - the :py:class:`boundary conditions <genepy.ModelBCs>`.
   - the :py:class:`material parameters <genepy.ModelRegions>`.

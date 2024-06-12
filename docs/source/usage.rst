@@ -97,7 +97,7 @@ We define a 3D :py:class:`domain <genepy.Domain>` :math:`\Omega = [0,600]\times[
 
 2. Velocity function
 ~~~~~~~~~~~~~~~~~~~~
-We define a simple orthogonal shortening :py:class:`velocity <genepy.Velocity>` in the :math:`z` direction.
+We define a simple orthogonal shortening :py:class:`velocity <genepy.VelocityLinear>` in the :math:`z` direction.
 
 .. code-block:: python
 
@@ -107,7 +107,7 @@ We define a simple orthogonal shortening :py:class:`velocity <genepy.Velocity>` 
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "compression"                  # extension or compression
   # Create Velocity class instance
-  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type)
+  BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type)
 
   # Evaluate the velocity and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
@@ -232,16 +232,16 @@ We define a 3D domain :math:`\Omega = [0,600]\times[-250,0]\times[0,300]` km\ :s
 
 2. Velocity function
 ~~~~~~~~~~~~~~~~~~~~
-We define an oblique extension :py:class:`velocity <genepy.Velocity>` velocity field
+We define an oblique extension :py:class:`velocity <genepy.VelocityLinear>` velocity field
 forming an angle of 30 degrees counter-clockwise with respect to the :math:`z` axis.
 The method 
-:py:meth:`evaluate_velocity_and_gradient_symbolic() <genepy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
+:py:meth:`evaluate_velocity_and_gradient_symbolic() <genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic>` 
 returns the symbolic expression of the velocity field and its gradient.
 The method
-:py:meth:`evaluate_velocity_numeric() <genepy.Velocity.evaluate_velocity_numeric>`
+:py:meth:`evaluate_velocity_numeric() <genepy.VelocityLinear.evaluate_velocity_numeric>`
 returns the numeric value of the velocity field evaluated at coordinates of the nodes.
 The method
-:py:meth:`get_velocity_orientation() <genepy.Velocity.get_velocity_orientation>`
+:py:meth:`get_velocity_orientation() <genepy.VelocityLinear.get_velocity_orientation>`
 returns the orientation of the velocity field at the boundary.
 
 .. code-block:: python
@@ -253,7 +253,7 @@ returns the orientation of the velocity field at the boundary.
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "extension"                    # extension or compression
   # Create Velocity class instance
-  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type,u_angle)
+  BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle)
 
   # Evaluate the velocity and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
@@ -432,13 +432,13 @@ clockwise around the :math:`y` axis.
 ~~~~~~~~~~~~~~~~~
 Next, we create a strike-slip velocity field with a norm of 1 cm.a\ :sup:`-1`.
 The method 
-:py:meth:`evaluate_velocity_and_gradient_symbolic() <genepy.Velocity.evaluate_velocity_and_gradient_symbolic>` 
+:py:meth:`evaluate_velocity_and_gradient_symbolic() <genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic>` 
 returns the symbolic expression of the velocity field and its gradient.
 The method
-:py:meth:`evaluate_velocity_numeric() <genepy.Velocity.evaluate_velocity_numeric>`
+:py:meth:`evaluate_velocity_numeric() <genepy.VelocityLinear.evaluate_velocity_numeric>`
 returns the numeric value of the velocity field evaluated at coordinates of the nodes.
 The method
-:py:meth:`get_velocity_orientation() <genepy.Velocity.get_velocity_orientation>`
+:py:meth:`get_velocity_orientation() <genepy.VelocityLinear.get_velocity_orientation>`
 returns the orientation of the velocity field at the boundary.
 
 .. note:: The rotation of the velocity field is handled inside the velocity function evaluation
@@ -453,7 +453,7 @@ returns the orientation of the velocity field at the boundary.
   u_dir   = "z"                            # direction in which velocity varies
   u_type  = "extension"                    # extension or compression, defines the sign
   # Create velocity class instance
-  BCs = gp.Velocity(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
+  BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity function and its derivatives
   u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
