@@ -20,8 +20,45 @@
 #====================================================================================================
 
 class BoundaryCondition:
+  """
+  .. py:class:: BoundaryCondition(model_name:str="model_GENE3D")
+
+    Abstract class to generate options for `pTatin3d`_ boundary conditions.
+    Parent class of :py:class:`StokesBoundaryCondition` 
+    and :py:class:`TemperatureBC <genepy.TemperatureBC>`.
+  """
   def __init__(self, model_name:str="model_GENE3D") -> None:
     self.model_name = model_name
+    self.dmap = {"x":0,"y":1,"z":2}
+
+  def is_expression(self,expression:str) -> bool:
+    """
+    is_expression(expression:str)
+    Check if the given expression contains one or several variables of the list 
+    ``["x","y","z","t","p"]``.
+
+    :param str expression: expression to check
+
+    :return: True if the expression contains one or several variables of the list, False otherwise
+    :rtype: bool
+    """
+    varlist = ["x","y","z","t","p"]
+    if any(variable in expression for variable in varlist): return True
+    else:                                                   return False
+  
+  def format_expression(self,expression:str) -> str:
+    """
+    format_expression(expression:str)
+    Format the given expression to be used in `pTatin3d`_ input file.
+    Basically, it removes spaces between characters.
+
+    :param str expression: expression to format
+
+    :return: formatted expression
+    :rtype: str
+    """
+    expression = expression.replace(" ","")
+    return expression
 
 class StokesBoundaryCondition(BoundaryCondition):
   """
@@ -99,6 +136,15 @@ class StokesBoundaryCondition(BoundaryCondition):
     return s
 
 class TemperatureBC(BoundaryCondition):
+  """
+  .. py:class:: TemperatureBC(conditions:dict, model_name:str="model_GENE3D")
+
+    Class to generate the options for `pTatin3d`_ thermal energy boundary condition.
+
+    :param dict conditions: dictionary of the form ``{face: value}`` where ``face`` is one of
+      ``['xmin','xmax','ymin','ymax','zmin','zmax']`` and ``value`` is the temperature value.
+    :param str model_name: name of the model (default: model_GENE3D)
+  """
   def __init__(self, conditions:dict, model_name:str="model_GENE3D") -> None:
     BoundaryCondition.__init__(self,model_name)
     self.conditions = conditions

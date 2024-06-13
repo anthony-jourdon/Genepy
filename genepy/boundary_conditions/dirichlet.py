@@ -80,22 +80,19 @@ class Dirichlet(StokesBoundaryCondition):
     """
     sprint_option(self)
     Returns the string to be added to the options file descibing the Dirichlet boundary condition.
-    Calls :meth:`genepy.boundary_conditions.bcs.StokesBoundaryCondition.sprint_option` first.
+    Calls :meth:`genepy.StokesBoundaryCondition.sprint_option` first.
 
     :return: string to be added to the options file
     :rtype: str
     """
     s = StokesBoundaryCondition.sprint_option(self)
+    # check if the velocity is a constant or an expression, 
+    # if any of the component is an expression, they are all considered as an expression
+    if not any([self.is_expression(str(self.u[self.dmap[d]])) for d in self.components]):
+      s += f"-{self.model_name}_{self.prefix}_constant_{self.tag}\n"
+
     for d in self.components:
-      if   d == "x": dim = 0
-      elif d == "y": dim = 1
-      elif d == "z": dim = 2
-      u_string = str(self.u[0,dim])
-      u_split  = u_string.split()
-      nmembers = len(u_split)
-      u_nospace = ""
-      for j in range(nmembers):
-        u_nospace += u_split[j]
+      u_nospace = self.format_expression(str(self.u[self.dmap[d]]))
       s += f"-{self.model_name}_{self.prefix}_u{d}_{self.tag} {u_nospace}\n"
     return s
   
@@ -104,10 +101,7 @@ class Dirichlet(StokesBoundaryCondition):
     s += f"\tComponents: {self.components}\n"
     s += f"\tVelocity:\n"
     for d in self.components:
-      if   d == "x": dim = 0
-      elif d == "y": dim = 1
-      elif d == "z": dim = 2
-      s += f"\t\tu{d}: {self.u[0,dim]}\n"
+      s += f"\t\tu{d}: {self.u[self.dmap[d]]}\n"
     return s
 
 class DirichletUdotN(StokesBoundaryCondition):

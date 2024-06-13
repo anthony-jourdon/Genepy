@@ -117,11 +117,5 @@ class InitialConditions:
     s += f"-{self.model_name}_{prefix}_ndir 3\n"
     s += f"-{self.model_name}_{prefix}_dir 0,1,2\n"
     for dim in components:
-      u_string = str(self.u[0,dim])
-      u_split  = u_string.split()
-      nmembers = len(u_split)
-      u_nospace = ""
-      for j in range(nmembers):
-        u_nospace += u_split[j]
-      s += f"-{self.model_name}_{prefix}_expression_{dim} {u_nospace}\n"
+      s += f"-{self.model_name}_{prefix}_expression_{dim} {str(self.u[dim]).replace(' ','')}\n"
     return s

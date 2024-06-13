@@ -531,6 +531,8 @@ class VelocityLinear(Velocity):
     # rotate the velocity field
     R   = self.rotation_matrix()
     u_R = self.rotate_vector(R,u,ccw=True)
+    # reshape for a 1D array
+    u_R.shape = (self.dim,)
     return u_R
   
   def evaluate_velocity_and_gradient_symbolic(self):
@@ -548,8 +550,8 @@ class VelocityLinear(Velocity):
     in symbolic form.
     """
     u      = self.evaluate_velocity_symbolic()
-    u[0,1] = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
-    grad_u = self.evaluate_gradient(u[0,:])
+    u[1]   = self.evaluate_vertical_velocity(self.sym_coor[1],u=u)
+    grad_u = self.evaluate_gradient(u)
     return u,grad_u
   
   def evaluate_vertical_velocity_coefficients(self,u=None):
@@ -578,7 +580,7 @@ class VelocityLinear(Velocity):
     """
     if u is None:
       u = self.evaluate_velocity_symbolic()
-    int_u_dot_n = self.evaluate_int_u_dot_n_faces(u[0,:])
+    int_u_dot_n = self.evaluate_int_u_dot_n_faces(u)
     iudn = 0.0
     for face in int_u_dot_n:
       iudn += int_u_dot_n[face]
@@ -818,12 +820,12 @@ class VelocityInversion(VelocityTimeDependant):
 
     # If not 1D, evaluate the vertical velocity
     if self.phases[0].dim > 1:
-      u1[0,1] = self.phases[0].evaluate_vertical_velocity(self.phases[0].sym_coor[1],u=u1)
-      u2[0,1] = self.phases[1].evaluate_vertical_velocity(self.phases[1].sym_coor[1],u=u2)
+      u1[1] = self.phases[0].evaluate_vertical_velocity(self.phases[0].sym_coor[1],u=u1)
+      u2[1] = self.phases[1].evaluate_vertical_velocity(self.phases[1].sym_coor[1],u=u2)
 
     u_t = []
     for d in range(self.phases[0].dim):
-      u_bounds = [ u1[0,d], u2[0,d] ]
+      u_bounds = [ u1[d], u2[d] ]
       u_t.append(self.velocity_function(self.time_sym,u_bounds))
     return u_t
   

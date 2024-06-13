@@ -62,6 +62,8 @@ for input files of `pTatin3d`_.
 .. autoclass:: genepy.ModelBCs
     :members:
 
+.. autoclass:: genepy.BoundaryCondition
+    :members:
 
 Stokes boundary conditions
 .......................... 
@@ -75,7 +77,7 @@ This class is parent of all Stokes boundary conditions classes:
     :members:
 
 Dirichlet
-.......... 
+~~~~~~~~~
 Classes to generate options for Dirichlet boundary conditions.
 Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditions.bcs.StokesBoundaryCondition>`.
 
@@ -83,7 +85,7 @@ Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditio
     :members:
 
 Navier-slip
-...........
+~~~~~~~~~~~
 Class to generate options for Navier-slip boundary conditions.
 Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditions.bcs.StokesBoundaryCondition>`.
 
@@ -91,9 +93,15 @@ Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditio
     :members:
 
 Neumann
-........
+~~~~~~~
 Class to generate options for Neumann boundary conditions.
 Inherits from class :py:class:`StokesBoundaryCondition <genepy.boundary_conditions.bcs.StokesBoundaryCondition>`.
 
 .. autoclass:: genepy.Neumann
+    :members:
+
+Energy boundary conditions
+..........................
+
+.. autoclass:: genepy.TemperatureBC
     :members:

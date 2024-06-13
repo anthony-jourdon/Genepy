@@ -44,7 +44,7 @@ def velocity_bcs(Domain,Rotation,report=False):
   u_num    = BCs.evaluate_velocity_numeric()                  # numeric
   uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
   if report:
-    print(BCs.report_symbolic_functions(u[0,:],grad_u,uL))
+    print(BCs.report_symbolic_functions(u,grad_u,uL))
   return BCs,u,grad_u,u_num,uL
 
 def initial_strain(Domain,MshRef,Rotation,report=False):

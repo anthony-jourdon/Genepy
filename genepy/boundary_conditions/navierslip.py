@@ -88,11 +88,20 @@ class NavierSlip(StokesBoundaryCondition):
     :rtype: str
     """
     s = StokesBoundaryCondition.sprint_option(self)
+    # collect the considered components of the gradient in a dictionnary
+    gu = { "duxdx" : self.grad_u[0,0],
+           "duxdz" : self.grad_u[0,2],
+           "duzdx" : self.grad_u[2,0],
+           "duzdz" : self.grad_u[2,2]}
+    # remove spaces in the expressions
+    gu = { k:self.format_expression(str(v)) for k,v in gu.items() }
+    # check if the gradient is a constant or an expression
+    if any(self.is_expression(gu[g]) for g in gu):
+      s += f"-{self.model_name}_{self.prefix}_expression_{self.tag}\n"
+
     s += f"-{self.model_name}_{self.prefix}_penalty_{self.tag} 1.0e3 # penalty for Nitsche's method\n"
-    s += f"-{self.model_name}_{self.prefix}_duxdx_{self.tag} {str(self.grad_u[0,0])}\n"
-    s += f"-{self.model_name}_{self.prefix}_duxdz_{self.tag} {str(self.grad_u[0,2])}\n"
-    s += f"-{self.model_name}_{self.prefix}_duzdx_{self.tag} {str(self.grad_u[2,0])}\n"
-    s += f"-{self.model_name}_{self.prefix}_duzdz_{self.tag} {str(self.grad_u[2,2])}\n"
+    for component,value in gu.items():
+      s += f"-{self.model_name}_{self.prefix}_{component}_{self.tag} {value}\n"
     s += f"-{self.model_name}_{self.prefix}_uL_{self.tag} {self.uL[0]},{self.uL[2]} # velocity orientation on boundary\n"
     s += f"-{self.model_name}_{self.prefix}_mathcal_H_{self.tag} 0,1,0,1,1,1\n"
     return s
