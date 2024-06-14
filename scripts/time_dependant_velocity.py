@@ -169,19 +169,19 @@ def main():
   print(f"Time at which velocity is 0: {t0/Ma2s} Myr")
 
   # plot the 1D velocity profile over time
-  time_1d = np.linspace(0, 20, 201) * Ma2s # time array for plots
+  time_1d = np.linspace(0, 6, 201) * Ma2s # time array for plots
   bc_inv.plot_1D_velocity(time_1d)
 
   # material parameters
   regions = [
     # Upper crust
-    gp.Region(38),
+    gp.Region(38,energy=gp.Energy(0.0,3.3)),
     # Lower crust
-    gp.Region(39),
+    gp.Region(39,energy=gp.Energy(0.0,3.3)),
     # Lithosphere mantle
-    gp.Region(40),
+    gp.Region(40,energy=gp.Energy(0.0,3.3)),
     # Asthenosphere
-    gp.Region(41)
+    gp.Region(41,energy=gp.Energy(0.0,3.3))
   ]
   # path to mesh files (system dependent, change accordingly)
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
@@ -197,17 +197,10 @@ def main():
   model_phase_1 = gp.Model(gp.InitialConditions(Domain,u),all_regions,bc_phase_1,output_path="extension")
   model_phase_2 = gp.Model(gp.InitialConditions(Domain,u),all_regions,bc_phase_2,output_path="compression")
   
-  #with open("model_phase_1.sh","w") as f:
-  #  f.write(model_phase_1.options)
-  #with open("model_phase_2.sh","w") as f:
-  #  f.write(model_phase_2.options)
-  """
-  time = np.linspace(0, 20, 21) * Ma2s # time array for plots
-  root = "./"
-  pvd = "timeseries.pvd"
-  writer = gp.WriteVTS(Domain)
-  bc_inv.paraview_velocity_inversion(writer,time,root,pvd)
-  """
+  with open("model_phase_1.sh","w") as f:
+    f.write(model_phase_1.options)
+  with open("model_phase_2.sh","w") as f:
+    f.write(model_phase_2.options)
 
 if __name__ == "__main__":
   main()
