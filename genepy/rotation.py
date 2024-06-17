@@ -114,7 +114,8 @@ class Rotation:
     """
     rotation_matrix(self)
     Return the rotation matrix depending on the :attr:`spatial dimension <genepy.rotation.Rotation.dim>`.
-    calls :meth:`rotation_matrix_2d() <genepy.rotation.Rotation.rotation_matrix_2d>` or :meth:`rotation_matrix_3d() <genepy.rotation.Rotation.rotation_matrix_3d>`.
+    calls :meth:`rotation_matrix_2d() <genepy.Rotation.rotation_matrix_2d>` or 
+    :meth:`rotation_matrix_3d() <genepy.Rotation.rotation_matrix_3d>`.
 
     :return: **R** rotation matrix in 2D or 3D of the shape ``(2,2)`` or ``(3,3)``
     """
@@ -134,7 +135,7 @@ class Rotation:
 
       This is **not** a rotation of the vector field, but a rotation of the vectors themselves.
       To rotate the vector field, have a look at how it is done in
-      :meth:`evaluate_velocity_numeric() <genepy.Velocity.evaluate_velocity_numeric>`.
+      :py:meth:`evaluate_velocity_symbolic() <genepy.VelocityLinear.evaluate_velocity_symbolic>`.
 
     :param np.ndarray R: rotation matrix of the shape ``(dim,dim)``
     :param np.ndarray u: vector(s) to be rotated of the shape ``(npoints,dim)``
