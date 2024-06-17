@@ -12,10 +12,16 @@ This module can:
 Some examples can be found in `scripts`  subdirectory.
 
 ## Installation
+This module requires python >= 3.10 and the following dependencies that can all be installed using pip
+- numpy
+- sympy
+- matplotlib
+- pyvista
+
 To be able to import genepy module its location needs to be known by `PYTHONPATH`.
 To do so, move yourself in Genepy and type
 
-`source bc-pre-proc.sh`
+`source genepy.sh`
 
 This needs to be done every time a new terminal or python session is opened.
 Another possibility is to add it to your bashrc or zshrc but it may be erased by python virtual environment when loaded.
@@ -26,12 +32,6 @@ Once your `PYTHONPATH` has been appended check that it works correctly with
 $ python
 >> import genepy
 ```
-
-This module requires the following dependencies that can all be installed using pip
-- numpy
-- sympy
-- matplotlib
-- pyvista
 
 ## Documentation
 Access documentation with this [link](https://anthony-jourdon.github.io/Genepy/).
