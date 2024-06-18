@@ -156,13 +156,8 @@ def main():
 
   # create time dependant velocity inversion class instance
   bc_inv = gp.VelocityInversion(Domain,phase_1,phase_2,breakpoints,slopes)
-  # space and time dependant velocity function and its gradient
-  u,grad_u = bc_inv.evaluate_velocity_and_gradient_symbolic()
-  print(u,grad_u)
-  # Orientation of the velocity at the boundary 
-  uL_1,uL_2 = bc_inv.get_velocity_orientation(horizontal=True,normalize=True)
   # Report the computed function and its gradient
-  print(bc_inv.report_symbolic_functions(u,grad_u))
+  print(bc_inv.report_symbolic_functions())
 
   # time at which velocity is 0 during the tectonic regime inversion
   t0 = bc_inv.get_time_zero_velocity(report=True)
@@ -190,12 +185,12 @@ def main():
                                 region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
 
   # boundary conditions
-  bc_phase_1 = boundary_conditions_Dirichlet(u)
-  bc_phase_2 = boundary_conditions_Navier(u,grad_u,uL_2)
+  bc_phase_1 = boundary_conditions_Dirichlet(bc_inv.u)
+  bc_phase_2 = boundary_conditions_Navier(bc_inv.u,bc_inv.grad_u,bc_inv.u_dir_horizontal[1])
   
   # write the options for ptatin3d
-  model_phase_1 = gp.Model(gp.InitialConditions(Domain,u),all_regions,bc_phase_1,output_path="extension")
-  model_phase_2 = gp.Model(gp.InitialConditions(Domain,u),all_regions,bc_phase_2,output_path="compression")
+  model_phase_1 = gp.Model(gp.InitialConditions(Domain,bc_inv.u),all_regions,bc_phase_1,output_path="extension")
+  model_phase_2 = gp.Model(gp.InitialConditions(Domain,bc_inv.u),all_regions,bc_phase_2,output_path="compression")
   
   with open("model_phase_1.sh","w") as f:
     f.write(model_phase_1.options)

@@ -109,12 +109,12 @@ We define a simple orthogonal shortening :py:class:`velocity <genepy.VelocityLin
   # Create Velocity class instance
   BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type)
 
-  # Evaluate the velocity and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
+  # Access the symbolic velocity function
+  u = BCs.u
 
 .. note:: In this example, the derivatives of the velocity are not used.
 
-3. Initial conditions
+1. Initial conditions
 ~~~~~~~~~~~~~~~~~~~~~
 In this example we do not impose any initial plastic strain value nor mesh refinement.
 Therefore the :py:class:`initial conditions <genepy.InitialConditions>` are only the Domain and the velocity function.
@@ -255,12 +255,12 @@ returns the orientation of the velocity field at the boundary.
   # Create Velocity class instance
   BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle)
 
-  # Evaluate the velocity and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
-  u_num    = BCs.evaluate_velocity_numeric()                  # numeric
-  uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
+  # Access the symbolic velocity function, its gradient and the orientation of the horizontal velocity at the boundary
+  u      = BCs.u                # velocity function
+  grad_u = BCs.grad_u           # gradient of the velocity function
+  uL     = BCs.u_dir_horizontal # orientation of the horizontal velocity at the boundary (normalized)
 
-3. Initial conditions
+1. Initial conditions
 ~~~~~~~~~~~~~~~~~~~~~
 In this example we do not impose any initial plastic strain value nor mesh refinement.
 Therefore the :py:class:`initial conditions <genepy.InitialConditions>` 
@@ -455,11 +455,10 @@ returns the orientation of the velocity field at the boundary.
   # Create velocity class instance
   BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
-  # Evaluate the velocity function and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
-  u_num    = BCs.evaluate_velocity_numeric()                  # numeric
-  # Get the orientation of the vectors at boundary (horizontal removes the vertical component)
-  uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
+  # Access the symbolic velocity function, its gradient and the orientation of the horizontal velocity at the boundary
+  u      = BCs.u                # velocity function
+  grad_u = BCs.grad_u           # gradient of the velocity function
+  uL     = BCs.u_dir_horizontal # orientation of the horizontal velocity at the boundary (normalized)
 
 5. Define gaussian weak zones
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -594,7 +593,7 @@ and we set the diffusivity to :math:`10^6` m\ :sup:`2`.s\ :sup:`-1`.
   # Add erosion-sedimentation with diffusion
   spm = gp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
 
-11. Add passive tracers
+10. Add passive tracers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Add passive tracers to the model.
 Here we define a box :math:`x \in [0, 600] \times y \in [-100, 0] \times z \in [0, 300]` km\ :sup:`3` 
@@ -613,7 +612,7 @@ We activate the tracking of the pressure and temperature fields.
                             pressure=True,
                             temperature=True)
 
-12.  Create the model and generate options
+11.  Create the model and generate options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The :py:class:`model <genepy.Model>` is created by gathering all the information defined previously.
 
@@ -716,11 +715,12 @@ using the :py:class:`VelocityInversion <genepy.VelocityInversion>` class
 
   # create time dependant velocity inversion class instance
   bc_inv = gp.VelocityInversion(Domain,phase_1,phase_2,breakpoints,slopes)
-  # space and time dependant velocity function and its gradient
-  u,grad_u = bc_inv.evaluate_velocity_and_gradient_symbolic()
-  # Orientation of the velocity at the boundary 
-  # (not necessary if the velocity is always orthogonal to the boundary for both phases)
-  uL_1,uL_2 = bc_inv.get_velocity_orientation(horizontal=True,normalize=True)
+
+  # Access the symbolic velocity function, its gradient and the orientation of the horizontal velocity at the boundary
+  u      = bc_inv.u                   # velocity function
+  grad_u = bc_inv.grad_u              # gradient of the velocity function
+  uL_1   = bc_inv.u_dir_horizontal[0] # orientation of the extension phase
+  uL_2   = bc_inv.u_dir_horizontal[1] # orientation of the compression phase
 
 To help visualize the resulting time dependant velocity function a 
 :py:meth:`plotting method <genepy.VelocityInversion.plot_1D_velocity>` using matplotlib is available:

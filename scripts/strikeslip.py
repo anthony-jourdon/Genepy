@@ -40,12 +40,13 @@ def velocity_bcs(Domain,Rotation,report=False):
   BCs = gp.VelocityLinear(Domain,u_norm,u_dir,u_type,u_angle,Rotation)
 
   # Evaluate the velocity and its derivatives
-  u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
+  #u,grad_u = BCs.evaluate_velocity_and_gradient_symbolic() # symbolic
   u_num    = BCs.evaluate_velocity_numeric()                  # numeric
-  uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
+  #uL       = BCs.get_velocity_orientation(horizontal=True,normalize=True)
   if report:
-    print(BCs.report_symbolic_functions(u,grad_u,uL))
-  return BCs,u,grad_u,u_num,uL
+    print(BCs.report_symbolic_functions())
+  #return BCs,BCs.u,BCs.grad_u,u_num,BCs.u_dir_horizontal
+  return BCs,u_num
 
 def initial_strain(Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
@@ -57,8 +58,8 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 50.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(77.5)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 32.5e3                            # distance from the domain centre in z direction
+  angle = np.deg2rad(-79.0)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -157,7 +158,7 @@ def strikeslip():
   # rotation of the referential, if not needed, the Velocity object can be created without it
   Rotation = domain_rotation()
   # boundary conditions
-  BCs,u,grad_u,u_num,uL = velocity_bcs(Domain,Rotation,report=True)
+  BCs,u_num = velocity_bcs(Domain,Rotation,report=True)
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
@@ -169,8 +170,8 @@ def strikeslip():
   w.write_vts()
 
   # generate objects for options writing
-  ics     = initial_conditions(Domain,MshRef,Gaussian,u)
-  bcs     = boundary_conditions(u,grad_u,uL)
+  ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
+  bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   regions = material_parameters()
   #regions = test_default_material_parameters()
   spm = gp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
