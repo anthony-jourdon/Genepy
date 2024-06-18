@@ -358,7 +358,7 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     :param float Vmol_diff: Molar volume of the diffusion in m\ :sup:`3`.mol\ :sup:`-1`.
     :param float pexp_diff: Grain size exponent of the diffusion flow law.
     :param float gsize: Grain size in m.
-    :param float Vmol_disl: Molar volume of the dislocation flow law in m\ :sup`3`.mol\ :sup:`-1`. Default is 0.0.
+    :param float Vmol_disl: Molar volume of the dislocation flow law in m\ :sup:`3`.mol\ :sup:`-1`. Default is 0.0.
     :param float Tref: Reference value to convert the temperature from Celsius to Kelvin. Default is 273.15.
     :param str model_name: Name of the model to which the viscosity is applied. Default is "model_GENE3D".
     :param int region: Region number to which the viscosity is applied. Default is 0.

@@ -44,11 +44,16 @@ class Velocity(domain.Domain,rotation.Rotation):
     # set rotation angle to zero if Rotation class is not provided
     if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
     else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
+    self.u               = None
+    self.grad_u          = None
+    self.u_h_orientation = None
+    self.uO              = None
+    self.uL              = None
     return
 
-  def report_symbolic_functions(self,u,grad_u=None) -> str:
+  def report_symbolic_functions(self) -> str:
     """
-    report_symbolic_functions(self,u,grad_u,uL)
+    report_symbolic_functions(self)
     Returns a string with the symbolic velocity function, 
     its gradient and the boundary velocity orientation.
     Can be used with print() or written to a file.
@@ -61,12 +66,12 @@ class Velocity(domain.Domain,rotation.Rotation):
     """
     s = f"Symbolic velocity function:\n"
     for i in range(self.dim):
-      s += f"\tu{self.sym_coor[i]}{self.sym_coor} = {u[i]}\n"
-    if grad_u is not None:
+      s += f"\tu{self.sym_coor[i]}{self.sym_coor} = {self.u[i]}\n"
+    if self.grad_u is not None:
       s += f"Gradient of the velocity function:\n"
       for i in range(self.dim):
         for j in range(self.dim):
-          s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(grad_u[i,j])+"\n"
+          s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(self.grad_u[i,j])+"\n"
     return s
   
   def velocity_function(self):
@@ -308,9 +313,28 @@ class VelocityLinear(Velocity):
 
       Flag to check if the vertical velocity has been evaluated
     
+    .. py:attribute:: u
+      :type: numpy.ndarray
+
+      Vector valued function of the velocity field. Shape ``(dim,)``. Contains sympy expressions.
+    
+    .. py:attribute:: grad_u
+      :type: numpy.ndarray
+
+      Matrix of the gradient of the velocity field. Shape ``(dim,dim)``. Contains sympy expressions.
+    
+    .. py:attribute:: u_dir_horizontal
+      :type: numpy.ndarray
+
+      Horizontal vector of the velocity field orientation. Shape ``(dim,)``.
+    
+    .. py:attribute:: u_dir
+      :type: numpy.ndarray
+
+      Full vector of the velocity field orientation. Shape ``(dim,)``.
+
     Methods
     -------
-
   """
 
   def __init__(self,Domain:domain.Domain,u_norm,variation_dir:str,velocity_type:str,u_angle:float=0.0,Rotation:rotation.Rotation=None) -> None:
@@ -322,14 +346,16 @@ class VelocityLinear(Velocity):
     if type(variation_dir) is not str:
       raise TypeError(f'variation_dir must be a string, found {type(variation_dir)}')
     
-    for d in variation_dir:
-      if   d == "x": self.dir = 0
-      elif d == "y": self.dir = 1
-      elif d == "z": self.dir = 2
-      else: raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {d}")
-
+    dirmap = {"x":0,"y":1,"z":2}
+    if variation_dir not in dirmap:
+      raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {variation_dir}")
+    self.dir = dirmap[variation_dir]
+    
     self.vertical_evaluated = False
     self.velocity_coefficients()
+    self.u, self.grad_u   = self.evaluate_velocity_and_gradient_symbolic()
+    self.u_dir_horizontal = self.get_velocity_orientation(horizontal=True,normalize=True)
+    self.u_dir            = self.get_velocity_orientation(normalize=True)
 
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}:\n'
@@ -356,9 +382,9 @@ class VelocityLinear(Velocity):
         s += f'\t{attribute}:\t{attributes[attribute]}\n'
     return s
   
-  def report_symbolic_functions(self,u,grad_u,uL) -> str:
+  def report_symbolic_functions(self) -> str:
     """
-    report_symbolic_functions(self,u,grad_u,uL)
+    report_symbolic_functions(self)
     Returns a string with the symbolic velocity function, 
     its gradient and the boundary velocity orientation.
     Can be used with print() or written to a file.
@@ -370,10 +396,14 @@ class VelocityLinear(Velocity):
     :return: string with the symbolic velocity function, its gradient and the boundary velocity orientation.
     :rtype: str
     """
-    s = super().report_symbolic_functions(u,grad_u)
-    s += f"Boundary velocity orientation:\n"
+    s = super().report_symbolic_functions()
+    s += f"Boundary velocity orientation (unit vector):\n"
+    s += "\tHorizontal vector:\n"
     for i in range(self.dim):
-      s += f"\tuL{self.sym_coor[i]} = {uL[i]}\n"
+      s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir_horizontal[i]}\n"
+    s += "\tFull vector:\n"
+    for i in range(self.dim):
+      s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir[i]}\n"
     return s
   
   def boundary_vector(self):
@@ -724,6 +754,45 @@ class VelocityInversion(VelocityTimeDependant):
     :param list slopes: list of two slopes at the breakpoints
     :param Rotation Rotation: **(Optional)** Rotation class instance to rotate the referential
 
+    
+    Attributes
+    ----------
+
+    .. py:attribute:: phases
+      :type: list
+
+      List containing the 2 class instances of the velocity phases. Shape ``[phase1:Velocity, phase2:Velocity]``.
+    
+    .. py:attribute:: breakpoints
+      :type: list
+
+      List of the two breakpoints in time. Shape ``[breakpoint1:float, breakpoint2:float]``
+    
+    .. py:attribute:: slopes
+      :type: list
+
+      List of the two slopes at the breakpoints. Shape ``[slope1:float, slope2:float]``
+
+    .. py:attribute:: u
+      :type: numpy.ndarray
+
+      Vector valued function of the velocity field. Shape ``(dim,)``. Contains sympy expressions.
+    
+    .. py:attribute:: grad_u
+      :type: numpy.ndarray
+
+      Matrix of the gradient of the velocity field. Shape ``(dim,dim)``. Contains sympy expressions.
+    
+    .. py:attribute:: u_dir_horizontal
+      :type: list
+
+      List of horizontal vectors of the velocity field orientation for each phase. Shape ``[(dim,), (dim,)]``.
+    
+    .. py:attribute:: u_dir
+      :type: numpy.ndarray
+
+      List of the full vector of the velocity field orientation for each phase. Shape ``[(dim,), (dim,)]``.
+
     Methods
     -------
   """
@@ -737,16 +806,21 @@ class VelocityInversion(VelocityTimeDependant):
     self.phases      = [phase1, phase2]
     self.breakpoints = breakpoints
     self.slopes      = slopes
+
+    self.u, self.grad_u   = self.evaluate_velocity_and_gradient_symbolic()
+    self.u_dir_horizontal = [self.phases[0].u_dir_horizontal, self.phases[1].u_dir_horizontal]
+    self.u_dir            = [self.phases[0].u_dir, self.phases[1].u_dir]
     return
 
   def velocity_function(self, time, bound, **kwargs):
     """
     velocity_function(self, time, bound)
-    Evaluates a time dependant velocity function with two phases by summing two arctangent functions such that
+    Evaluates a time dependant velocity function :math:`u(t)` with two phases by summing two arctangent functions such that
 
     .. math::
       f_1(t) &= b_1 \\left( \\frac{1}{2} - \\frac{\\tan^{-1} \\left(s_1(t-t_1) \\right)}{\\pi} \\right) \\\\
-      f_2(t) &= b_2 \\left( \\frac{1}{2} + \\frac{\\tan^{-1} \\left(s_2(t-t_2) \\right)}{\\pi} \\right)
+      f_2(t) &= b_2 \\left( \\frac{1}{2} + \\frac{\\tan^{-1} \\left(s_2(t-t_2) \\right)}{\\pi} \\right) \\\\
+      u(t) &= f_1(t) + f_2(t)
 
     where :math:`t_i` are the breakpoints in time, :math:`s_i` are the arctangent slopes at the breakpoints 
     and :math:`b_i` are the bounds of the functions (min and max values i.e., the steady state velocities of each phase).
@@ -814,14 +888,8 @@ class VelocityInversion(VelocityTimeDependant):
 
     :return: time dependant velocity function
     """
-    # Evaluate the steady-state symbolic function of each phase
-    u1 = self.phases[0].evaluate_velocity_symbolic()
-    u2 = self.phases[1].evaluate_velocity_symbolic()
-
-    # If not 1D, evaluate the vertical velocity
-    if self.phases[0].dim > 1:
-      u1[1] = self.phases[0].evaluate_vertical_velocity(self.phases[0].sym_coor[1],u=u1)
-      u2[1] = self.phases[1].evaluate_vertical_velocity(self.phases[1].sym_coor[1],u=u2)
+    u1 = self.phases[0].u
+    u2 = self.phases[1].u
 
     u_t = []
     for d in range(self.phases[0].dim):
@@ -844,19 +912,6 @@ class VelocityInversion(VelocityTimeDependant):
     u = self.evaluate_velocity_symbolic()
     grad_u = self.evaluate_gradient(u)
     return u,grad_u
-  
-  def get_velocity_orientation(self,horizontal=True,normalize=True):
-    """
-    get_velocity_orientation(self,horizontal=True,normalize=False)
-    Returns the orientation vector of the velocity field at the boundary for each phase.
-    The orientation is **not** evaluated in time.
-
-    :param bool horizontal: if True, only the horizontal components are returned (default: ``True``)
-    :param bool normalize:  if True, the vector is normalized (default: ``True``)
-    """
-    uL_1 = self.phases[0].get_velocity_orientation(horizontal=horizontal,normalize=normalize)
-    uL_2 = self.phases[1].get_velocity_orientation(horizontal=horizontal,normalize=normalize)
-    return uL_1,uL_2
 
   def get_time_zero_velocity(self,report=False):
     """
