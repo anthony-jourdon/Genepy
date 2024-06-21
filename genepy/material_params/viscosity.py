@@ -455,10 +455,10 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     ViscosityArrhenius.__init__(self,rock_name,Vmol_disl,Tref,model_name,region,**kwargs)
     # erase the attributes from the parent class
     self.preexpA_disl = self.preexpA
-    self.Ascale_disl = self.Ascale
+    self.Ascale_disl  = self.Ascale
     self.entalpy_disl = self.entalpy
-    self.Vmol_disl = self.Vmol
-    self.nexp_disl = self.nexp
+    self.Vmol_disl    = self.Vmol
+    self.nexp_disl    = self.nexp
     # delete the attributes from the parent class to avoid printing them in the sprint_option method
     del self.preexpA
     del self.Ascale
@@ -466,13 +466,13 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     del self.Vmol
     del self.nexp
 
-    self.preexpA_diff   = preexpA_diff
-    self.Ascale_diff    = Ascale_diff
-    self.entalpy_diff   = entalpy_diff
-    self.Vmol_diff      = Vmol_diff
-    self.pexp_diff      = pexp_diff
-    self.gsize          = gsize
-    self.visc_type = 5
+    self.preexpA_diff = preexpA_diff
+    self.Ascale_diff  = Ascale_diff
+    self.entalpy_diff = entalpy_diff
+    self.Vmol_diff    = Vmol_diff
+    self.pexp_diff    = pexp_diff
+    self.gsize        = gsize
+    self.visc_type    = 5
   
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'
