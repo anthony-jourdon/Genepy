@@ -20,8 +20,6 @@
   If not, see <https://www.gnu.org/licenses/>.
   ====================================================================================================
 
-.. _pTatin3d: https://github.com/laetitialp/ptatin-gene
-.. _PETSc: https://petsc.org
 
 Initial conditions
 ==================
@@ -44,9 +42,23 @@ The following code describes the physical domain.
 While most of the usage of this class is for 3 dimensional domains,
 it can also be used for 2 dimensional and 1 dimensional domains.
 
+Eulerian Domain (with free-surface)
+...................................
+
 .. autoclass:: genepy.Domain
     :members:
 
+ALE Domain
+..........
+
+In case an ALE simulation is performed, the domain can be defined as a moving domain.
+Therefore, its minumum and maximum coordinates will change in time and expressions relying 
+on the size of the domain need to consider this.
+To do so, the following class introduce symbolic representation of the domain with the symbols
+``"Ox", "Oy", "Oz"`` for the origin of the domain and ``"Lx", "Ly", "Lz"`` for the size of the domain.
+
+.. autoclass:: genepy.DomainALE
+    :members:
 
 Mesh refinement
 ---------------

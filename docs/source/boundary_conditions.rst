@@ -20,13 +20,10 @@
   If not, see <https://www.gnu.org/licenses/>.
   ====================================================================================================
 
-.. _pTatin3d: https://github.com/laetitialp/ptatin-gene
-.. _PETSc: https://petsc.org
-
 Boundary conditions
 ===================
 Contains a class to evaluate symbolic and numeric linear velocity functions and their derivatives 
-and classes to generate options for input files of `pTatin3d <https://github.com/laetitialp/ptatin-gene>`_.   
+and classes to generate options for input files of `pTatin3d`_.   
 
 Velocity
 --------

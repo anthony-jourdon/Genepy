@@ -20,8 +20,6 @@
   If not, see <https://www.gnu.org/licenses/>.
   ====================================================================================================
 
-.. _pTatin3d: https://github.com/laetitialp/ptatin-gene
-.. _PETSc: https://petsc.org
 
 Model
 =====

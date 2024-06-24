@@ -19,7 +19,7 @@ sys.path.insert(0, module_dir)
 project = 'Genepy'
 copyright = '2024, Anthony Jourdon'
 author = 'Anthony Jourdon'
-release = '0.1'
+release = '1.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -33,7 +33,13 @@ extensions = [
 
 templates_path = ['_templates']
 exclude_patterns = []
+include_patterns = ['**',
+                    '../genepy/**']
 
+rst_prolog = """
+.. _pTatin3d: https://github.com/laetitialp/ptatin-gene
+.. _PETSc: https://petsc.org
+"""
 
 
 # -- Options for HTML output -------------------------------------------------

@@ -25,9 +25,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. _pTatin3d: https://github.com/laetitialp/ptatin-gene
-.. _PETSc: https://petsc.org
-
 Welcome to Genepy's documentation!
 ==================================
 `genepy` is a python module designed to evaluate symbolic (mathematic) 
