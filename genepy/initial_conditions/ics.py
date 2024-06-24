@@ -86,7 +86,7 @@ class InitialConditions:
         raise ValueError(serr)
     return
   
-  def sprint_option(self) -> str:
+  def sprint_option(self,**kwargs) -> str:
     """
     sprint_option(self)
     Returns a string formatted for `pTatin3d`_ input file using `PETSc`_ options format
@@ -95,7 +95,7 @@ class InitialConditions:
     :return: string formatted for `pTatin3d`_ input file
     :rtype: str
     """
-    s = self.Domain.sprint_option(self.model_name)
+    s = self.Domain.sprint_option(self.model_name, **kwargs)
     s += self.sprint_initial_velocity()
     for kw in self.possible_kwargs:
       if kw in self.kwargs:

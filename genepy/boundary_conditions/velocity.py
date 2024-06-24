@@ -40,7 +40,10 @@ class Velocity(domain.Domain,rotation.Rotation):
     -------
   """
   def __init__(self,Domain:domain.Domain,Rotation:rotation.Rotation=None) -> None:
-    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n,coor=Domain.num_coor)
+    if isinstance(Domain, domain.DomainALE):
+      domain.DomainALE.__init__(self, Domain.dim, Domain.O_num, Domain.L_num, Domain.n, coor=Domain.num_coor)
+    else:
+      domain.Domain.__init__(self, Domain.dim, Domain.O, Domain.L, Domain.n, coor=Domain.num_coor)
     # set rotation angle to zero if Rotation class is not provided
     if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
     else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
@@ -174,8 +177,10 @@ class Velocity(domain.Domain,rotation.Rotation):
         # evaluate u.n
         udn = u_dot_n.subs(n_num)
 
-        # substitute the coordinate components by numerical values corresponding to the face
-        _x = np.zeros(shape=(self.dim), dtype=np.float64)
+        # substitute the coordinate components by values corresponding to the face
+        if type(self.O[0]) is sp.Symbol: dtype = 'object'
+        else:                            dtype = np.float64
+        _x = np.zeros(shape=(self.dim), dtype=dtype)
         if faces[f] == "min": _x[d] = self.O[d]
         if faces[f] == "max": _x[d] = self.L[d]
         # evaluate u.n at the face
@@ -197,7 +202,7 @@ class Velocity(domain.Domain,rotation.Rotation):
           integral_u_dot_n = sp.integrate(integral_u_dot_n,(self.sym_coor[1],self.O[1],self.L[1]))
         
 
-        int_u_dot_n[face] = integral_u_dot_n
+        int_u_dot_n[face] = integral_u_dot_n.simplify()
     return int_u_dot_n
 
 
@@ -315,21 +320,25 @@ class VelocityLinear(Velocity):
     
     .. py:attribute:: u
       :type: numpy.ndarray
+      :canonical: genepy.VelocityLinear.u
 
       Vector valued function of the velocity field. Shape ``(dim,)``. Contains sympy expressions.
     
     .. py:attribute:: grad_u
       :type: numpy.ndarray
+      :canonical: genepy.VelocityLinear.grad_u
 
       Matrix of the gradient of the velocity field. Shape ``(dim,dim)``. Contains sympy expressions.
     
     .. py:attribute:: u_dir_horizontal
       :type: numpy.ndarray
+      :canonical: genepy.VelocityLinear.u_dir_horizontal
 
       Horizontal vector of the velocity field orientation. Shape ``(dim,)``.
     
     .. py:attribute:: u_dir
       :type: numpy.ndarray
+      :canonical: genepy.VelocityLinear.u_dir
 
       Full vector of the velocity field orientation. Shape ``(dim,)``.
 
@@ -430,7 +439,9 @@ class VelocityLinear(Velocity):
     :return: boundary velocity, shape (dim,)
     :rtype: numpy.ndarray
     """
-    u = np.zeros(shape=(self.dim), dtype=np.float64)
+    if type(self.O[0]) is sp.Symbol: dtype = 'object'
+    else:                            dtype = np.float64
+    u = np.zeros(shape=(self.dim), dtype=dtype)
     if self.dim == 1 or self.dim == 2: 
       u[0] = self.norm
     elif self.dim == 3:
@@ -479,8 +490,11 @@ class VelocityLinear(Velocity):
     Each component of the velocity field is computed by calling 
     :py:meth:`velocity_coefficients_1d() <genepy.VelocityLinear.velocity_coefficients_1d>`.
     """
-    self.a = np.zeros(shape=(self.dim), dtype=np.float64)
-    self.b = np.zeros(shape=(self.dim), dtype=np.float64)
+    if type(self.O[0]) is sp.Symbol: dtype = 'object'
+    else:                            dtype = np.float64
+
+    self.a = np.zeros(shape=(self.dim), dtype=dtype)
+    self.b = np.zeros(shape=(self.dim), dtype=dtype)
 
     if self.type == "compression":
       self.uO = self.boundary_vector()

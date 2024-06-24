@@ -69,6 +69,18 @@ class Domain:
 
       Maximum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
     
+    .. py:attribute:: O_num
+      :type: np.ndarray
+      :canonical: genepy.initial_conditions.domain.Domain.O_num
+
+      Minimum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
+    
+    .. py:attribute:: L_num
+      :type: np.ndarray
+      :canonical: genepy.initial_conditions.domain.Domain.L_num
+
+      Maximum coordinates of the domain, expected shape: ``(dim,)`` and dtype: ``np.float64``
+    
     .. py:attribute:: n
       :type: np.ndarray
       :canonical: genepy.initial_conditions.domain.Domain.n
@@ -109,10 +121,12 @@ class Domain:
     if size.shape[0] != self.dim:
       raise ValueError(f'{self.__class__.__name__}: size must have {self.dim} elements, found {size.shape[0]}')
     
-    self.O  = minCoor # origin
-    self.L  = maxCoor # length
-    self.n  = size    # number of points in each direction
-    self.nv = np.prod(self.n) # total number of points
+    self.O     = minCoor # origin
+    self.L     = maxCoor # length
+    self.O_num = minCoor
+    self.L_num = maxCoor
+    self.n     = size    # number of points in each direction
+    self.nv    = np.prod(self.n) # total number of points
 
     self.num_coor = coor # numerical coordinates
     self.sym_coor = None # symbolic coordinates
@@ -134,7 +148,7 @@ class Domain:
         s += f'\t{attribute}:\t{attributes[attribute]}\n'
     return s
   
-  def sprint_option(self,model_name:str):
+  def sprint_option(self,model_name:str,**kwargs) -> str:
     """
     sprint_option(self,model_name:str)
     Returns a string formatted for `pTatin3d`_ input file using `PETSc <https://petsc.org>`_ options format.
@@ -204,6 +218,74 @@ class Domain:
       coor[:,d] = self.num_coor[d].reshape(self.nv,order='F')
     return coor
 
+class DomainALE(Domain):
+  """
+  .. py:class:: DomainALE(dim, minCoor, maxCoor, size, coor=None)
+  
+      Class to build a physical domain for ALE simulations. 
+      This class creates sympy symbols for the min and max coordinates of the domain to evaluate expressions 
+      in which the size of the domain is a variable (typically ALE simulations). 
+      Inherits from :py:class:`Domain <genepy.Domain>` class.
+
+      :param int dim: dimension of the domain (can be 1, 2 or 3)
+      :param np.ndarray minCoor: minimum coordinates of the domain
+      :param np.ndarray maxCoor: maximum coordinates of the domain
+      :param np.ndarray size: size of the domain (number of points in each direction)
+      :param np.ndarray coor: coordinates of the domain (numerical), optional
+
+      Attributes
+      ----------
+
+      .. py:attribute:: O_num
+        :type: np.ndarray
+        :canonical: genepy.initial_conditions.domain.DomainALE.O_num
+
+        Symbols of the minimum coordinates of the domain ``["Ox","Oy","Oz"]``
+
+      .. py:attribute:: L_num
+        :type: np.ndarray
+        :canonical: genepy.initial_conditions.domain.DomainALE.L_num
+
+        Symbols of the maximum coordinates of the domain ``["Lx","Ly","Lz"]``
+      
+      Other attributes are inherited from the :py:class:`Domain <genepy.Domain>` class.
+  """
+  def __init__(self, dim: int, minCoor: np.ndarray, maxCoor: np.ndarray, size: np.ndarray, coor=None) -> None:
+    Domain.__init__(self, dim, minCoor, maxCoor, size, coor)
+    self.O_num = minCoor
+    self.L_num = maxCoor
+    self.O     = np.asarray(sp.symbols('Ox Oy Oz'))
+    self.L     = np.asarray(sp.symbols('Lx Ly Lz'))
+    return
+  
+  def sprint_option(self,model_name:str,ale_rm_component:list=None,**kwargs) -> str:
+    """
+    sprint_option(self,model_name:str)
+    Returns a string formatted for `pTatin3d`_ input file using `PETSc <https://petsc.org>`_ options format.
+    
+    :param str model_name: name of the model to include in the options
+    :param list ale_rm_component: list of components to remove from the mesh. Valid values are ``"x"``, ``"y"`` and ``"z"``
+
+    :return: string with the options
+    """
+    component = {0:'x', 1:'y', 2:'z'}
+    tnenopmoc = {'x':0, 'y':1, 'z':2}
+    s = "########### Bounding Box ###########\n"
+    for d in range(self.dim):
+      s += f"-{model_name}_O{component[d]} {self.O_num[d]:.5g} # min {component[d]} coord\n"
+      s += f"-{model_name}_L{component[d]} {self.L_num[d]:.5g} # max {component[d]} coord\n"
+    s += "########### Mesh ###########\n"
+    for d in range(self.dim):
+      s += f"-m{component[d]} {self.n[d]-1} # number of elements in {component[d]} direction\n"
+    s += "# Mesh type: 0: Eulerian, 1: ALE\n"
+    s += f"-{model_name}_mesh_type 1\n"
+    if ale_rm_component is not None:
+      for d in ale_rm_component:
+        if d not in ['x','y','z']:
+          raise ValueError(f"Invalid component, can only be \"x\", \"y\" or \"z\". Found: {d}")
+        s += f"-{model_name}_mesh_ale_rm_component_{tnenopmoc[d]} # Remove mesh ALE velocity component: {d}\n"
+    return s
+
 def test2d():
   O = np.array([-0.5, -0.5], dtype=np.float64)
   L = np.array([0.5, 0.5], dtype=np.float64)
@@ -218,8 +300,17 @@ def test3d():
   dom = Domain(3,O,L,n)
   print(dom)
 
+def test_lagrangian():
+  O = np.array([-0.5, -0.5, -0.5], dtype=np.float64)
+  L = np.array([0.5, 0.5, 0.5], dtype=np.float64)
+  n = np.array([4,5,3], dtype=np.int32)
+  dom = DomainALE(3,O,L,n)
+  print(dom)
+
 if __name__ == "__main__":
   print("Running tests")
   test2d()
   print("\n")
   test3d()
+  print("\n")
+  test_lagrangian()

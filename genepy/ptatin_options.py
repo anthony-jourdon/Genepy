@@ -123,7 +123,7 @@ class Model:
 
     # initial conditions options
     self.ics.model_name = self.name
-    self.options += self.ics.sprint_option()
+    self.options += self.ics.sprint_option(**kwargs)
 
     # initial topography options
     density = kwargs.get("isostatic_density", 3300.0)
