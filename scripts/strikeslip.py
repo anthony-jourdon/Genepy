@@ -55,8 +55,8 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 40.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(-70.0)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 15.0e3                            # distance from the domain centre in z direction
+  angle = np.deg2rad(-65.0)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -108,7 +108,7 @@ def material_parameters():
     # Lower crust
     gp.Region(39,
               gp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
-              gp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
+              gp.ViscosityArrhenius2("Quartzite"),
               gp.SofteningLinear(strain_min=0.0,strain_max=0.5),
               gp.PlasticDruckerPrager(),
               gp.Energy(heat_source=0.5e-6,conductivity=2.85)),
