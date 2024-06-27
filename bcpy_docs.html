@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module genepy &mdash; Genepy 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=2709fde1"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Module genepy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/bcpy_docs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-genepy">
+<h1>Module genepy<a class="headerlink" href="#module-genepy" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="initial_conditions.html">Initial conditions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html#domain">Domain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#genepy.Domain"><code class="docutils literal notranslate"><span class="pre">Domain</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html#mesh-refinement">Mesh refinement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement"><code class="docutils literal notranslate"><span class="pre">MeshRefinement</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html#rotation">Rotation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#genepy.Rotation"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html#gaussian">Gaussian</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian"><code class="docutils literal notranslate"><span class="pre">Gaussian</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html#ics-ptatin3d-options-generation">ICs pTatin3d options generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions"><code class="docutils literal notranslate"><span class="pre">InitialConditions</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html#velocity">Velocity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html#options-generation">Options generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#bounary-conditions-wrapper">Bounary conditions wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#stokes-boundary-conditions">Stokes boundary conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#navier-slip">Navier-slip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#neumann">Neumann</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="material_parameters.html">Material parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#wrapper-for-material-parameters">Wrapper for material parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#region">Region</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#model-regions">Model regions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#parent-class-for-all-material-parameters">Parent class for all material parameters.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#genepy.MaterialConstants"><code class="docutils literal notranslate"><span class="pre">MaterialConstants</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#density">Density</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#constant-density">Constant density</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#boussinesq-approximation">Boussinesq approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#thermodynamic-table">Thermodynamic table</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#viscosity">Viscosity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#constant-viscosity">Constant viscosity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#frank-kamenetskii-viscosity">Frank-Kamenetskii viscosity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#depth-dependent-viscosity">Depth-dependent viscosity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#arrhenius-viscosity">Arrhenius viscosity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#pasticity">Pasticity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#no-plasticity">No plasticity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#vonmises-plasticity">VonMises plasticity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#drucker-prager-plasticity">Drucker-Prager plasticity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#plastic-strain-softening">Plastic strain softening</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#no-softening">No softening</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#linear-softening">Linear softening</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#exponential-softening">Exponential softening</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html#energy">Energy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#genepy.Energy"><code class="docutils literal notranslate"><span class="pre">Energy</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#genepy.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.Model.Model"><code class="docutils literal notranslate"><span class="pre">Model.Model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html#markers-management">Markers management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#genepy.MarkersManagement"><code class="docutils literal notranslate"><span class="pre">MarkersManagement</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.MarkersManagement.MarkersManagement"><code class="docutils literal notranslate"><span class="pre">MarkersManagement.MarkersManagement</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html#passive-tracers">Passive tracers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#pswarm">Pswarm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.Pswarm"><code class="docutils literal notranslate"><span class="pre">Pswarm</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#fill-entire-domain">Fill entire domain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.PswarmFillDomain"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomain</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#fill-domain-within-a-bounding-box">Fill domain within a bounding box</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.PswarmFillDomainWithinBoundingBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomainWithinBoundingBox</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#fill-domain-within-a-bounding-box-with-a-given-number-of-particles">Fill domain within a bounding box with a given number of particles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.PswarmFillBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillBox</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#place-only-selected-tracers">Place only selected tracers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.PswarmFromUserList"><code class="docutils literal notranslate"><span class="pre">PswarmFromUserList</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html#surface-processes">Surface processes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#genepy.SPMDiffusion"><code class="docutils literal notranslate"><span class="pre">SPMDiffusion</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.SPMDiffusion.SPMDiffusion"><code class="docutils literal notranslate"><span class="pre">SPMDiffusion.SPMDiffusion</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
