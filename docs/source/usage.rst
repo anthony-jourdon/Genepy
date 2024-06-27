@@ -57,6 +57,12 @@ in a python terminal. If no error is raised, the module is correctly installed.
 
 Building a model
 ----------------
+
+.. toctree:: 
+  :maxdepth: 3
+
+  gmsh_tuto
+
 .. warning:: 
   In each examples, the following code blocks may re-use variables defined in previous blocks.
   To ensure that the code runs correctly, 

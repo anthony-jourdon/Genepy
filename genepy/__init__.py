@@ -31,6 +31,7 @@ from .initial_conditions.ics             import *
 from .rotation        import *
 from .utils           import *
 from .writers         import *
+from .geo_generation  import *
 
 # Boundary conditions
 from .boundary_conditions.velocity   import *
