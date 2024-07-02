@@ -39,8 +39,20 @@ class MeshRefinement(domain.Domain):
                            "y": {"x_initial": np.array([...],dtype=np.float64), "x_refined": np.array([...],dtype=np.float64)},
                            "z": {"x_initial": np.array([...],dtype=np.float64), "x_refined": np.array([...],dtype=np.float64)}
 
-    The keys of the dictionary are the directions to refine (``"x"``, ``"y"``, ``"z"``) and the values are dictionaries with the keys ``"x_initial"`` and ``"x_refined"``. 
-    The values of these keys are numpy arrays of the initial and refined coordinates in the specified direction. 
+    or
+
+    .. code-block:: python
+
+      refinement_params = {"x": {"mesh_fraction": np.array([...],dtype=np.float64), "x_refined": np.array([...],dtype=np.float64)}}
+
+    The keys of the dictionary are the directions to refine (``"x"``, ``"y"``, ``"z"``) 
+    and the values are dictionaries with the keys:
+    
+    1. ``"x_initial"`` and ``"x_refined"`` 
+    2. ``"mesh_fraction"`` and ``"x_refined"``
+
+    In the first case, the values of these keys are numpy arrays of the initial and refined coordinates in the specified direction. 
+    In the second case, the values of these keys are numpy arrays of the mesh fractions and the refined coordinates in the specified direction.
     The arrays must have the same shape.
 
     Attributes
@@ -52,20 +64,32 @@ class MeshRefinement(domain.Domain):
 
       Refinement parameters
 
+    .. py:attribute:: dirmap
+      :type: dict
+      :canonical: genepy.initial_conditions.mesh_refinement.MeshRefinement.dirmap
+
+      Dictionary to map the direction to the index of the direction in the mesh i.e., ``"x":0``, ``"y":1``, ``"z":2``
+
     Methods
     -------
   """
   def __init__(self, Domain, refinement_params) -> None:
     domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
+    self.dirmap = {"x":0,"y":1,"z":2}
     self.params = refinement_params
     for d in self.params:
       if d not in ["x","y","z"]:
         raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {d}")
       for p in self.params[d]:
-        if p not in ["x_initial","x_refined"]:
-          raise ValueError(f"Invalid parameter, possible values are \"x_initial\", \"x_refined\", found: {p}")
+        if p not in ["x_initial","x_refined","mesh_fraction"]:
+          raise ValueError(f"Invalid parameter, possible values are \"x_initial\", \"x_refined\", \"mesh_fraction\" found: {p}")
 
-      self.params[d]["x_initial"] = np.asarray(self.params[d]["x_initial"],dtype=np.float64)
+      if "x_initial" in self.params[d]:
+        self.params[d]["x_initial"] = np.asarray(self.params[d]["x_initial"],dtype=np.float64)
+      elif "mesh_fraction" in self.params[d]:
+        self.params[d]["x_initial"] = np.cumsum(self.params[d]["mesh_fraction"]) * (self.L[self.dirmap[d]] - self.O[self.dirmap[d]]) + self.O[self.dirmap[d]]
+      else:
+        raise ValueError(f"Direction {d}: either \"x_initial\" or \"mesh_fraction\" must be provided")
       self.params[d]["x_refined"] = np.asarray(self.params[d]["x_refined"],dtype=np.float64)
       if self.params[d]["x_initial"].shape != self.params[d]["x_refined"].shape:
         raise ValueError(f"Direction {d}: array in \"x_initial\" of shape {self.params[d]['x_initial'].shape} and \"x_refined\" {self.params[d]['x_refined'].shape} must have the same shape")
@@ -74,15 +98,11 @@ class MeshRefinement(domain.Domain):
   def __str__(self) -> str:
     s  = f"{self.__class__.__name__}:\n"
     for d in self.params:
-      if   d == "x": dim = 0
-      elif d == "y": dim = 1
-      elif d == "z": dim = 2
-
       s += f"\tDirection: {d}\n"
       for p in self.params[d]:
-        s += f"\t\t{p}           : {self.params[d][p]}\n"
+        s += f"\t\t{p}:\t{self.params[d][p]}\n"
         if p == "x_initial" or p == "x_refined":
-          s += f"\t\t{p} normalized: {self.normalize(self.params[d][p],dim)}\n"
+          s += f"\t\t{p} normalized:\t{self.normalize(self.params[d][p],self.dirmap[d])}\n"
     return s
   
   def normalize(self,x,dim):
@@ -128,13 +148,9 @@ class MeshRefinement(domain.Domain):
     Refine the mesh in the specified directions in :attr:`params <MeshRefinement.params>`.
     """
     for d in self.params:
-      if   d == "x": dim = 0
-      elif d == "y": dim = 1
-      elif d == "z": dim = 2
-
-      x_initial = self.normalize(self.params[d]["x_initial"],dim)
-      x_refined = self.normalize(self.params[d]["x_refined"],dim)
-      self.refine_direction(dim,x_initial,x_refined)
+      x_initial = self.normalize(self.params[d]["x_initial"],self.dirmap[d])
+      x_refined = self.normalize(self.params[d]["x_refined"],self.dirmap[d])
+      self.refine_direction(self.dirmap[d],x_initial,x_refined)
     return
   
   def sprint_option(self,model_name:str):
@@ -146,7 +162,6 @@ class MeshRefinement(domain.Domain):
 
     :return: string with the options
     """
-    components = {"x":0,"y":1,"z":2}
     prefix = "refinement"
     s  = f"###### Mesh {prefix} ######\n"
     s += f"-{model_name}_{prefix}_apply # activate mesh {prefix}\n"
@@ -161,25 +176,21 @@ class MeshRefinement(domain.Domain):
     directions = list(self.params.keys())
     s += f"-{model_name}_{prefix}_dir "
     for i in range(n-1):
-      s += f"{components[directions[i]]},"
-    s += f"{components[directions[n-1]]} # directions of refinement (0:x, 1:y, 2:z)\n"
+      s += f"{self.dirmap[directions[i]]},"
+    s += f"{self.dirmap[directions[n-1]]} # directions of refinement (0:x, 1:y, 2:z)\n"
 
     # for each direction, report the number of points and the normalized xp,f(xp)
     for d in self.params:
-      if   d == "x": dim = 0
-      elif d == "y": dim = 1
-      elif d == "z": dim = 2
-
-      x_initial = self.normalize(self.params[d]["x_initial"],dim)
-      x_refined = self.normalize(self.params[d]["x_refined"],dim)
+      x_initial = self.normalize(self.params[d]["x_initial"],self.dirmap[d])
+      x_refined = self.normalize(self.params[d]["x_refined"],self.dirmap[d])
 
       npoints = x_initial.shape[0]
-      s += f"-{model_name}_{prefix}_npoints_{dim} {npoints} # number of points for interpolation\n"
-      s += f"-{model_name}_{prefix}_xref_{dim} "
+      s += f"-{model_name}_{prefix}_npoints_{self.dirmap[d]} {npoints} # number of points for interpolation\n"
+      s += f"-{model_name}_{prefix}_xref_{self.dirmap[d]} "
       for i in range(npoints-1):
         s += f"{x_initial[i]},"
       s += f"{x_initial[npoints-1]} # xp\n"
-      s += f"-{model_name}_{prefix}_xnat_{dim} "
+      s += f"-{model_name}_{prefix}_xnat_{self.dirmap[d]} "
       for i in range(npoints-1):
         s += f"{x_refined[i]},"
       s += f"{x_refined[npoints-1]} # f(xp)\n"
@@ -193,12 +204,14 @@ def test():
   d = domain.Domain(3,O,L,n)
   #w = writers.WriteVTS(d,vtk_fname="mesh_refinement.vts")
 
-  refinement = {"x": {"x_initial": np.array([0,12,60,540,588,600], dtype=np.float64),
-                      "x_refined": np.array([0,100,150,450,500,600], dtype=np.float64)},
-                "y": {"x_initial": np.array([-250,-180,-87.5,0], dtype=np.float64),
-                      "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)},
-                "z": {"x_initial": np.array([0,12,60,540,588,600], dtype=np.float64),
-                      "x_refined": np.array([0,180,240,360,420,600], dtype=np.float64)}}
+  #"x": {"x_initial": np.array([0,12,60,540,588,600], dtype=np.float64),
+  #      "x_refined": np.array([0,100,150,450,500,600], dtype=np.float64)},
+  refinement = {"x": {"mesh_fraction": np.array([0,0.02,0.08,0.8,0.08,0.02], dtype=np.float64),
+                      "x_refined":     np.array([0,100,150,450,500,600], dtype=np.float64)},
+                "y": {"x_initial":     np.array([-250,-180,-87.5,0], dtype=np.float64),
+                      "x_refined":     np.array([-250,-50,-16.25,0], dtype=np.float64)},
+                "z": {"x_initial":     np.array([0,12,60,540,588,600], dtype=np.float64),
+                      "x_refined":     np.array([0,180,240,360,420,600], dtype=np.float64)}}
 
   m = MeshRefinement(d,refinement)
   print(m)

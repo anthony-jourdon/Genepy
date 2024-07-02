@@ -55,7 +55,7 @@ Two possibilities are available to create points in `Gmsh`_:
 
 In the `Gmsh`_ GUI you will obtain points as shown in the figure below:
 
-.. figure:: figures/gmsh_imgs/box_points.png
+.. figure:: figures/gmsh_imgs/box_points.PNG
    :align: center
 
 2. Lines
@@ -71,7 +71,7 @@ In the .geo file use ``Line(i) = {p1, p2};`` where ``i`` is the index of the lin
 
 You will obtain lines as shown in the figure below:
 
-.. figure:: figures/gmsh_imgs/box_lines-01.png
+.. figure:: figures/gmsh_imgs/box_lines-01.PNG
    :align: center
 
 3. Surfaces
@@ -81,7 +81,7 @@ Surfaces can be created using the GUI with
 Geometry :math:`\rightarrow` Elementary entities :math:`\rightarrow` Add :math:`\rightarrow` Plane surface.
 This tool will ask you to select the lines that close the surface:
 
-.. figure:: figures/gmsh_imgs/box_lines_surf_bot-01.png
+.. figure:: figures/gmsh_imgs/box_lines_surf_bot-01.PNG
    :align: center
 
 You need to repeat this operation for each surface of the model (both internal and external surfaces).
@@ -96,7 +96,7 @@ Like surfaces, volumes are built by selecting the surfaces that close the volume
 This can be done in the GUI with
 Geometry :math:`\rightarrow` Elementary entities :math:`\rightarrow` Add :math:`\rightarrow` Volume.
 
-.. figure:: figures/gmsh_imgs/box_volume_bot-01.png
+.. figure:: figures/gmsh_imgs/box_volume_bot-01.PNG
    :align: center
 
 You need to repeat this operation for each volume of the model.
@@ -139,7 +139,7 @@ you can group them in the same physical group.
   ``"zmax"`` is the name of the surface physical group, ``37`` its tag and ``{14, 15, 16, 17}`` 
   the surfaces that are in this group.
 
-.. figure:: figures/gmsh_imgs/box_volume_physical_bot-01.png
+.. figure:: figures/gmsh_imgs/box_volume_physical_bot-01.PNG
    :align: center
 
 6. Mesh
@@ -147,7 +147,7 @@ you can group them in the same physical group.
 Finally, once everything is set up, the last step is to create the mesh.
 In the GUI use Mesh :math:`\rightarrow` 3D to create the mesh.
 
-.. figure:: figures/gmsh_imgs/box_mesh.png
+.. figure:: figures/gmsh_imgs/box_mesh.PNG
    :align: center
 
 Once it is done you can save the mesh using File :math:`\rightarrow` Save mesh.
