@@ -130,7 +130,7 @@ We provide the parameters of the gaussians and their position in the domain.
   x0[0] = gp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
   x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
   # Create instance of Gaussian class
-  Gaussian = gp.Gaussian(MshRef,Rotation,ng,A,a,b,c,x0,z0)
+  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
   # Evaluate symbolic expression and numerical values of the gaussians
   Gaussian.evaluate_gaussians()
 
