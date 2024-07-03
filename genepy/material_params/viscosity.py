@@ -194,7 +194,7 @@ class ViscosityArrhenius(Viscosity):
     The dictionnary containing the rocks can be accessed with the class method :meth:`ViscosityArrhenius.arrhenius_flow_laws`.
   
     :param str rock_name: Name of the rock to retrieve the Arrhenius flow law parameters.
-    :param float Vmol: Molar volume of the rock in  m\ :sup:`3`.mol\ :sup:`-1` . Default is 0.0.
+    :param float Vmol: Molar volume of the rock in  m\\ :sup:`3`.mol\\ :sup:`-1` . Default is 0.0.
     :param float Tref: Reference value to convert the temperature from Celsius to Kelvin. Default is 273.15.
     :param str model_name: Name of the model to which the viscosity is applied. Default is "model_GENE3D".
     :param int region: Region number to which the viscosity is applied. Default is 0.
@@ -219,24 +219,24 @@ class ViscosityArrhenius(Viscosity):
     .. py:attribute:: preexpA
       :type: float
 
-        Pre-exponential factor (:math:`A`) in Pa\ :sup:`-n`.s\ :sup:`-1`.
+        Pre-exponential factor (:math:`A`) in Pa\\ :sup:`-n`.s\\ :sup:`-1`.
 
     .. py:attribute:: Ascale
       :type: float
 
         Scaling factor for the viscosity. 
-        Should be :math:`10^6` if :math:`A` is given in MPa\ :sup:`-n`.s\ :sup:`-1` 
-        and :math:`1` if :math:`A` is given in Pa\ :sup:`-n`.s\ :sup:`-1`.
+        Should be :math:`10^6` if :math:`A` is given in MPa\\ :sup:`-n`.s\\ :sup:`-1` 
+        and :math:`1` if :math:`A` is given in Pa\\ :sup:`-n`.s\\ :sup:`-1`.
       
     .. py:attribute:: entalpy
       :type: float
 
-        Activation energy (:math:`E`) in J.mol\ :sup:`-1`.
+        Activation energy (:math:`E`) in J.mol\\ :sup:`-1`.
 
     .. py:attribute:: Vmol
       :type: float
 
-        Molar volume of the rock in m\ :sup:`3`.mol\ :sup:`-1`.
+        Molar volume of the rock in m\\ :sup:`3`.mol\\ :sup:`-1`.
 
     .. py:attribute:: nexp
       :type: float
@@ -350,15 +350,15 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     Class to apply a dislocation-diffusion viscosity to a region of the model.
 
     :param str rock_name: Name of the rock to retrieve the dislocation flow law parameters.
-    :param float preexpA_diff: Pre-exponential factor for the diffusion flow law in Pa.s\ :sup:`-1`.
+    :param float preexpA_diff: Pre-exponential factor for the diffusion flow law in Pa.s\\ :sup:`-1`.
     :param float Ascale_diff: Scaling factor for the diffusion viscosity. 
-      Should be :math:`10^6` if :math:`A` is given in MPa.s\ :sup:`-1`
-      and :math:`1` if :math:`A` is given in Pa.s\ :sup:`-1`.
-    :param float entalpy_diff: Activation energy for the diffusion flow law in J.mol\ :sup:`-1`.
-    :param float Vmol_diff: Molar volume of the diffusion in m\ :sup:`3`.mol\ :sup:`-1`.
+      Should be :math:`10^6` if :math:`A` is given in MPa.s\\ :sup:`-1`
+      and :math:`1` if :math:`A` is given in Pa.s\\ :sup:`-1`.
+    :param float entalpy_diff: Activation energy for the diffusion flow law in J.mol\\ :sup:`-1`.
+    :param float Vmol_diff: Molar volume of the diffusion in m\\ :sup:`3`.mol\\ :sup:`-1`.
     :param float pexp_diff: Grain size exponent of the diffusion flow law.
     :param float gsize: Grain size in m.
-    :param float Vmol_disl: Molar volume of the dislocation flow law in m\ :sup:`3`.mol\ :sup:`-1`. Default is 0.0.
+    :param float Vmol_disl: Molar volume of the dislocation flow law in m\\ :sup:`3`.mol\\ :sup:`-1`. Default is 0.0.
     :param float Tref: Reference value to convert the temperature from Celsius to Kelvin. Default is 273.15.
     :param str model_name: Name of the model to which the viscosity is applied. Default is "model_GENE3D".
     :param int region: Region number to which the viscosity is applied. Default is 0.
@@ -378,23 +378,23 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     .. py:attribute:: preexpA_diff
       :type: float
         
-          Pre-exponential factor for the diffusion flow law in Pa.s\ :sup:`-1`.
+          Pre-exponential factor for the diffusion flow law in Pa.s\\ :sup:`-1`.
 
     .. py:attribute:: Ascale_diff
       :type: float
 
         Scaling factor for the diffusion viscosity. 
-        Should be :math:`10^6` if :math:`A` is given in MPa.s\ :sup:`-1`
-        and :math:`1` if :math:`A` is given in Pa.s\ :sup:`-1`.
+        Should be :math:`10^6` if :math:`A` is given in MPa.s\\ :sup:`-1`
+        and :math:`1` if :math:`A` is given in Pa.s\\ :sup:`-1`.
 
     .. py:attribute:: entalpy_diff
       :type: float
 
-        Activation energy for the diffusion flow law in J.mol\ :sup:`-1`.
+        Activation energy for the diffusion flow law in J.mol\\ :sup:`-1`.
 
     .. py:attribute:: Vmol_diff
 
-      Molar volume of the diffusion in m\ :sup:`3`.mol\ :sup:`-1`.
+      Molar volume of the diffusion in m\\ :sup:`3`.mol\\ :sup:`-1`.
 
     .. py:attribute:: pexp_diff
       :type: float
@@ -410,24 +410,24 @@ class ViscosityArrheniusDislDiff(ViscosityArrhenius):
     .. py:attribute:: preexpA_disl
       :type: float
 
-        Pre-exponential factor for the dislocation flow law in Pa.s\ :sup:`-1`.
+        Pre-exponential factor for the dislocation flow law in Pa.s\\ :sup:`-1`.
 
     .. py:attribute:: Ascale_disl
       :type: float
         
           Scaling factor for the dislocation viscosity. 
-          Should be :math:`10^6` if :math:`A` is given in MPa.s\ :sup:`-1`
-          and :math:`1` if :math:`A` is given in Pa.s\ :sup:`-1`.
+          Should be :math:`10^6` if :math:`A` is given in MPa.s\\ :sup:`-1`
+          and :math:`1` if :math:`A` is given in Pa.s\\ :sup:`-1`.
 
     .. py:attribute:: entalpy_disl
       :type: float
 
-        Activation energy for the dislocation flow law in J.mol\ :sup:`-1`.
+        Activation energy for the dislocation flow law in J.mol\\ :sup:`-1`.
       
     .. py:attribute:: Vmol_disl
       :type: float
 
-        Molar volume of the dislocation in m\ :sup:`3`.mol\ :sup:`-1`.
+        Molar volume of the dislocation in m\\ :sup:`3`.mol\\ :sup:`-1`.
         
     .. py:attribute:: nexp_disl
       :type: float

@@ -27,9 +27,9 @@ class Energy(MaterialConstants):
 
     Class to define the energy parameters of a region of the model.
 
-    :param float heat_source: Heat source value in W.m\ :sup:`-3`.
-    :param float conductivity: Conductivity value in W.m\ :sup:`-1`.K\ :sup:`-1`.
-    :param float Cp: Heat capacity value in J.kg\ :sup:`-1`.K\ :sup:`-1`. Default is :math:`800` J.kg\ :sup:`-1`.K\ :sup:`-1`.
+    :param float heat_source: Heat source value in W.m\\ :sup:`-3`.
+    :param float conductivity: Conductivity value in W.m\\ :sup:`-1`.K\\ :sup:`-1`.
+    :param float Cp: Heat capacity value in J.kg\\ :sup:`-1`.K\\ :sup:`-1`. Default is :math:`800` J.kg\\ :sup:`-1`.K\\ :sup:`-1`.
     :param str model_name: Name of the model to which the energy parameters are applied. Default is "model_GENE3D".
     :param int region: Region number to which the energy parameters are applied. Default is 0.
 
@@ -39,17 +39,17 @@ class Energy(MaterialConstants):
     .. py:attribute:: heatcapacity
       :type: float
 
-        Heat capacity value in J.kg\ :sup:`-1`.K\ :sup:`-1`. Default is :math:`800` J.kg\ :sup:`-1`.K\ :sup:`-1`.
+        Heat capacity value in J.kg\\ :sup:`-1`.K\\ :sup:`-1`. Default is :math:`800` J.kg\\ :sup:`-1`.K\\ :sup:`-1`.
 
     .. py:attribute:: heat_source
       :type: float
 
-        Heat source value in W.m\ :sup:`-3`.
+        Heat source value in W.m\\ :sup:`-3`.
 
     .. py:attribute:: conductivity
       :type: float
 
-        Conductivity value in W.m\ :sup:`-1`.K\ :sup:`-1`.
+        Conductivity value in W.m\\ :sup:`-1`.K\\ :sup:`-1`.
   """
   def __init__(self, heat_source:float, conductivity:float, Cp:float=800.0, model_name:str="model_GENE3D", region:int=0) -> None:
     MaterialConstants.__init__(self, model_name, region)

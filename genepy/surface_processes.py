@@ -40,7 +40,7 @@ class SPMDiffusion(SPM):
                             Possible values are: ``"xmin"``, ``"xmax"``, ``"zmin"``, ``"zmax"``.
                             At least one is required to ensure uniqueness of the solution.
     :type dirichlet_faces: list[str]
-    :param diffusivity: Diffusivity value in m\ :sup:`2`.s\ :sup:`-1`. Default is :math:`10^{-6}`.
+    :param diffusivity: Diffusivity value in m\\ :sup:`2`.s\\ :sup:`-1`. Default is :math:`10^{-6}`.
     :type diffusivity: float
     :param model_name: Model name.
     :type model_name: str

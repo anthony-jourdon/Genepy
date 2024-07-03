@@ -237,7 +237,7 @@ class VelocityLinear(Velocity):
     .. code-block:: python
 
       u_norm  = 1.0              # horizontal velocity norm
-      u_angle = np.deg2rad(45.0) # velocity angle \in [-pi/2, pi/2]. If 0, can be ommited
+      u_angle = np.deg2rad(45.0) # velocity angle in [-pi/2, pi/2]. If 0, can be ommited
       u_dir   = "z"              # direction in which velocity varies
       u_type  = "extension"      # velocity orientation
       # Create VelocityLinear instance 
@@ -248,6 +248,7 @@ class VelocityLinear(Velocity):
     .. code-block::  python
 
       # Rotation of the referential
+      dim     = 3                                   # Number of spatial dimensions
       r_angle = np.deg2rad(-15.0)                   # Rotation angle
       axis    = np.array([0,1,0], dtype=np.float64) # Rotation axis
       # Create Rotation instance
@@ -740,7 +741,7 @@ class VelocityTimeDependant(Velocity):
     Considering the functions :math:`f_1(x), f_2(x), \\ldots , f_n(x)` this method computes:
     
     .. math:: 
-      u(x) = \sum_{i=1}^{n} f_i(x)
+      u(x) = \\sum_{i=1}^{n} f_i(x)
     
     where :math:`x` represents the variable(s) of the function.
 

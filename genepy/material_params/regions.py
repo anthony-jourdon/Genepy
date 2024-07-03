@@ -43,8 +43,8 @@ class Region:
     .. note::
       If the user does not provide any material parameter, the default values are set to:
       
-      - :py:class:`Constant Density <genepy.material_params.density.DensityConstant>` : 3300 kg/m\ :sup:`3`
-      - :py:class:`Constant Viscosity <genepy.material_params.viscosity.ViscosityConstant>` : 10\ :sup:`22` Pa.s
+      - :py:class:`Constant Density <genepy.material_params.density.DensityConstant>` : 3300 kg/m\\ :sup:`3`
+      - :py:class:`Constant Viscosity <genepy.material_params.viscosity.ViscosityConstant>` : 10\\ :sup:`22` Pa.s
       - :py:class:`No Plasticity <genepy.material_params.plasticity.PlasticNone>` 
       - :py:class:`No Softening <genepy.material_params.softening.SofteningNone>` 
     

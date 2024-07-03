@@ -46,11 +46,11 @@ class Model:
     :param int checkpoint_frequency: Checkpoint every n time step. Default is ``25``.
     :param float length_bar: Length scaling. Default is ``1.0e5`` m.
     :param float viscosity_bar: Viscosity scaling. Default is :math:`10^{22}` Pa.s.
-    :param float velocity_bar: Velocity scaling. Default is :math:`10^{-10}` m.s\ :sup:`-1`.
+    :param float velocity_bar: Velocity scaling. Default is :math:`10^{-10}` m.s\\ :sup:`-1`.
     :param int nsteps: Max number of time steps. Default is ``100000``.
     :param float dtmin: Min time step. Default is ``1.0e-6``.
     :param float dtmax: Max time step. Default is ``0.5``.
-    :param float isostatic_density: Density reference for initial isostatic topography. Default is ``3300`` kg.m\ :sup:`-3`.
+    :param float isostatic_density: Density reference for initial isostatic topography. Default is ``3300`` kg.m\\ :sup:`-3`.
     :param float isostatic_depth: Depth of compensation for initial isostatic topography. Default is ``-40`` km.
     :param float max_surface_displacement: Max surface displacement per time step. Default is 500 m.
     :param MarkersManagement markers: Markers layout and population control options.

@@ -31,7 +31,7 @@ class DensityConstant(Density):
 
     Class to apply a constant density to a region of the model.
 
-    :param float density: Constant density value in kg.m\ :sup:`-3` to be applied to the region.
+    :param float density: Constant density value in kg.m\\ :sup:`-3` to be applied to the region.
     :param str model_name: Name of the model to which the density is applied. Default is ``"model_GENE3D"``.
     :param int region: Region number to which the density is applied. Default is 0.
 
@@ -45,7 +45,7 @@ class DensityConstant(Density):
     .. py:attribute:: density
       :type: float
 
-        Constant density value (:math:`\\rho_0`) in kg.m\ :sup:`-3` to be applied to the region.
+        Constant density value (:math:`\\rho_0`) in kg.m\\ :sup:`-3` to be applied to the region.
     
     .. py:attribute:: model_name
       :type: str
@@ -74,9 +74,9 @@ class DensityBoussinesq(Density):
 
     Class to apply a density using the Boussinesq approximation to a region of the model.
 
-    :param float density: Reference density value in kg.m\ :sup:`-3` (:math:`\\rho_0`).
-    :param float thermal_expansion: Thermal expansion coefficient in K\ :sup:`-1` (:math:`\\alpha`).
-    :param float compressibility: Compressibility coefficient in Pa\ :sup:`-1` (:math:`\\beta`).
+    :param float density: Reference density value in kg.m\\ :sup:`-3` (:math:`\\rho_0`).
+    :param float thermal_expansion: Thermal expansion coefficient in K\\ :sup:`-1` (:math:`\\alpha`).
+    :param float compressibility: Compressibility coefficient in Pa\\ :sup:`-1` (:math:`\\beta`).
     :param str model_name: Name of the model to which the density is applied. Default is "model_GENE3D".
     :param int region: Region number to which the density is applied. Default is 0.
 
@@ -90,17 +90,17 @@ class DensityBoussinesq(Density):
     .. py:attribute:: density
       :type: float
 
-        Reference density value in kg.m\ :sup:`-3` (:math:`\\rho_0`).
+        Reference density value in kg.m\\ :sup:`-3` (:math:`\\rho_0`).
 
     .. py:attribute:: thermal_expansion
       :type: float
 
-        Thermal expansion coefficient in K\ :sup:`-1` (:math:`\\alpha`).
+        Thermal expansion coefficient in K\\ :sup:`-1` (:math:`\\alpha`).
 
     .. py:attribute:: compressibility
       :type: float
 
-        Compressibility coefficient in Pa\ :sup:`-1` (:math:`\\beta`).
+        Compressibility coefficient in Pa\\ :sup:`-1` (:math:`\\beta`).
 
     .. py:attribute:: model_name
       :type: str
@@ -134,7 +134,7 @@ class DensityTable(Density):
 
     Class to apply a density read from a thermodynamic table to a region of the model.
 
-    :param float density: Density value in kg.m\ :sup:`-3` in case the map does not contain the :math:`p,T` conditions.
+    :param float density: Density value in kg.m\\ :sup:`-3` in case the map does not contain the :math:`p,T` conditions.
     :param str map: Name of the file containing the density map.
     :param str model_name: Name of the model to which the density is applied. Default is "model_GENE3D".
     :param int region: Region number to which the density is applied. Default is 0.
@@ -145,7 +145,7 @@ class DensityTable(Density):
     .. py:attribute:: density
       :type: float
 
-        Density value in kg.m\ :sup:`-3` in case the map does not contain the :math:`p,T` conditions.
+        Density value in kg.m\\ :sup:`-3` in case the map does not contain the :math:`p,T` conditions.
 
     .. py:attribute:: map
       :type: str
