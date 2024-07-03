@@ -131,7 +131,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     Methods
     -------
   """
-  def __init__(self,Domain,Rotation,ng:int,A,a,b,c,x0,z0) -> None:
+  def __init__(self,Domain,ng:int,A,a,b,c,x0,z0,Rotation=None) -> None:
     self.ng = ng
     self.A  = np.asarray(A,  dtype=np.float64) # amplitude of the gaussian
     self.a  = np.asarray(a,  dtype=np.float64) # gaussian coefficient
@@ -152,8 +152,11 @@ class Gaussian(domain.Domain,rotation.Rotation):
     self.gaussian_num = None
     self.gaussian_sym = None
 
-    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
-    rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
+    domain.Domain.__init__(self,Domain.dim,Domain.O_num,Domain.L_num,Domain.n)
+    if Rotation is None:
+      rotation.Rotation.__init__(self,Domain.dim,0.0)
+    else:
+      rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
     return
   
   def __str__(self) -> str:
@@ -238,7 +241,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     for n in range(self.ng):
       if self.dim == 2:   g_centre = np.array([[self.x0[n],self.z0[n]]],dtype=np.float64)
       elif self.dim == 3: g_centre = np.array([[self.x0[n],0.0,self.z0[n]]],dtype=np.float64)
-      g_centre = self.rotate_referential(g_centre,self.O,self.L)
+      g_centre = self.rotate_referential(g_centre,self.O_num,self.L_num)
       self.x0[n] = g_centre[0,0]
       self.z0[n] = g_centre[0,self.dim-1]
       self.gaussian_sym[n] = self.symbolic_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
@@ -354,7 +357,7 @@ def test():
   x0[0] = utils.x_centre_from_angle(z0[0],angle,domain_centre)
   x0[1] = utils.x_centre_from_angle(z0[1],angle,domain_centre)
 
-  GWZ = Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+  GWZ = Gaussian(Domain,ng,A,a,b,c,x0,z0,Rotation)
   print(GWZ)
   
   GWZ.evaluate_gaussians()
@@ -394,7 +397,7 @@ def test3d():
   x0[0] = utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2]))
   x0[1] = utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
 
-  GWZ = Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+  GWZ = Gaussian(Domain,ng,A,a,b,c,x0,z0,Rotation)
   print(GWZ)
   GWZ.evaluate_gaussians()
   field = GWZ.compute_field_distribution()

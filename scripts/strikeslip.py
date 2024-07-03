@@ -67,7 +67,7 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   x0[0] = gp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
   x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
   # Create gaussian object
-  Gaussian = gp.Gaussian(MshRef,Rotation,ng,A,a,b,c,x0,z0)
+  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
   Gaussian.evaluate_gaussians()
   if report:
     print(Gaussian.report_symbolic_functions())
