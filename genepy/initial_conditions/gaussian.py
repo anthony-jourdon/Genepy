@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt
 
 class Gaussian(domain.Domain,rotation.Rotation):
   """
-  .. py:class:: Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+  .. py:class:: Gaussian(Domain,ng,A,a,b,c,x0,z0,Rotation=None)
 
     Class to build a 2D gaussian distribution defined by:
     
@@ -38,10 +38,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     The class inherits from :py:class:`Domain <genepy.Domain>` 
     and :py:class:`Rotation <genepy.Rotation>`.
 
-    
-
     :param Domain Domain: instance of the Domain class
-    :param Rotation Rotation: instance of the Rotation class
     :param int ng: number of gaussians
     :param np.ndarray A: amplitude of the gaussian, shape: ``(ng,)``
     :param np.ndarray a: gaussians coefficient, shape: ``(ng,)``
@@ -49,11 +46,12 @@ class Gaussian(domain.Domain,rotation.Rotation):
     :param np.ndarray c: gaussian coefficient, shape: ``(ng,)``
     :param np.ndarray x0: x coordinate of the gaussian centre, shape: ``(ng,)``
     :param np.ndarray z0: z coordinate of the gaussian centre, shape: ``(ng,)``
+    :param Rotation Rotation: instance of the Rotation class (**optional**)
 
     Example
     -------
-    Assuming that instances of :class:`Domain` and :class:`Rotation` classes are already created
-    and that 2 gaussians are required:
+    Assuming that instances of :class:`Domain` and :class:`Rotation` (Rotation is optional) 
+    classes are already created and that 2 gaussians are required:
 
     .. code-block:: python
 
@@ -69,7 +67,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
       x0 = np.array([..., ...], dtype=np.float64)
       z0 = np.array([..., ...], dtype=np.float64)
       # Create instance of the Gaussian class
-      g  = gp.Gaussian(Domain,Rotation,ng,A,a,b,c,x0,z0)
+      g  = gp.Gaussian(Domain,ng,A,a,b,c,x0,z0,Rotation=Rotation)
     
     Attributes
     ----------
