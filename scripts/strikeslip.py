@@ -55,8 +55,8 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 30.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(70.0)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 25.0e3                            # distance from the domain centre in z direction
+  angle = np.deg2rad(67.5)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -74,8 +74,39 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   strain = Gaussian.compute_field_distribution()
   return Gaussian,strain
 
+def initial_heat_source(Domain,Rotation,report=False):
+  # gaussian initial heat source
+  dc = 50.0e3 # distance between gaussian centres
+  # number of gaussians
+  nx = int(Domain.L[0] / dc)
+  nz = int(Domain.L[2] / dc)
+
+  xc = np.zeros(shape=(nx*nz),dtype=np.float64)
+  zc = np.zeros(shape=(nx*nz),dtype=np.float64)
+  n = 0
+  for j in range(nz):
+    for i in range(nx):
+      xc[n] = dc * (i + np.random.rand())
+      zc[n] = dc * (j + np.random.rand())
+      n += 1
+
+  # shape of the gaussians
+  coeff = 0.5 * 6.0e-5**2
+  a = np.ones(shape=(nx*nz),dtype=np.float64) * coeff
+  b = np.zeros(shape=(nx*nz),dtype=np.float64)
+  c = np.ones(shape=(nx*nz),dtype=np.float64) * coeff
+
+  # amplitude of the gaussians (heat source)
+  A = np.ones(shape=(nx*nz),dtype=np.float64) * 1.5e-6
+
+  # Create gaussian object
+  Gaussian = gp.Gaussian(Domain,nx*nz,A,a,b,c,xc,zc)
+  Gaussian.evaluate_gaussians()
+  return Gaussian
+
 def initial_conditions(Domain,MshRef,IniStrain,u):
-  model_ics = gp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=IniStrain)
+  plstr = gp.InitialPlasticStrain(IniStrain)
+  model_ics = gp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=plstr)
   return model_ics
 
 def boundary_conditions(u,grad_u,uL):
@@ -104,28 +135,35 @@ def material_parameters():
               gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
               gp.SofteningLinear(0.0,0.5),                 # softening
               gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-              gp.Energy(1.5e-6,2.7)),                      # energy
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceMaterialPointValue(),
+                                                    gp.EnergySourceConstant(1.5e-6),
+                                                    gp.EnergySourceShearHeating()),
+                        conductivity=2.7)),
     # Lower crust
     gp.Region(39,
               gp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
               gp.ViscosityArrhenius2("Quartzite"),
               gp.SofteningLinear(strain_min=0.0,strain_max=0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(heat_source=0.5e-6,conductivity=2.85)),
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceConstant(0.5e-6),
+                                                    gp.EnergySourceShearHeating()),
+                        conductivity=2.85)),
     # Lithosphere mantle
     gp.Region(40,
               gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
               gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
               gp.SofteningLinear(0.0,0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(0.0,3.3)),
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceShearHeating()),
+                        conductivity=3.3)),
     # Asthenosphere
     gp.Region(41,
               gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
               gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
               gp.SofteningLinear(0.0,0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(0.0,3.3))
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceShearHeating()),
+                        conductivity=3.3))
   ]
 
   # path to mesh files (system dependent, change accordingly)
@@ -154,20 +192,27 @@ def strikeslip():
   Domain   = model_domain()
   # rotation of the referential, if not needed, the Velocity object can be created without it
   Rotation = domain_rotation()
+  
   # boundary conditions
   BCs,u_num = velocity_bcs(Domain,Rotation,report=True)
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
   Gaussian,strain = initial_strain(Domain,MshRef,Rotation,report=True)
+  # initial heat source
+  Gaussian_hs = initial_heat_source(Domain,Rotation,report=False)
+
+  plstr  = gp.InitialPlasticStrain(Gaussian)
+  hs_ini = gp.InitialHeatSource(Gaussian_hs)
+  ics    = gp.InitialConditions(Domain,BCs.u,mesh_refinement=MshRef,initial_strain=plstr,initial_heat_source=hs_ini)
 
   # write the results to a vts file for visualization
-  point_data = {"u": u_num, "strain": strain}
-  w = gp.WriteVTS(MshRef, vtk_fname="strike-slip.vts", point_data=point_data)
-  w.write_vts()
+  #point_data = {"u": u_num, "strain": strain}
+  #w = gp.WriteVTS(MshRef, vtk_fname="strike-slip.vts", point_data=point_data)
+  #w.write_vts()
 
   # generate objects for options writing
-  ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
+  #ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
   bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   regions = material_parameters()
   #regions = test_default_material_parameters()

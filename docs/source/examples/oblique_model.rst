@@ -119,35 +119,41 @@ In this example we use the following material types:
               gp.DensityBoussinesq(2700.0,3.0e-5,1.0e-11), # density
               gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
               gp.SofteningLinear(0.0,0.5),                 # softening
-              gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-              gp.Energy(1.5e-6,2.7)),                      # energy
+              gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)                   
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceConstant(1.5e-6), # energy
+                                                    gp.EnergySourceShearHeating()),
+                        conductivity=2.7)),
     # Lower crust
     gp.Region(39,
               gp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
               gp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
               gp.SofteningLinear(strain_min=0.0,strain_max=0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(heat_source=0.5e-6,conductivity=2.85)),
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceConstant(0.5e-6), # energy
+                                                    gp.EnergySourceShearHeating()),
+                        conductivity=2.85)),
     # Lithosphere mantle
     gp.Region(40,
               gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
               gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
               gp.SofteningLinear(0.0,0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(0.0,3.3)),
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceShearHeating()),
+                        conductivity=3.3)),
     # Asthenosphere
     gp.Region(41,
               gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
               gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
               gp.SofteningLinear(0.0,0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(0.0,3.3))
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceShearHeating()),
+                        conductivity=3.3))
   ]
   model_regions = gp.ModelRegions(regions,
                                   mesh_file=os.path.join(root,"box_ptatin_md.bin"),
                                   region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
 
-6. Create the model and generate options
+1. Create the model and generate options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Finally, we create the :py:class:`model <genepy.Model>` by gathering all the information defined previously and we save
 the options to a file named ``oblique_extension_model.opts``.

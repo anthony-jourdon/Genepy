@@ -27,6 +27,8 @@ from .initial_conditions.domain          import *
 from .initial_conditions.gaussian        import *
 from .initial_conditions.mesh_refinement import *
 from .initial_conditions.ics             import *
+from .initial_conditions.plastic_strain  import *
+from .initial_conditions.heat_source     import *
 
 from .rotation        import *
 from .utils           import *

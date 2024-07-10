@@ -20,18 +20,27 @@
 #====================================================================================================
 
 class Markers:
-  def __init__(self,layout:tuple[int,int,int]=(8,8,8)) -> None:
+  def __init__(self,layout:tuple[int,int,int]=(5,5,5)) -> None:
     self.layout = layout
     
 class MarkersManagement(Markers):
   """
-  .. py:class:: MarkersManagement(layout:tuple[int,int,int]=(8,8,8),popctrl_faces:tuple[int,...]=(0,1,4,5),popctrl_np_lower:int=8,popctrl_np_upper:int=128,popctrl_layout:tuple[int,int,int]=(2,2,2))
+  .. py:class:: MarkersManagement(layout:tuple[int,int,int]=(5,5,5),popctrl_faces:tuple[int,...]=(0,1,4,5),popctrl_np_lower:int=8,popctrl_np_upper:int=128,popctrl_layout:tuple[int,int,int]=(2,2,2))
 
     Class to manage the lagrangian markers in `pTatin3d`_ model.
 
-    :param layout: Number of markers per element in each direction. Default is (8,8,8).
+    :param layout: Number of markers per element in each direction. Default is (5,5,5).
     :type layout: tuple[int,int,int]
     :param popctrl_faces: Faces where markers are injected and not cleaned as long as they belong to an element connected to the face. Default is (0,1,4,5).
+                          Faces numbering is as follow:
+
+                          - ``0``: east  = xmax = imax = Pxi
+                          - ``1``: west  = xmin = imin = Nxi
+                          - ``2``: north = ymax = jmax = Peta
+                          - ``3``: south = ymin = jmin = Neta
+                          - ``4``: front = zmax = kmax = Pzeta
+                          - ``5``: back  = zmin = kmin = Nzeta
+
     :type popctrl_faces: tuple[int,...]
     :param popctrl_np_lower: Minimum number of markers per element. Default is 8.
     :type popctrl_np_lower: int
@@ -40,7 +49,7 @@ class MarkersManagement(Markers):
     :param popctrl_layout: Number of markers injected in each direction. Default is (2,2,2).
     :type popctrl_layout: tuple[int,int,int]
   """
-  def __init__(self,layout:tuple[int,int,int]=(8,8,8),
+  def __init__(self,layout:tuple[int,int,int]=(5,5,5),
                popctrl_faces:tuple[int,...]=(0,1,4,5),
                popctrl_np_lower:int=8,popctrl_np_upper:int=128,
                popctrl_layout:tuple[int,int,int]=(2,2,2)) -> None:

@@ -140,6 +140,8 @@ Gather the information defined previously to generate the options for the initia
 
 .. code-block:: python
 
+  # Initial plastic strain
+  IniStrain = gp.InitialPlasticStrain(Gaussian)
   # Initial conditions
   model_ics = gp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=IniStrain)
 
@@ -186,28 +188,34 @@ The details on the methods can be found in the
               gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
               gp.SofteningLinear(0.0,0.5),                 # softening
               gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-              gp.Energy(1.5e-6,2.7)),                      # energy
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceConstant(1.5e-6),
+                                                    gp.EnergySourceShearHeating()),
+                        conductivity=2.7)),
     # Lower crust
     gp.Region(39,
               gp.DensityBoussinesq(density=2850.0,thermal_expansion=3.0e-5,compressibility=1.0e-11),
               gp.ViscosityArrhenius2("Anorthite",Vmol=38.0e-6),
               gp.SofteningLinear(strain_min=0.0,strain_max=0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(heat_source=0.5e-6,conductivity=2.85)),
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceConstant(0.5e-6),
+                                                    gp.EnergySourceShearHeating()),
+                        conductivity=2.85)),
     # Lithosphere mantle
     gp.Region(40,
               gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
               gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
               gp.SofteningLinear(0.0,0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(0.0,3.3)),
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceShearHeating()),
+                        conductivity=3.3)),
     # Asthenosphere
     gp.Region(41,
               gp.DensityBoussinesq(3300.0,3.0e-5,1.0e-11),
               gp.ViscosityArrhenius2("Peridotite(dry)",Vmol=8.0e-6),
               gp.SofteningLinear(0.0,0.5),
               gp.PlasticDruckerPrager(),
-              gp.Energy(0.0,3.3))
+              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceShearHeating()),
+                        conductivity=3.3))
   ]
 
   # path to mesh files (system dependent, change accordingly)

@@ -157,3 +157,39 @@ Energy
 
 .. autoclass:: genepy.Energy
     :members:
+
+Heat sources
+............ 
+
+.. autoclass:: genepy.EnergySource
+    :members:
+
+No source (default)
+...................
+
+.. autoclass:: genepy.EnergySourceNone
+    :members:
+
+Defined on material points
+..........................
+
+.. autoclass:: genepy.EnergySourceMaterialPointValue
+    :members:
+
+Constant by region
+..................
+
+.. autoclass:: genepy.EnergySourceConstant
+    :members:
+
+Shear heating
+.............
+
+.. autoclass:: genepy.EnergySourceShearHeating
+    :members:
+
+Exponential decay
+.................
+
+.. autoclass:: genepy.EnergySourceDecay
+    :members:

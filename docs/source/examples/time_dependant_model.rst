@@ -269,13 +269,13 @@ To keep it simple we use the default parameters for all regions:
   # material parameters
   regions = [
     # Upper crust
-    gp.Region(38,energy=gp.Energy(0.0,3.3)),
+    gp.Region(38,energy=gp.Energy(conductivity=3.3)),
     # Lower crust
-    gp.Region(39,energy=gp.Energy(0.0,3.3)),
+    gp.Region(39,energy=gp.Energy(conductivity=3.3)),
     # Lithosphere mantle
-    gp.Region(40,energy=gp.Energy(0.0,3.3)),
+    gp.Region(40,energy=gp.Energy(conductivity=3.3)),
     # Asthenosphere
-    gp.Region(41,energy=gp.Energy(0.0,3.3))
+    gp.Region(41,energy=gp.Energy(conductivity=3.3))
   ]
   # path to mesh files (system dependent, change accordingly)
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")

@@ -70,7 +70,7 @@ class MaterialConstants:
     attributes = vars(self)
     s = ""
     for p in attributes:
-      if p in ['model_name','region']:
+      if p in ['model_name','region','heat_source_type']:
         continue
       if type(attributes[p]) is str: fmt = f"{attributes[p]}"
       else:                          fmt = f"{attributes[p]:g}"

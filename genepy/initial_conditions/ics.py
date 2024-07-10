@@ -67,8 +67,9 @@ class InitialConditions:
 
         Possible keyword arguments
 
-        - **mesh_refinement**: instance of the MeshRefinement class
-        - **initial_strain**: instance of the Gaussian class
+        - **mesh_refinement**: instance of the :py:class:`genepy.MeshRefinement` class.
+        - **initial_strain**: instance of the :py:class:`genepy.InitialPlasticStrain` class
+        - **initial_heat_source**: instance of the :py:class:`genepy.InitialHeatSource` class
 
     Methods:
     --------
@@ -78,7 +79,7 @@ class InitialConditions:
     self.Domain          = Domain
     self.u               = velocity
     self.kwargs          = kwargs
-    self.possible_kwargs = ["mesh_refinement","initial_strain"]
+    self.possible_kwargs = ["mesh_refinement","initial_strain","initial_heat_source"]
 
     for kw in self.kwargs:
       if kw not in self.possible_kwargs:

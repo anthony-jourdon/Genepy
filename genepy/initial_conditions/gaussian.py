@@ -281,6 +281,18 @@ class Gaussian(domain.Domain,rotation.Rotation):
     field = np.reshape(field,self.nv,order='F')
     return field
   
+  
+  def sprint_option(self, model_name:str, prefix:str) -> str:
+    if prefix == "wz":
+      s = f"-{model_name}_{prefix}_nwz {self.ng} # number of gaussians\n"
+    elif prefix == "heat_source":
+      s = f"-{model_name}_{prefix}_nhs {self.ng} # number of gaussians\n"    
+    for n in range(self.ng):
+      gaussian_expression = str(self.gaussian_sym[n]).replace(" ","")
+      s += f"-{model_name}_{prefix}_expression_{n} {gaussian_expression}\n"
+    return s
+  
+
   def plot_gaussians(self):
     """
     plot_gaussians(self)
@@ -301,27 +313,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     plt.colorbar(g,ax=ax)
     plt.draw()
     return
-  
-  def sprint_option(self, model_name: str):
-    """
-    sprint_option(self,model_name:str)
-    Return a string formatted for `pTatin3d`_ input file using `PETSc`_ options format.
 
-    :param str model_name: name of the model
-
-    :return: string with the options
-    """
-    prefix = "wz"
-    s  = f"########### Initial plastic strain for weak zone ###########\n"
-    s += f"-{model_name}_{prefix}_nwz {self.ng} # number of gaussians\n"
-    for n in range(self.ng):
-      gaussian_expression = str(self.gaussian_sym[n]).split()
-      s += f"-{model_name}_{prefix}_expression_{n} "
-      for term in range(len(gaussian_expression)-1):
-        s += f"{gaussian_expression[term]}"
-      s += f"{gaussian_expression[-1]}\n"
-    return s
-  
 def test():
   from genepy import utils
   # Domain

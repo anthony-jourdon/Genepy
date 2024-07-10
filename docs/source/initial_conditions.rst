@@ -83,6 +83,21 @@ It is generally used to define the initial strain distribution to place weak zon
 .. autoclass:: genepy.Gaussian
     :members:
 
+Plastic strain
+--------------
+This module contains the class to generate options for the initial plastic strain.
+
+.. autoclass:: genepy.InitialPlasticStrain
+    :members:
+
+Heat source
+-----------
+This module contains the class to generate options for the initial heat source when set to 
+:py:class:`genepy.EnergySourceMaterialPointValue`.
+
+.. autoclass:: genepy.InitialHeatSource
+    :members:
+
 ICs pTatin3d options generation
 -------------------------------
 This module contains the class to generate the options 
