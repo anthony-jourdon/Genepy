@@ -135,7 +135,7 @@ def material_parameters():
               gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
               gp.SofteningLinear(0.0,0.5),                 # softening
               gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-              gp.Energy(heat_source=gp.EnergySource(gp.EnergySourceMaterialPointValue(),
+              gp.Energy(heat_source=gp.EnergySource(#gp.EnergySourceMaterialPointValue(),
                                                     gp.EnergySourceConstant(1.5e-6),
                                                     gp.EnergySourceShearHeating()),
                         conductivity=2.7)),
@@ -202,9 +202,9 @@ def strikeslip():
   # initial heat source
   Gaussian_hs = initial_heat_source(Domain,Rotation,report=False)
 
-  plstr  = gp.InitialPlasticStrain(Gaussian)
-  hs_ini = gp.InitialHeatSource(Gaussian_hs)
-  ics    = gp.InitialConditions(Domain,BCs.u,mesh_refinement=MshRef,initial_strain=plstr,initial_heat_source=hs_ini)
+  #plstr  = gp.InitialPlasticStrain(Gaussian)
+  #hs_ini = gp.InitialHeatSource(Gaussian_hs)
+  #ics    = gp.InitialConditions(Domain,BCs.u,mesh_refinement=MshRef,initial_strain=plstr,initial_heat_source=hs_ini)
 
   # write the results to a vts file for visualization
   #point_data = {"u": u_num, "strain": strain}
@@ -212,7 +212,7 @@ def strikeslip():
   #w.write_vts()
 
   # generate objects for options writing
-  #ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
+  ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
   bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   regions = material_parameters()
   #regions = test_default_material_parameters()

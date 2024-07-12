@@ -288,7 +288,7 @@ class Gaussian(domain.Domain,rotation.Rotation):
     elif prefix == "heat_source":
       s = f"-{model_name}_{prefix}_nhs {self.ng} # number of gaussians\n"    
     for n in range(self.ng):
-      gaussian_expression = str(self.gaussian_sym[n]).replace(" ","")
+      gaussian_expression = str(sp.ccode(self.gaussian_sym[n])).replace(" ","")
       s += f"-{model_name}_{prefix}_expression_{n} {gaussian_expression}\n"
     return s
   

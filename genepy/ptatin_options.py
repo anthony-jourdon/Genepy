@@ -24,6 +24,7 @@ from genepy import ModelBCs
 from genepy import Domain
 from genepy import MarkersManagement
 from genepy import InitialConditions
+from genepy import Energy
 import numpy as np
 
 class Model:
@@ -107,9 +108,17 @@ class Model:
 
     self.options  = "########### Gene3D options file ###########\n"
     self.options += "-ptatin_model Gene3D\n"
-    self.options += "-activate_energyfv true # use finite volume for temperature (Do not change)\n"
+    # check if energy is required
+    for r in self.regions.regions:
+      for m in r.material_parameters:
+        if isinstance(m, Energy):
+          self.options += "-activate_energyfv true # use finite volume for temperature (Do not change)\n"
+          self.options += f"-{self.name}_ic_temperature_from_file # load temperature from petsc vec file\n"
+          break
+        else:
+          continue
+      break
     self.options += "-view_ic # write .vts file for initial temperature\n"
-    self.options += f"-{self.name}_ic_temperature_from_file # load temperature from petsc vec file\n"
     
     # output options
     output_frequency = kwargs.get("output_frequency", 25)

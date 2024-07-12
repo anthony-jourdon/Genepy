@@ -69,7 +69,8 @@ class Region:
                           gp.ViscosityArrhenius2("Quartzite"),         # viscosity  (values from the database using rock name)
                           gp.SofteningLinear(0.0,0.5),                 # softening
                           gp.PlasticDruckerPrager(),                   # plasticity (default values, can be modified using the corresponding parameters)
-                          gp.Energy(1.0e-6,2.7)),                      # energy
+                          gp.Energy(gp.EnergySource(EnergySourceConstant(1.0e-6)), # energy heat source
+                                    2.7))                                          # energy conductivity
 
   """
   def __init__(self, region: int, 

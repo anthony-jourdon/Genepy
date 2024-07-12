@@ -82,5 +82,5 @@ class InitialHeatSource:
       prefix = "heat_source"
       s  = f"########### Initial heat source ###########\n"
       s += f"-{model_name}_{prefix}_nhs 1\n"
-      s += f"-{model_name}_{prefix}_expression {str(self.data).replace(' ','')}\n"
+      s += f"-{model_name}_{prefix}_expression_0 {str(self.data).replace(' ','')}\n"
       return s

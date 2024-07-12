@@ -416,9 +416,9 @@ class VelocityLinear(Velocity):
       s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir[i]}\n"
     return s
   
-  def boundary_vector(self):
+  def boundary_vector(self,norm,alpha):
     """
-    boundary_vector(self)
+    boundary_vector(self,norm,alpha)
     Computes a vector horizontal components from:
 
     - 1D & 2D: only the :attr:`norm <genepy.boundary_conditions.velocity.VelocityLinear.norm>` is used,
@@ -436,6 +436,8 @@ class VelocityLinear(Velocity):
       if different signs are needed. This is normally addressed with the 
       :attr:`type <genepy.boundary_conditions.velocity.VelocityLinear.type>` class attribute.
 
+    :param float norm: velocity norm
+    :param float alpha: angle with the :math:`z` axis in radians
 
     :return: boundary velocity, shape (dim,)
     :rtype: numpy.ndarray
@@ -444,12 +446,23 @@ class VelocityLinear(Velocity):
     else:                            dtype = np.float64
     u = np.zeros(shape=(self.dim), dtype=dtype)
     if self.dim == 1 or self.dim == 2: 
-      u[0] = self.norm
+      u[0] = norm
     elif self.dim == 3:
-      u[2] = self.norm * np.cos(self.alpha)
-      u[0] = np.sqrt(self.norm**2 - u[2]**2)
+      u[2] = norm * np.cos(alpha)
+      u[0] = np.sqrt(norm**2 - u[2]**2)
     return u
   
+  def velocity_boundary(self):
+    if self.type == "compression":
+      self.uO = self.boundary_vector(self.norm,self.alpha)
+      self.uL = -self.uO
+    elif self.type == "extension":
+      self.uL = self.boundary_vector(self.norm,self.alpha)
+      self.uO = -self.uL
+    else:
+      raise RuntimeError(f'velocity_type can only be \"extension\" or \"compression\", found {self.type}')
+    return
+
   def velocity_coefficients_1d(self,uO,uL,O,L):
     """
     velocity_coefficients_1d(self,uO,uL,O,L)
@@ -496,16 +509,9 @@ class VelocityLinear(Velocity):
 
     self.a = np.zeros(shape=(self.dim), dtype=dtype)
     self.b = np.zeros(shape=(self.dim), dtype=dtype)
-
-    if self.type == "compression":
-      self.uO = self.boundary_vector()
-      self.uL = -self.uO
-    elif self.type == "extension":
-      self.uL = self.boundary_vector()
-      self.uO = -self.uL
-    else:
-      raise RuntimeError(f'velocity_type can only be \"extension\" or \"compression\", found {self.type}')
     
+    self.velocity_boundary()
+
     for d in range(self.dim):
       self.a[d], self.b[d] = self.velocity_coefficients_1d(self.uO[d],self.uL[d],self.O[self.dir],self.L[self.dir])
     return
@@ -712,7 +718,78 @@ class VelocityLinear(Velocity):
     ax.axis('equal')
     plt.show()
     return
+  
+class VelocityLinearAsymmetric(VelocityLinear):
+  """
+  .. py:class:: VelocityLinearAsymmetric(Domain, u_normL, u_normO, variation_dir, velocity_type, u_angleL=0.0, u_angleO=0.0, Rotation=None)
 
+    Subclass of :py:class:`VelocityLinear <genepy.VelocityLinear>` 
+    to evaluate a linear velocity field with different velocities at the boundaries.
+    Both the norm and the angle can be different at the boundaries.
+
+    :param Domain Domain: domain in which the velocity field is evaluated
+    :param float u_normL: velocity norm of the vector at the boundary of minimum coordinate
+    :param float u_normO: velocity norm of the vector at the boundary of maximum coordinate
+    :param str variation_dir: direction in which the velocity varies (``"x"``, ``"y"``, ``"z"``)
+    :param str velocity_type: velocity field orientation, 
+                              ``"extension"`` velocity is directed outward the domain, 
+                              ``"compression"`` velocity is directed inward the domain
+    :param float u_angleL: **(Optional)**  angle in radians of the velocity field at the boundary of minimum coordinate
+    :param float u_angleO: **(Optional)**  angle in radians of the velocity field at the boundary of maximum coordinate
+    :param Rotation Rotation: **(Optional)** Rotation class instance to rotate the referential
+
+    Example:
+
+    For an asymetric shortening in the :math:`z` direction from 1 cm/a to 0 cm/a at the boundaries,
+    assuming that the class :class:`Domain <genepy.Domain>` 
+    has been instanciated as ``domain``:
+
+    .. code-block:: python
+
+      cma2ms  = 1e-2 / (3600.0 * 24.0 * 365.0) # cm/a to m/s conversion
+      u_normL = 1.0*cma2ms
+      u_normO = 0.0
+      u_dir   = "z"
+      u_type  = "compression"
+      Vel = gp.VelocityLinearAsymmetric(domain,u_normL,u_normO,u_dir,u_type)
+
+  """
+  def __init__(self, Domain: domain.Domain, 
+               u_normL,u_normO,variation_dir:str,velocity_type:str,u_angleL:float=0.0,u_angleO:float=0.0,
+               Rotation: rotation.Rotation = None) -> None:
+    Velocity.__init__(self,Domain,Rotation)
+    self.normL  = u_normL
+    self.normO  = u_normO
+    self.alphaL = u_angleL
+    self.alphaO = u_angleO
+    self.type   = velocity_type
+
+    if type(variation_dir) is not str:
+      raise TypeError(f'variation_dir must be a string, found {type(variation_dir)}')
+    
+    dirmap = {"x":0,"y":1,"z":2}
+    if variation_dir not in dirmap:
+      raise ValueError(f"Invalid direction, possible values are \"x\", \"y\", \"z\", found: {variation_dir}")
+    self.dir = dirmap[variation_dir]
+
+    self.vertical_evaluated = False
+    self.velocity_coefficients()
+    self.u, self.grad_u   = self.evaluate_velocity_and_gradient_symbolic()
+    self.u_dir_horizontal = self.get_velocity_orientation(horizontal=True,normalize=True)
+    self.u_dir            = self.get_velocity_orientation(normalize=True)
+    return
+
+  def velocity_boundary(self):
+    if self.type == "compression":
+      self.uO =  self.boundary_vector(self.normO,self.alphaO)
+      self.uL = -self.boundary_vector(self.normL,self.alphaL)
+    elif self.type == "extension":
+      self.uL =  self.boundary_vector(self.normL,self.alphaL)
+      self.uO = -self.boundary_vector(self.normO,self.alphaO)
+    else:
+      raise RuntimeError(f'velocity_type can only be \"extension\" or \"compression\", found {self.type}')
+    return
+  
 class VelocityTimeDependant(Velocity):
   """
   .. py:class:: VelocityTimeDependant(Domain, Rotation=None)
@@ -754,7 +831,7 @@ class VelocityTimeDependant(Velocity):
       for n in range(1,nf):
         u += user_func[n](*(user_args[n]))
     return u
-  
+
 class VelocityInversion(VelocityTimeDependant):
   """
   .. py:class:: VelocityInversion(Domain, phase1, phase2, breakpoints, slopes, Rotation=None)
