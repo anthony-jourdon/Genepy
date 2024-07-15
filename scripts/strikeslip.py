@@ -56,7 +56,7 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
   dz    = 25.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(67.5)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  angle = np.deg2rad(72)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)

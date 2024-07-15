@@ -47,11 +47,12 @@ class Velocity(domain.Domain,rotation.Rotation):
     # set rotation angle to zero if Rotation class is not provided
     if Rotation is None: rotation.Rotation.__init__(self,Domain.dim,0.0,np.array([0,1,0]))
     else:                rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
-    self.u               = None
-    self.grad_u          = None
-    self.u_h_orientation = None
-    self.uO              = None
-    self.uL              = None
+    self.u                = None
+    self.grad_u           = None
+    self.uO               = None
+    self.uL               = None
+    self.u_dir_horizontal = None
+    self.u_dir            = None
     return
 
   def report_symbolic_functions(self) -> str:
@@ -61,11 +62,9 @@ class Velocity(domain.Domain,rotation.Rotation):
     its gradient and the boundary velocity orientation.
     Can be used with print() or written to a file.
 
-    :param numpy.ndarray u: sympy vector valued function of the velocity field
-    :param numpy.ndarray grad_u: sympy matrix of the gradient of the velocity field shape (dim,dim)
-
     :return: string with the symbolic velocity function, its gradient and the boundary velocity orientation.
     :rtype: str
+
     """
     s = f"Symbolic velocity function:\n"
     for i in range(self.dim):
@@ -75,6 +74,14 @@ class Velocity(domain.Domain,rotation.Rotation):
       for i in range(self.dim):
         for j in range(self.dim):
           s += f"\tdu{self.sym_coor[i]}/d{self.sym_coor[j]} = "+str(self.grad_u[i,j])+"\n"
+    if self.u_dir_horizontal is not None and self.u_dir is not None:
+      s += f"Boundary velocity orientation (unit vector):\n"
+      s += "\tHorizontal vector:\n"
+      for i in range(self.dim):
+        s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir_horizontal[i]}\n"
+      s += "\tFull vector:\n"
+      for i in range(self.dim):
+        s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir[i]}\n"
     return s
   
   def velocity_function(self):
@@ -205,6 +212,40 @@ class Velocity(domain.Domain,rotation.Rotation):
         int_u_dot_n[face] = integral_u_dot_n.simplify()
     return int_u_dot_n
 
+  def velocity_boundary(self):
+    if self.u is None: raise RuntimeError("The velocity field has not been evaluated yet.")
+    self.uO = np.zeros(shape=(self.dim), dtype='object')
+    self.uL = np.zeros(shape=(self.dim), dtype='object')
+    coor = {self.sym_coor[d]:self.O_num[d] for d in range(self.dim)}
+    for d in range(self.dim):
+      self.uO[d] = self.u[d].subs(coor)
+      self.uL[d] = self.u[d].subs(coor)
+    print("Boundary velocity at O:",self.uO)
+    print("Boundary velocity at L:",self.uL)
+    return
+
+  def get_velocity_orientation(self,horizontal=True,normalize=True):
+    """
+    get_velocity_orientation(self,horizontal=True,normalize=False)
+    Returns the orientation vector of the velocity field at the boundary
+
+    :param bool horizontal: if True, only the horizontal components are returned (default: True)
+    :param bool normalize:  if True, the vector is normalized (default: True)
+
+    :return: **uL**: orientation of the velocity field at the boundary
+    """
+    if self.uL is None or self.uO is None: self.velocity_boundary()
+    if horizontal == True:
+      uL = np.zeros(shape=(self.dim), dtype=np.float64)
+      uL[0] = self.uL[0]
+      uL[self.dim-1] = self.uL[self.dim-1]
+    else:
+      uL = np.copy(self.uL)
+    R  = self.rotation_matrix()
+    uL = self.rotate_vector(R,uL,ccw=True)
+    if normalize == True: 
+      uL = uL / np.linalg.norm(uL)
+    return uL
 
 class VelocityLinear(Velocity):
   """
@@ -392,30 +433,6 @@ class VelocityLinear(Velocity):
         s += f'\t{attribute}:\t{attributes[attribute]}\n'
     return s
   
-  def report_symbolic_functions(self) -> str:
-    """
-    report_symbolic_functions(self)
-    Returns a string with the symbolic velocity function, 
-    its gradient and the boundary velocity orientation.
-    Can be used with print() or written to a file.
-
-    :param numpy.ndarray u: sympy vector valued function of the velocity field
-    :param numpy.ndarray grad_u: sympy matrix of the gradient of the velocity field shape (dim,dim)
-    :param numpy.ndarray uL: sympy orientation vector of the velocity field at the boundary
-
-    :return: string with the symbolic velocity function, its gradient and the boundary velocity orientation.
-    :rtype: str
-    """
-    s = super().report_symbolic_functions()
-    s += f"Boundary velocity orientation (unit vector):\n"
-    s += "\tHorizontal vector:\n"
-    for i in range(self.dim):
-      s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir_horizontal[i]}\n"
-    s += "\tFull vector:\n"
-    for i in range(self.dim):
-      s += f"\t\tu_dir_{self.sym_coor[i]} = {self.u_dir[i]}\n"
-    return s
-  
   def boundary_vector(self,norm,alpha):
     """
     boundary_vector(self,norm,alpha)
@@ -453,6 +470,18 @@ class VelocityLinear(Velocity):
     return u
   
   def velocity_boundary(self):
+    """
+    velocity_boundary(self)
+    Computes the boundary velocity vectors :py:attr:`uO <genepy.boundary_conditions.velocity.VelocityLinear.uO>` 
+    and :py:attr:`uL <genepy.boundary_conditions.velocity.VelocityLinear.uL>` based on the 
+    :py:attr:`norm <genepy.boundary_conditions.velocity.VelocityLinear.norm>` and the angle
+    :py:attr:`alpha <genepy.boundary_conditions.velocity.VelocityLinear.alpha>` provided at class initialization.
+
+    .. note::
+      The velocity field is **symmetric** on the boundaries i.e., ``uL = -uO`` for **compression** and 
+      ``uO = -uL`` for **extension**.
+
+    """
     if self.type == "compression":
       self.uO = self.boundary_vector(self.norm,self.alpha)
       self.uL = -self.uO
@@ -682,28 +711,6 @@ class VelocityLinear(Velocity):
     u_R[:,1] = self.evaluate_vertical_velocity(coor[:,1])
     return u_R
   
-  def get_velocity_orientation(self,horizontal=True,normalize=True):
-    """
-    get_velocity_orientation(self,horizontal=True,normalize=False)
-    Returns the orientation vector of the velocity field at the boundary
-
-    :param bool horizontal: if True, only the horizontal components are returned (default: True)
-    :param bool normalize:  if True, the vector is normalized (default: True)
-
-    :return: **uL**: orientation of the velocity field at the boundary
-    """
-    if horizontal == True:
-      uL = np.zeros(shape=(self.dim), dtype=np.float64)
-      uL[0] = self.uL[0]
-      uL[self.dim-1] = self.uL[self.dim-1]
-    else:
-      uL = np.copy(self.uL)
-    R  = self.rotation_matrix()
-    uL = self.rotate_vector(R,uL,ccw=True)
-    if normalize == True: 
-      uL = uL / np.linalg.norm(uL)
-    return uL
-
   def plot_velocity_matplotlib(self):
     u = self.evaluate_velocity_numeric()
     X,Z = self.num_coor[0],self.num_coor[self.dim-1]
@@ -723,7 +730,7 @@ class VelocityLinearAsymmetric(VelocityLinear):
   """
   .. py:class:: VelocityLinearAsymmetric(Domain, u_normL, u_normO, variation_dir, velocity_type, u_angleL=0.0, u_angleO=0.0, Rotation=None)
 
-    Subclass of :py:class:`VelocityLinear <genepy.VelocityLinear>` 
+    Inherits from :py:class:`VelocityLinear <genepy.VelocityLinear>` 
     to evaluate a linear velocity field with different velocities at the boundaries.
     Both the norm and the angle can be different at the boundaries.
 
@@ -739,8 +746,9 @@ class VelocityLinearAsymmetric(VelocityLinear):
     :param Rotation Rotation: **(Optional)** Rotation class instance to rotate the referential
 
     Example:
+    --------
 
-    For an asymetric shortening in the :math:`z` direction from 1 cm/a to 0 cm/a at the boundaries,
+    For an asymetric orthogonal shortening in the :math:`z` direction from 1 cm/a to 0 cm/a at the boundaries,
     assuming that the class :class:`Domain <genepy.Domain>` 
     has been instanciated as ``domain``:
 
@@ -753,9 +761,37 @@ class VelocityLinearAsymmetric(VelocityLinear):
       u_type  = "compression"
       Vel = gp.VelocityLinearAsymmetric(domain,u_normL,u_normO,u_dir,u_type)
 
+      
+    Attributes
+    ----------
+
+    .. py:attribute:: normL
+      :type: float
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normL
+
+      Velocity norm at the boundary of minimum coordinate
+
+    .. py:attribute:: normO
+      :type: float
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normO
+
+      Velocity norm at the boundary of maximum coordinate
+
+    .. py:attribute:: alphaL
+      :type: float
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaL
+
+      Velocity angle with the :math:`z` axis in radians at the boundary of minimum coordinate. Default: ``0.0``.
+
+    .. py:attribute:: alphaO
+      :type: float
+      :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaO
+
+      Velocity angle with the :math:`z` axis in radians at the boundary of maximum coordinate. Default: ``0.0``.
+
   """
   def __init__(self, Domain: domain.Domain, 
-               u_normL,u_normO,variation_dir:str,velocity_type:str,u_angleL:float=0.0,u_angleO:float=0.0,
+               u_normL:float,u_normO:float,variation_dir:str,velocity_type:str,u_angleL:float=0.0,u_angleO:float=0.0,
                Rotation: rotation.Rotation = None) -> None:
     Velocity.__init__(self,Domain,Rotation)
     self.normL  = u_normL
@@ -780,6 +816,22 @@ class VelocityLinearAsymmetric(VelocityLinear):
     return
 
   def velocity_boundary(self):
+    """
+    velocity_boundary(self)
+    Computes the boundary velocity vectors :py:attr:`uO <genepy.boundary_conditions.velocity.VelocityLinear.uO>` 
+    and :py:attr:`uL <genepy.boundary_conditions.velocity.VelocityLinear.uL>` based on the 
+    :py:attr:`normL <genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normL>`,
+    :py:attr:`normO <genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normO>` and the angles
+    :py:attr:`alphaL <genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaL>`,
+    :py:attr:`alphaO <genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaO>` provided at class initialization.
+
+    .. note::
+      In compression :py:attr:`uL <genepy.boundary_conditions.velocity.VelocityLinear.uL>` 
+      is directed inward the domain i.e., negative, and in extension 
+      :py:attr:`uO <genepy.boundary_conditions.velocity.VelocityLinear.uO>` 
+      is directed outward the domain i.e., positive.
+      
+    """
     if self.type == "compression":
       self.uO =  self.boundary_vector(self.normO,self.alphaO)
       self.uL = -self.boundary_vector(self.normL,self.alphaL)
@@ -1109,4 +1161,65 @@ class VelocityInversion(VelocityTimeDependant):
       writer.append_pvd(t,output)
       step += 1
     writer.close_pvd()                                          
+    return
+
+class VelocityCompose(Velocity):
+  """
+  .. py:class:: VelocityCompose(Domain, Velocities, Rotation=None, method="sum")
+
+    Class to construct and evaluate a velocity function composed by multiple velocity functions.
+    The composition method is defined by the ``method`` parameter.
+
+    :param Domain Domain: domain in which the velocity field is evaluated
+    :param list Velocities: list of :py:class:`Velocity <genepy.Velocity>` class instances
+    :param Rotation Rotation: **(Optional)** Rotation
+    :param str method: **(Optional)** method to compose the velocity functions, default is ``"sum"``
+
+    Attributes
+    ----------
+
+    .. py:attribute:: nfuncs
+      :type: int
+      :canonical: genepy.boundary_conditions.velocity.VelocityCompose.nfuncs
+
+      Number of velocity functions to compose
+
+    .. py:attribute:: velocities
+      :type: list
+      :canonical: genepy.boundary_conditions.velocity.VelocityCompose.velocities
+
+      List of :py:class:`velocity <genepy.Velocity>` class instances of velocity functions to compose.
+
+    .. py:attribute:: method
+      :type: str
+      :canonical: genepy.boundary_conditions.velocity.VelocityCompose.method
+
+      Method to compose the velocity functions. Default is ``"sum"``.
+
+    Methods
+    -------
+  """
+  def __init__(self, Domain:domain.Domain, Velocities:list[Velocity], Rotation:rotation.Rotation=None, method="sum") -> None:
+    Velocity.__init__(self, Domain, Rotation)
+    self.nfuncs     = len(Velocities)
+    self.velocities = Velocities
+    if type(method) is not str: raise TypeError(f'method must be a string, found {type(method)}')
+    self.method = method
+    self.u = np.zeros(shape=(self.dim), dtype='object')
+
+    if self.method == "sum": self.sum_velocities()
+    else: raise ValueError(f'Invalid method, possible values are \"sum\", found {method}')
+    
+    self.grad_u           = self.evaluate_gradient(self.u)
+    self.u_dir_horizontal = self.get_velocity_orientation(horizontal=True,normalize=True)
+    self.u_dir            = self.get_velocity_orientation(normalize=True)
+    return
+
+  def sum_velocities(self):
+    """
+    sum_velocities(self)
+    Sums the velocity functions of :py:class:`velocity <genepy.Velocity>` class instances from the list 
+    :py:attr:`velocities <genepy.boundary_conditions.velocity.VelocityCompose.velocities>`.
+    """
+    self.u = sum(v.u for v in self.velocities)
     return
