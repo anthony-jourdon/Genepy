@@ -246,6 +246,29 @@ class Gaussian(domain.Domain,rotation.Rotation):
       self.gaussian_num[n] = self.numerical_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
     return 
   
+  def sum_gaussians(self,blocksize:int=10):
+    """
+    sum_gaussians(self,blocksize:int=10)
+    Sum the gaussians in blocks of size `blocksize`.
+    Can be utilized to reduce the amount of options in the input file for `pTatin3d`_.
+
+    :param int blocksize: **Optional** size of the block to sum the gaussians. Default is ``10``.
+    """
+    if self.gaussian_sym is None:
+      self.evaluate_gaussians()
+    nblocks = int(np.ceil(self.ng/blocksize))
+    field_sym = np.zeros(shape=(nblocks), dtype="object")
+    field_num = np.zeros(shape=(nblocks,*self.n), dtype=np.float64)
+    for n in range(nblocks):
+      start = n*blocksize
+      end   = min((n+1)*blocksize,self.ng)
+      field_sym[n] = np.sum(self.gaussian_sym[start:end])
+      field_num[n] = np.sum(self.gaussian_num[start:end], axis=0)
+    self.gaussian_sym = field_sym
+    self.gaussian_num = field_num
+    self.ng = nblocks
+    return 
+
   def report_symbolic_functions(self):
     """
     report_symbolic_functions(self)

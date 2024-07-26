@@ -80,6 +80,7 @@ class MarkersManagement(Markers):
     s += f"#  3: south = ymin = jmin = Neta\n"
     s += f"#  4: front = zmax = kmax = Pzeta\n"
     s += f"#  5: back  = zmin = kmin = Nzeta\n"
+    # TODO: handle empty popctrl_faces
     s += f"-model_GENE3D_bc_marker_nfaces {len(self.popctrl_faces)} # number of faces on which cleaning is ignored\n"
     s += f"-model_GENE3D_bc_marker_faces_list "
     for n in range(len(self.popctrl_faces)-1):

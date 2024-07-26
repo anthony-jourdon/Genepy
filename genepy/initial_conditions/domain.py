@@ -205,7 +205,7 @@ class Domain:
     as a tuple (``"x"``, ``"y"``, ``"z"``)
     """
     variables = {1:'x', 2:'x y', 3:'x y z'}
-    self.sym_coor = sp.symbols(variables[self.dim])
+    self.sym_coor = sp.symbols(variables[self.dim], real=True)
     return
   
   def shape_coor(self):

@@ -74,7 +74,7 @@ class MeshRefinement(domain.Domain):
     -------
   """
   def __init__(self, Domain, refinement_params) -> None:
-    domain.Domain.__init__(self,Domain.dim,Domain.O,Domain.L,Domain.n)
+    domain.Domain.__init__(self,Domain.dim,Domain.O_num,Domain.L_num,Domain.n)
     self.dirmap = {"x":0,"y":1,"z":2}
     self.params = refinement_params
     for d in self.params:
