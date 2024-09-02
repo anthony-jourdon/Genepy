@@ -186,14 +186,8 @@ class MeshRefinement(domain.Domain):
 
       npoints = x_initial.shape[0]
       s += f"-{model_name}_{prefix}_npoints_{self.dirmap[d]} {npoints} # number of points for interpolation\n"
-      s += f"-{model_name}_{prefix}_xref_{self.dirmap[d]} "
-      for i in range(npoints-1):
-        s += f"{x_initial[i]},"
-      s += f"{x_initial[npoints-1]} # xp\n"
-      s += f"-{model_name}_{prefix}_xnat_{self.dirmap[d]} "
-      for i in range(npoints-1):
-        s += f"{x_refined[i]},"
-      s += f"{x_refined[npoints-1]} # f(xp)\n"
+      s += f"-{model_name}_{prefix}_xref_{self.dirmap[d]} {','.join([str(x) for x in x_initial])} # xp\n"
+      s += f"-{model_name}_{prefix}_xnat_{self.dirmap[d]} {','.join([str(x) for x in x_refined])} # f(xp)\n"
     return s
 
 def test():

@@ -769,25 +769,25 @@ class VelocityLinearAsymmetric(VelocityLinear):
       :type: float
       :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normL
 
-      Velocity norm at the boundary of minimum coordinate
+      Velocity norm at the boundary of maximum coordinate
 
     .. py:attribute:: normO
       :type: float
       :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normO
 
-      Velocity norm at the boundary of maximum coordinate
+      Velocity norm at the boundary of minimum coordinate
 
     .. py:attribute:: alphaL
       :type: float
       :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaL
 
-      Velocity angle with the :math:`z` axis in radians at the boundary of minimum coordinate. Default: ``0.0``.
+      Velocity angle with the :math:`z` axis in radians at the boundary of maximum coordinate. Default: ``0.0``.
 
     .. py:attribute:: alphaO
       :type: float
       :canonical: genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaO
 
-      Velocity angle with the :math:`z` axis in radians at the boundary of maximum coordinate. Default: ``0.0``.
+      Velocity angle with the :math:`z` axis in radians at the boundary of minimum coordinate. Default: ``0.0``.
 
   """
   def __init__(self, Domain: domain.Domain, 
