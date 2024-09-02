@@ -735,14 +735,14 @@ class VelocityLinearAsymmetric(VelocityLinear):
     Both the norm and the angle can be different at the boundaries.
 
     :param Domain Domain: domain in which the velocity field is evaluated
-    :param float u_normL: velocity norm of the vector at the boundary of minimum coordinate
-    :param float u_normO: velocity norm of the vector at the boundary of maximum coordinate
+    :param float u_normL: velocity norm of the vector at the boundary of maximum coordinate
+    :param float u_normO: velocity norm of the vector at the boundary of minimum coordinate
     :param str variation_dir: direction in which the velocity varies (``"x"``, ``"y"``, ``"z"``)
     :param str velocity_type: velocity field orientation, 
                               ``"extension"`` velocity is directed outward the domain, 
                               ``"compression"`` velocity is directed inward the domain
-    :param float u_angleL: **(Optional)**  angle in radians of the velocity field at the boundary of minimum coordinate
-    :param float u_angleO: **(Optional)**  angle in radians of the velocity field at the boundary of maximum coordinate
+    :param float u_angleL: **(Optional)**  angle in radians of the velocity field at the boundary of maximum coordinate
+    :param float u_angleO: **(Optional)**  angle in radians of the velocity field at the boundary of minimum coordinate
     :param Rotation Rotation: **(Optional)** Rotation class instance to rotate the referential
 
     Example:
