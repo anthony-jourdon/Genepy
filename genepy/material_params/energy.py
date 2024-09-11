@@ -194,7 +194,7 @@ class EnergySource(MaterialConstants):
     MaterialConstants.__init__(self, model_name, region)
     self.heat_sources = args
     for arg in self.heat_sources:
-      if not isinstance(arg, (EnergySourceMaterialPointValue, EnergySourceConstant, EnergySourceShearHeating, EnergySourceDecay)):
+      if not isinstance(arg, (EnergySourceNone, EnergySourceMaterialPointValue, EnergySourceConstant, EnergySourceShearHeating, EnergySourceDecay)):
         raise ValueError(f"arg, expected one of {EnergySourceMaterialPointValue}, {EnergySourceConstant}, {EnergySourceShearHeating}, {EnergySourceDecay}, got {type(arg)}")
     return
 
