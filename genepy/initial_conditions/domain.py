@@ -127,6 +127,7 @@ class Domain:
     self.L_num = maxCoor
     self.n     = size    # number of points in each direction
     self.nv    = np.prod(self.n) # total number of points
+    self.domain_type = 'Eulerian'
 
     self.num_coor = coor # numerical coordinates
     self.sym_coor = None # symbolic coordinates
@@ -256,6 +257,7 @@ class DomainALE(Domain):
     self.L_num = maxCoor
     self.O     = np.asarray(sp.symbols('Ox Oy Oz'))
     self.L     = np.asarray(sp.symbols('Lx Ly Lz'))
+    self.domain_type = 'ALE'
     return
   
   def sprint_option(self,model_name:str,ale_rm_component:list=None,**kwargs) -> str:

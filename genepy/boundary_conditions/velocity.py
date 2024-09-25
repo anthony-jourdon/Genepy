@@ -213,6 +213,10 @@ class Velocity(domain.Domain,rotation.Rotation):
     return int_u_dot_n
 
   def velocity_boundary(self):
+    """
+    Note to me:
+    When domain is ALE and the velocity is composite, the boundary velocity should be computed by face
+    """
     if self.u is None: raise RuntimeError("The velocity field has not been evaluated yet.")
     self.uO = np.zeros(shape=(self.dim), dtype='object')
     self.uL = np.zeros(shape=(self.dim), dtype='object')
@@ -220,6 +224,15 @@ class Velocity(domain.Domain,rotation.Rotation):
     for d in range(self.dim):
       self.uO[d] = self.u[d].subs(coor)
       self.uL[d] = self.u[d].subs(coor)
+    
+    if self.domain_type == "ALE":
+      lims = []
+      for d in range(self.dim):
+        lims.append((self.O[d],self.O_num[d]))
+        lims.append((self.L[d],self.L_num[d]))
+      for d in range(self.dim):
+        self.uL[d] = self.uL[d].subs(lims)
+        self.uO[d] = self.uO[d].subs(lims)
     print("Boundary velocity at O:",self.uO)
     print("Boundary velocity at L:",self.uL)
     return
