@@ -45,7 +45,7 @@ def velocity_bcs(Domain,Rotation,report=False):
     print(BCs.report_symbolic_functions())
   return BCs,u_num
 
-def initial_strain(Domain,MshRef,Rotation,report=False):
+def initial_strain_double_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
   ng = np.int32(2) # number of gaussians
   A  = np.array([1.0, 1.0],dtype=np.float64)
@@ -55,7 +55,7 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 25.0e3                            # distance from the domain centre in z direction
+  dz    = 25.0e3                         # distance from the domain centre in z direction
   angle = np.deg2rad(72)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
@@ -71,6 +71,46 @@ def initial_strain(Domain,MshRef,Rotation,report=False):
   Gaussian.evaluate_gaussians()
   if report:
     print(Gaussian.report_symbolic_functions())
+  strain = Gaussian.compute_field_distribution()
+  return Gaussian,strain
+
+def initial_strain_single_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
+  # gaussian initial strain
+  ng = np.int32(1) # number of gaussians
+  A  = np.array([1.0],dtype=np.float64)
+  # shape of the gaussians
+  coeff = 0.5 * 6.0e-5**2
+  a = np.array([coeff], dtype=np.float64)
+  b = np.array([0.0],     dtype=np.float64)
+  c = np.array([coeff], dtype=np.float64)
+  # position of the centre of the gaussian
+  domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
+  x0 = np.array([domain_centre[0]], dtype=np.float64) # centre of the gaussian in x direction
+  z0 = np.array([domain_centre[2]], dtype=np.float64) # centre of the gaussian in z direction
+  # Create gaussian object
+  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
+  Gaussian.evaluate_gaussians()
+  if report:
+    print(Gaussian.report_symbolic_functions())
+  strain = Gaussian.compute_field_distribution()
+  return Gaussian,strain
+
+def initial_strain_multiple_gaussians_aligned(Domain:gp.Domain,MshRef,Rotation,report=False):
+  # gaussian initial strain
+  ng = np.int32(2) # number of gaussians
+  A  = np.array([1.0, 1.0],dtype=np.float64)
+  # shape of the gaussians
+  coeff = 0.5 * 6.0e-5**2
+  a = np.array([coeff, coeff], dtype=np.float64)
+  b = np.array([0.0, 0.0],     dtype=np.float64)
+  c = np.array([coeff, coeff], dtype=np.float64)
+
+  domain_centre = 0.5*(Domain.O_num + Domain.L_num) # centre of the domain
+
+  z0 = np.array([domain_centre[2], domain_centre[2]], dtype=np.float64)
+  x0 = np.array([100.0e3, 500.0e3], dtype=np.float64)
+  
+  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
   strain = Gaussian.compute_field_distribution()
   return Gaussian,strain
 
@@ -118,6 +158,41 @@ def boundary_conditions(u,grad_u,uL):
     gp.Dirichlet(37,"Zmin",["x","z"],u,mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
     gp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL,mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
     gp.NavierSlip(14,"Xmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
+    gp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
+  ]
+  # Temperature boundary conditions
+  Tbcs = gp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
+  # collect all boundary conditions
+  all_bcs = gp.ModelBCs(bcs,Tbcs)
+  return all_bcs
+
+def boundary_conditions_navier_slip_all(u,grad_u,uL):
+  # path to mesh files (system dependent, change accordingly)
+  root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
+  # Velocity boundary conditions
+  bcs = [
+    gp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
+    gp.NavierSlip(37,"Zmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
+    gp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL,mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
+    gp.NavierSlip(14,"Xmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
+    gp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
+  ]
+  # Temperature boundary conditions
+  Tbcs = gp.TemperatureBC({"ymax":0.0, "ymin":1450.0})
+  # collect all boundary conditions
+  all_bcs = gp.ModelBCs(bcs,Tbcs)
+  return all_bcs
+
+def boundary_conditions_compose(u,grad_u,uL):
+  # path to mesh files (system dependent, change accordingly)
+  root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
+  # Velocity boundary conditions
+  bcs = [
+    gp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
+    gp.Dirichlet(37,"Zmin",["x","z"],u,mesh_file=os.path.join(root,"box_ptatin_facet_37_mesh.bin")),
+    gp.NavierSlip(tag=32,name="Xmax",grad_u=grad_u,u_orientation=uL,mesh_file=os.path.join(root,"box_ptatin_facet_32_mesh.bin")),
+    gp.NavierSlip(14,"Xmin",grad_u,uL,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
+    gp.Dirichlet(tag=12,name="XminDiri",components=["y"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_14_mesh.bin")),
     gp.DirichletUdotN(33,"Bottom",mesh_file=os.path.join(root,"box_ptatin_facet_33_mesh.bin")),
   ]
   # Temperature boundary conditions
@@ -184,7 +259,11 @@ def test_default_material_parameters():
     # Asthenosphere
     gp.Region(41)
   ]
-  all_regions = gp.ModelRegions(regions)
+  # path to mesh files (system dependent, change accordingly)
+  root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
+  all_regions = gp.ModelRegions(regions,
+                                mesh_file=os.path.join(root,"box_ptatin_md.bin"),
+                                region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
   return all_regions
 
 def strikeslip():
@@ -198,7 +277,9 @@ def strikeslip():
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
-  Gaussian,strain = initial_strain(Domain,MshRef,Rotation,report=True)
+  #Gaussian,strain = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
+  #Gaussian,strain = initial_strain_single_wz(Domain,MshRef,Rotation,report=True)
+  Gaussian,strain = initial_strain_multiple_gaussians_aligned(Domain,MshRef,Rotation,report=True)
   # initial heat source
   Gaussian_hs = initial_heat_source(Domain,Rotation,report=False)
 
@@ -213,7 +294,9 @@ def strikeslip():
 
   # generate objects for options writing
   ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
-  bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
+  #bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
+  bcs     = boundary_conditions_compose(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
+  #bcs     = boundary_conditions_navier_slip_all(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   regions = material_parameters()
   #regions = test_default_material_parameters()
   spm = gp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)

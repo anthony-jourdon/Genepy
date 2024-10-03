@@ -80,3 +80,6 @@ Surface processes
 
 .. autoclass:: genepy.SPMDiffusion
     :members:
+
+.. autoclass:: genepy.SPMDiffusionBaselvl
+    :members:
