@@ -155,3 +155,59 @@ class SofteningExponential(Softening):
     s += f'\tStrain min:  {self.eps_min}\n'
     s += f'\tStrain fold: {self.eps_fold}\n'
     return s
+
+class SofteningLinearTemperature(SofteningLinear):
+  """
+  .. py:class:: SofteningLinearTemperature(temperature_min:float, temperature_max:float, model_name:str='model_GENE3D', region:int=0)
+
+    Class to apply linear softening based on temperature to a region of the model.
+    Only applies to the plastic deformation.
+
+    :param float temperature_min: Minimum temperature value (:math:`T_{min}`).
+    :param float temperature_max: Maximum temperature value (:math:`T_{max}`).
+    :param str model_name: Name of the model to which the softening is applied. Default is "model_GENE3D".
+    :param int region: Region number to which the softening is applied. Default is 0.
+  
+    .. note:: 
+      The linear softening is defined by the minimum and maximum temperature values and influences the friction and/or the cohesion.
+      For :math:`t` the variable to be softened, the softening is given by:
+      
+      .. math::
+        t = t_0 - (t_0 - t_{\\infty}) \\frac{T - T_{min}}{T_{max} - T_{min}}
+      
+      where :math:`t_0` is the initial value of the variable, :math:`t_{\\infty}` is the final value of the variable, and :math:`T` is the temperature.
+  
+    Attributes
+    ----------
+
+    .. py:attribute:: eps_min
+      :type: float
+        
+        Minimum temperature value (:math:`T_{min}`).
+
+    .. py:attribute:: eps_max
+      :type: float
+        
+        Maximum temperature value (:math:`T_{max}`).
+
+    .. py:attribute:: model_name
+      :type: str
+        
+        Name of the model to which the softening is applied.
+
+    .. py:attribute:: region
+      :type: int
+        
+        Region number to which the softening is applied.
+  
+  """
+  def __init__(self, temperature_min:float, temperature_max:float, model_name:str="model_GENE3D", region:int=0) -> None:
+    SofteningLinear.__init__(self, temperature_min, temperature_max, model_name, region)
+    self.softening_type = 3
+  
+  def __str__(self) -> str:
+    s = f'{self.__class__.__name__}\n'
+    s += f'\tRegion:    {self.region}\n'
+    s += f'\tTemperature min: {self.eps_min}\n'
+    s += f'\tTemperature max: {self.eps_max}\n'
+    return s

@@ -150,6 +150,15 @@ Exponential softening
 .. autoclass:: genepy.SofteningExponential
     :members:
 
+Temperature-dependent softening
+-------------------------------
+
+Linear temperature softening
+.............................
+
+.. autoclass:: genepy.SofteningLinearTemperature
+    :members:
+
 .. _energy:
 
 Energy
