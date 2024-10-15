@@ -80,6 +80,11 @@ class PlasticMises(Plasticity):
 
         Yield stress value in Pa after softening (if any). Default is :math:`5` MPa.
 
+    .. py:attribute:: healing_rate
+      :type: float
+
+        Healing rate value. Default is 0.
+    
     .. py:attribute:: model_name
       :type: str
 
@@ -90,18 +95,20 @@ class PlasticMises(Plasticity):
 
         Region number to which the plasticity is applied. Default is 0
   """
-  def __init__(self, yield_stress:float=5.e7, yield_stress_inf:float=5.e6,
+  def __init__(self, yield_stress:float=5.e7, yield_stress_inf:float=5.e6, healing_rate:float=0.0,
                model_name:str="model_GENE3D", region:int=0) -> None:
     self.plastic_type     = 1
     self.yield_stress     = yield_stress
     self.yield_stress_inf = yield_stress_inf
+    self.healing_rate     = healing_rate
     Plasticity.__init__(self,model_name,region)
   
   def __str__(self) -> str:
     s = f'{self.__class__.__name__}\n'
-    s += f'\tRegion:          {self.region}\n'
-    s += f'\tYield stress:    {self.yield_stress}\n'
-    s += f'\tYield stress inf:{self.yield_stress_inf}\n'
+    s += f'\tRegion:           {self.region}\n'
+    s += f'\tYield stress:     {self.yield_stress}\n'
+    s += f'\tYield stress inf: {self.yield_stress_inf}\n'
+    s += f'\tHealing rate:     {self.healing_rate}\n'
     return s
 
 class PlasticDruckerPrager(Plasticity):
@@ -158,6 +165,11 @@ class PlasticDruckerPrager(Plasticity):
 
         High stress cutoff value in Pa (if :math:`\\sigma_y > \\text{highstress_cutoff} : \\sigma_y = \\text{highstress_cutoff}`). Default is :math:`400` MPa.
 
+    .. py:attribute:: healing_rate
+      :type: float
+
+        Healing rate value. Default is 0.
+    
     .. py:attribute:: model_name
       :type: str
 
@@ -171,6 +183,7 @@ class PlasticDruckerPrager(Plasticity):
   def __init__(self, friction:float=np.deg2rad(30.), friction_inf:float=np.deg2rad(5.),
                cohesion:float=2.e7, cohesion_inf:float=5.e6, 
                tension_cutoff:float=1.e7, highstress_cutoff:float=4.e8,
+               healing_rate:float=0.0,
                model_name:str="model_GENE3D", region:int=0) -> None:
     self.plastic_type = 2
     self.friction     = friction
@@ -179,6 +192,7 @@ class PlasticDruckerPrager(Plasticity):
     self.cohesion_inf = cohesion_inf
     self.tens_cutoff  = tension_cutoff
     self.hst_cutoff   = highstress_cutoff
+    self.healing_rate = healing_rate
     Plasticity.__init__(self,model_name,region)
   
   def __str__(self) -> str:
