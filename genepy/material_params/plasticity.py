@@ -83,7 +83,7 @@ class PlasticMises(Plasticity):
     .. py:attribute:: healing_rate
       :type: float
 
-        Healing rate value. Default is 0.
+        Healing rate value in s\\ :sup:`-1`. Rate to reduce the plastic damage on which softening is based.
     
     .. py:attribute:: model_name
       :type: str
@@ -168,7 +168,7 @@ class PlasticDruckerPrager(Plasticity):
     .. py:attribute:: healing_rate
       :type: float
 
-        Healing rate value. Default is 0.
+        Healing rate value in s\\ :sup:`-1`. Rate to reduce the plastic damage on which softening is based. Default is 0.
     
     .. py:attribute:: model_name
       :type: str

@@ -55,8 +55,8 @@ def initial_strain_double_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
   b = np.array([0.0, 0.0],     dtype=np.float64)
   c = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 25.0e3                         # distance from the domain centre in z direction
-  angle = np.deg2rad(72)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 27.5e3                         # distance from the domain centre in z direction
+  angle = np.deg2rad(75)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -152,6 +152,7 @@ def initial_conditions(Domain,MshRef,IniStrain,u):
 def boundary_conditions(u,grad_u,uL):
   # path to mesh files (system dependent, change accordingly)
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
+  #root = os.path.join(os.environ['SOFTS'],"gmsh_to_point_cloud")
   # Velocity boundary conditions
   bcs = [
     gp.Dirichlet(tag=23,name="Zmax",components=["x","z"],velocity=u,mesh_file=os.path.join(root,"box_ptatin_facet_23_mesh.bin")),
@@ -243,6 +244,7 @@ def material_parameters():
 
   # path to mesh files (system dependent, change accordingly)
   root = os.path.join(os.environ['PTATIN'],"ptatin-gene/src/models/gene3d/examples")
+  #root = os.path.join(os.environ['SOFTS'],"gmsh_to_point_cloud")
   all_regions = gp.ModelRegions(regions,
                                 mesh_file=os.path.join(root,"box_ptatin_md.bin"),
                                 region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
@@ -277,9 +279,9 @@ def strikeslip():
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
-  #Gaussian,strain = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
+  Gaussian,strain = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
   #Gaussian,strain = initial_strain_single_wz(Domain,MshRef,Rotation,report=True)
-  Gaussian,strain = initial_strain_multiple_gaussians_aligned(Domain,MshRef,Rotation,report=True)
+  #Gaussian,strain = initial_strain_multiple_gaussians_aligned(Domain,MshRef,Rotation,report=True)
   # initial heat source
   Gaussian_hs = initial_heat_source(Domain,Rotation,report=False)
 
@@ -294,18 +296,24 @@ def strikeslip():
 
   # generate objects for options writing
   ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
-  #bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
-  bcs     = boundary_conditions_compose(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
+  bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
+  #bcs     = boundary_conditions_compose(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   #bcs     = boundary_conditions_navier_slip_all(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   regions = material_parameters()
   #regions = test_default_material_parameters()
   spm = gp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
   pswarm = gp.PswarmFillBox([0.0,-100.0e3,0.0],[600e3,-4.0e3,300.0e3],layout=[30,5,15],pressure=True,temperature=True)
+  markers = gp.MarkersManagement(layout=(8,8,8),
+                                 popctrl_faces=(0, 1, 4, 5), 
+                                 popctrl_np_lower=8,
+                                 popctrl_np_upper=128, 
+                                 popctrl_layout=(2, 2, 2))
 
   # write the options for ptatin3d
   model = gp.Model(ics,regions,bcs,
                    model_name="model_GENE3D",
-                   spm=spm,pswarm=pswarm,
+                   spm=spm,#pswarm=pswarm,
+                   markers=markers,
                    mpi_ranks=1)
   #print(model.options)
   with open("strike-slip.sh","w") as f:
