@@ -193,11 +193,26 @@ class Model:
 
     return
 
-  def output(self, output_frequency:int, output_path:str) -> None:
+  def output(self, output_frequency:int, output_path:str, output_fields:list[str]|None=None) -> None:
     prefix = "output"
     self.options +=f"########### {prefix} ###########\n"
     self.options +=f"-{prefix}_frequency {output_frequency} # frequency of results output\n"
     self.options +=f"-{prefix}_path {output_path} # path of the output directory\n"
+    self.options += "########### markers fields output ###########\n"
+    self.options += "# Available fields are:\n"
+    self.options += "# region, viscosity, density\n"
+    self.options += "# plastic_strain, yield_indicator\n"
+    self.options += "# diffusivity, damage\n"
+    prefix += "_markercellp0"
+    if output_fields is None:
+      output_fields = [
+        "region",
+        "viscosity",
+        "density",
+        "plastic_strain"
+      ]
+    for field in output_fields:
+      self.options +=f"-{self.name}_{prefix}_{field}\n"
     return
   
   def viscosity_cutoff(self, viscosity_min:float, viscosity_max:float) -> None:
