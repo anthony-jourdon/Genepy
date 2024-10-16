@@ -314,6 +314,7 @@ def strikeslip():
                    model_name="model_GENE3D",
                    spm=spm,#pswarm=pswarm,
                    markers=markers,
+                   output_fields=["region","viscosity","density","plastic_strain"],
                    mpi_ranks=1)
   #print(model.options)
   with open("strike-slip.sh","w") as f:

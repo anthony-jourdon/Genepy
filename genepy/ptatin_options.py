@@ -43,6 +43,7 @@ class Model:
 
     :param int output_frequency: Frequency of results output. Default is ``25``.
     :param str output_path: Path of the output directory. Default is ``"output"``.
+    :param list[str] output_fields: Fields to output. Default is ``["region","viscosity","density","plastic_strain"]``.
     :param int checkpoint_ncpumins: Checkpoint every n cpu minutes. Default is ``230``.
     :param int checkpoint_frequency: Checkpoint every n time step. Default is ``25``.
     :param float length_bar: Length scaling. Default is ``1.0e5`` m.
@@ -123,7 +124,8 @@ class Model:
     # output options
     output_frequency = kwargs.get("output_frequency", 25)
     output_path      = kwargs.get("output_path", "output")
-    self.output(output_frequency, output_path)
+    output_fields    = kwargs.get("output_fields", ["region","viscosity","density","plastic_strain"])
+    self.output(output_frequency, output_path, output_fields)
 
     # checkpointing options
     ncpumins   = kwargs.get("checkpoint_ncpumins", 230)
@@ -193,7 +195,7 @@ class Model:
 
     return
 
-  def output(self, output_frequency:int, output_path:str, output_fields:list[str]|None=None) -> None:
+  def output(self, output_frequency:int, output_path:str, output_fields:list[str]) -> None:
     prefix = "output"
     self.options +=f"########### {prefix} ###########\n"
     self.options +=f"-{prefix}_frequency {output_frequency} # frequency of results output\n"
@@ -204,13 +206,6 @@ class Model:
     self.options += "# plastic_strain, yield_indicator\n"
     self.options += "# diffusivity, damage\n"
     prefix += "_markercellp0"
-    if output_fields is None:
-      output_fields = [
-        "region",
-        "viscosity",
-        "density",
-        "plastic_strain"
-      ]
     for field in output_fields:
       self.options +=f"-{self.name}_{prefix}_{field}\n"
     return
