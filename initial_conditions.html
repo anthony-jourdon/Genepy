@@ -1,0 +1,189 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Initial conditions &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Boundary conditions" href="boundary_conditions.html" />
+    <link rel="prev" title="Module genepy" href="genepy_docs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="genepy_docs.html">Module genepy</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Initial conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#domain">Domain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eulerian-domain-with-free-surface">Eulerian Domain (with free-surface)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ale-domain">ALE Domain</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-refinement">Mesh refinement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rotation">Rotation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gaussian">Gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plastic-strain">Plastic strain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-source">Heat source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ics-ptatin3d-options-generation">ICs pTatin3d options generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html">Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#markers-management">Markers management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#passive-tracers">Passive tracers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#surface-processes">Surface processes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="genepy_docs.html">Module genepy</a></li>
+      <li class="breadcrumb-item active">Initial conditions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/initial_conditions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="genepy_docs.html" class="btn btn-neutral float-left" title="Module genepy" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boundary_conditions.html" class="btn btn-neutral float-right" title="Boundary conditions" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="initial-conditions">
+<h1>Initial conditions<a class="headerlink" href="#initial-conditions" title="Link to this heading"></a></h1>
+<p>Contains the classes to define the initial conditions such as the
+geometry of the physical domain, the mesh refinement or an initial field with
+a gaussian distribution.
+It generates symbolic expressions of the coordinates and initial field distribution.</p>
+<section id="domain">
+<h2>Domain<a class="headerlink" href="#domain" title="Link to this heading"></a></h2>
+<p>In <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>, the physical domain where the simulation is performed
+is defined by the coordinate system showed in the figure below.</p>
+<a class="reference internal image-reference" href="_images/coordinate_system.png"><img alt="_images/coordinate_system.png" class="align-center" src="_images/coordinate_system.png" style="width: 400px;" />
+</a>
+<p>The following code describes the physical domain.
+While most of the usage of this class is for 3 dimensional domains,
+it can also be used for 2 dimensional and 1 dimensional domains.</p>
+<section id="eulerian-domain-with-free-surface">
+<h3>Eulerian Domain (with free-surface)<a class="headerlink" href="#eulerian-domain-with-free-surface" title="Link to this heading"></a></h3>
+</section>
+<section id="ale-domain">
+<h3>ALE Domain<a class="headerlink" href="#ale-domain" title="Link to this heading"></a></h3>
+<p>In case an ALE simulation is performed, the domain can be defined as a moving domain.
+Therefore, its minumum and maximum coordinates will change in time and expressions relying
+on the size of the domain need to consider this.
+To do so, the following class introduce symbolic representation of the domain with the symbols
+<code class="docutils literal notranslate"><span class="pre">&quot;Ox&quot;,</span> <span class="pre">&quot;Oy&quot;,</span> <span class="pre">&quot;Oz&quot;</span></code> for the origin of the domain and <code class="docutils literal notranslate"><span class="pre">&quot;Lx&quot;,</span> <span class="pre">&quot;Ly&quot;,</span> <span class="pre">&quot;Lz&quot;</span></code> for the size of the domain.</p>
+</section>
+</section>
+<section id="mesh-refinement">
+<h2>Mesh refinement<a class="headerlink" href="#mesh-refinement" title="Link to this heading"></a></h2>
+<p>This module contains the class describing the mesh refinement.</p>
+</section>
+<section id="rotation">
+<h2>Rotation<a class="headerlink" href="#rotation" title="Link to this heading"></a></h2>
+<p>This module contains the class to perform rotations of single vectors,
+vector fields and referential in 2D and 3D.</p>
+</section>
+<section id="gaussian">
+<h2>Gaussian<a class="headerlink" href="#gaussian" title="Link to this heading"></a></h2>
+<p>This module contains the class to evaluate gaussian distributions of a field in 2D.
+It is generally used to define the initial strain distribution to place weak zones in the domain.</p>
+</section>
+<section id="plastic-strain">
+<h2>Plastic strain<a class="headerlink" href="#plastic-strain" title="Link to this heading"></a></h2>
+<p>This module contains the class to generate options for the initial plastic strain.</p>
+</section>
+<section id="heat-source">
+<h2>Heat source<a class="headerlink" href="#heat-source" title="Link to this heading"></a></h2>
+<p>This module contains the class to generate options for the initial heat source when set to
+<code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.EnergySourceMaterialPointValue</span></code>.</p>
+</section>
+<section id="ics-ptatin3d-options-generation">
+<h2>ICs pTatin3d options generation<a class="headerlink" href="#ics-ptatin3d-options-generation" title="Link to this heading"></a></h2>
+<p>This module contains the class to generate the options
+for the initial conditions of a 3D model running GENE3D
+in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="genepy_docs.html" class="btn btn-neutral float-left" title="Module genepy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boundary_conditions.html" class="btn btn-neutral float-right" title="Boundary conditions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

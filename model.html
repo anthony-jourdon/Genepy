@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Material parameters" href="material_parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="genepy_docs.html">Module genepy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html">Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html">Material parameters</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#markers-management">Markers management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#passive-tracers">Passive tracers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pswarm">Pswarm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fill-entire-domain">Fill entire domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fill-domain-within-a-bounding-box">Fill domain within a bounding box</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fill-domain-within-a-bounding-box-with-a-given-number-of-particles">Fill domain within a bounding box with a given number of particles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#place-only-selected-tracers">Place only selected tracers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#surface-processes">Surface processes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="genepy_docs.html">Module genepy</a></li>
+      <li class="breadcrumb-item active">Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="material_parameters.html" class="btn btn-neutral float-left" title="Material parameters" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model">
+<h1>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h1>
+<p>This class generates the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> model using
+the format of the <a class="reference external" href="https://petsc.org">PETSc</a> library.
+It requires to have generated</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the physical <code class="xref py py-class docutils literal notranslate"><span class="pre">domain</span></code></p></li>
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">velocity</span></code> field function.</p></li>
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">initial</span> <span class="pre">conditions</span></code>.</p></li>
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">boundary</span> <span class="pre">conditions</span></code>.</p></li>
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">material</span> <span class="pre">parameters</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="markers-management">
+<h1>Markers management<a class="headerlink" href="#markers-management" title="Link to this heading"></a></h1>
+</section>
+<section id="passive-tracers">
+<h1>Passive tracers<a class="headerlink" href="#passive-tracers" title="Link to this heading"></a></h1>
+<section id="pswarm">
+<h2>Pswarm<a class="headerlink" href="#pswarm" title="Link to this heading"></a></h2>
+</section>
+<section id="fill-entire-domain">
+<h2>Fill entire domain<a class="headerlink" href="#fill-entire-domain" title="Link to this heading"></a></h2>
+</section>
+<section id="fill-domain-within-a-bounding-box">
+<h2>Fill domain within a bounding box<a class="headerlink" href="#fill-domain-within-a-bounding-box" title="Link to this heading"></a></h2>
+</section>
+<section id="fill-domain-within-a-bounding-box-with-a-given-number-of-particles">
+<h2>Fill domain within a bounding box with a given number of particles<a class="headerlink" href="#fill-domain-within-a-bounding-box-with-a-given-number-of-particles" title="Link to this heading"></a></h2>
+</section>
+<section id="place-only-selected-tracers">
+<h2>Place only selected tracers<a class="headerlink" href="#place-only-selected-tracers" title="Link to this heading"></a></h2>
+</section>
+</section>
+<section id="surface-processes">
+<h1>Surface processes<a class="headerlink" href="#surface-processes" title="Link to this heading"></a></h1>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="material_parameters.html" class="btn btn-neutral float-left" title="Material parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
