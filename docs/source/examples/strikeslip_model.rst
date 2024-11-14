@@ -45,10 +45,8 @@ Note however that the mesh refinement can be done in any direction following the
                }
   # Create MeshRefinement class instance
   MshRef = gp.MeshRefinement(Domain,refinement)
-  # Refine the mesh
-  MshRef.refine()
 
-3. Rotation
+1. Rotation
 ~~~~~~~~~~~
 To rotate the velocity field we first need to 
 set the parameters of this :py:class:`rotation <genepy.Rotation>`.

@@ -93,6 +93,7 @@ class MeshRefinement(domain.Domain):
       self.params[d]["x_refined"] = np.asarray(self.params[d]["x_refined"],dtype=np.float64)
       if self.params[d]["x_initial"].shape != self.params[d]["x_refined"].shape:
         raise ValueError(f"Direction {d}: array in \"x_initial\" of shape {self.params[d]['x_initial'].shape} and \"x_refined\" {self.params[d]['x_refined'].shape} must have the same shape")
+    self.refine()
     return
 
   def __str__(self) -> str:

@@ -16,7 +16,6 @@ def mesh_refinement(Domain,report=False):
   refinement = {"y": {"x_initial": np.array([-250,-180,-87.5,0], dtype=np.float64)*1e3,
                       "x_refined": np.array([-250,-50,-16.25,0], dtype=np.float64)*1e3}}
   MshRef = gp.MeshRefinement(Domain,refinement)
-  MshRef.refine()
   if report:
     print(MshRef)
   return MshRef
@@ -94,6 +93,39 @@ def initial_strain_single_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
     print(Gaussian.report_symbolic_functions())
   strain = Gaussian.compute_field_distribution()
   return Gaussian,strain
+
+def initial_strain_triple_gaussians(Domain:gp.Domain,MshRef,Rotation,report=False):
+  # gaussian initial strain
+  ng = np.int32(3) # number of gaussians
+  A  = np.array([1.0, 1.0, 1.0],dtype=np.float64)
+  # shape of the gaussians
+  coeff = 0.5 * 6.0e-5**2
+  a = np.array([coeff, coeff, coeff], dtype=np.float64)
+  b = np.array([0.0, 0.0, 0.0],     dtype=np.float64)
+  c = np.array([coeff, coeff, coeff], dtype=np.float64)
+  # position of the centre of the gaussians
+  dz    = 25.0e3                         # distance from the domain centre in z direction
+  angle = np.deg2rad(-30)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
+  
+  x0 = np.zeros(shape=(ng), dtype=np.float64)
+  # centre of the gaussian in z direction
+  z0 = np.array([domain_centre[2] - dz, 
+                 domain_centre[2] + dz,
+                 domain_centre[2]], dtype=np.float64) 
+  # centre of the gaussian in x direction
+  x0[0] = gp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
+  x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
+  x0[2] = domain_centre[0]
+  # Create gaussian object
+  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
+  Gaussian.evaluate_gaussians()
+  if report:
+    print(Gaussian.report_symbolic_functions())
+  #import matplotlib.pyplot as plt
+  #Gaussian.plot_gaussians()
+  #plt.show()
+  return Gaussian
 
 def initial_strain_multiple_gaussians_aligned(Domain:gp.Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
@@ -279,7 +311,8 @@ def strikeslip():
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
-  Gaussian,strain = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
+  #Gaussian,strain = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
+  Gaussian = initial_strain_triple_gaussians(Domain,MshRef,Rotation,report=True)
   #Gaussian,strain = initial_strain_single_wz(Domain,MshRef,Rotation,report=True)
   #Gaussian,strain = initial_strain_multiple_gaussians_aligned(Domain,MshRef,Rotation,report=True)
   # initial heat source
@@ -303,7 +336,7 @@ def strikeslip():
   #regions = test_default_material_parameters()
   spm = gp.SPMDiffusion(["zmin","zmax"],diffusivity=1.0e-6)
   pswarm = gp.PswarmFillBox([0.0,-100.0e3,0.0],[600e3,-4.0e3,300.0e3],layout=[30,5,15],pressure=True,temperature=True)
-  markers = gp.MarkersManagement(layout=(8,8,8),
+  markers = gp.MarkersManagement(layout=(16,16,16),
                                  popctrl_faces=(0, 1, 4, 5), 
                                  popctrl_np_lower=8,
                                  popctrl_np_upper=128, 
@@ -314,7 +347,7 @@ def strikeslip():
                    model_name="model_GENE3D",
                    spm=spm,#pswarm=pswarm,
                    markers=markers,
-                   output_fields=["region","viscosity","density","plastic_strain"],
+                   output_fields=["region","viscosity","density","plastic_strain","damage"],
                    mpi_ranks=1)
   #print(model.options)
   with open("strike-slip.sh","w") as f:
