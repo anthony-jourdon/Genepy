@@ -51,8 +51,7 @@ def initial_strain_double_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
   # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
   a = np.array([coeff, coeff], dtype=np.float64)
-  b = np.array([0.0, 0.0],     dtype=np.float64)
-  c = np.array([coeff, coeff], dtype=np.float64)
+  b = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
   dz    = 27.5e3                         # distance from the domain centre in z direction
   angle = np.deg2rad(75)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
@@ -66,33 +65,30 @@ def initial_strain_double_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
   x0[0] = gp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
   x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
   # Create gaussian object
-  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
-  Gaussian.evaluate_gaussians()
-  if report:
-    print(Gaussian.report_symbolic_functions())
-  strain = Gaussian.compute_field_distribution()
-  return Gaussian,strain
+  Gaussian = []
+  for i in range(ng):
+    Gaussian.append(gp.Gaussian2D(MshRef,A[i],a[i],b[i],x0[i],z0[i],Rotation))
+    if report:
+      print(Gaussian[i])
+
+  Gopts = gp.GaussiansOptions(Gaussian)
+  return Gopts
 
 def initial_strain_single_wz(Domain:gp.Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
-  ng = np.int32(1) # number of gaussians
-  A  = np.array([1.0],dtype=np.float64)
+  A  = 1.0
   # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
-  a = np.array([coeff], dtype=np.float64)
-  b = np.array([0.0],     dtype=np.float64)
-  c = np.array([coeff], dtype=np.float64)
   # position of the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
-  x0 = np.array([domain_centre[0]], dtype=np.float64) # centre of the gaussian in x direction
-  z0 = np.array([domain_centre[2]], dtype=np.float64) # centre of the gaussian in z direction
+  x0 = domain_centre[0] # centre of the gaussian in x direction
+  z0 = domain_centre[2] # centre of the gaussian in z direction
   # Create gaussian object
-  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
-  Gaussian.evaluate_gaussians()
+  Gaussian = gp.Gaussian2D(MshRef,A,coeff,coeff,x0,z0,Rotation)
   if report:
-    print(Gaussian.report_symbolic_functions())
-  strain = Gaussian.compute_field_distribution()
-  return Gaussian,strain
+    print(Gaussian)
+  Gopts = gp.GaussiansOptions([Gaussian])
+  return Gopts
 
 def initial_strain_triple_gaussians(Domain:gp.Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
@@ -101,8 +97,7 @@ def initial_strain_triple_gaussians(Domain:gp.Domain,MshRef,Rotation,report=Fals
   # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
   a = np.array([coeff, coeff, coeff], dtype=np.float64)
-  b = np.array([0.0, 0.0, 0.0],     dtype=np.float64)
-  c = np.array([coeff, coeff, coeff], dtype=np.float64)
+  b = np.array([coeff, coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
   dz    = 25.0e3                         # distance from the domain centre in z direction
   angle = np.deg2rad(-30)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
@@ -118,14 +113,13 @@ def initial_strain_triple_gaussians(Domain:gp.Domain,MshRef,Rotation,report=Fals
   x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
   x0[2] = domain_centre[0]
   # Create gaussian object
-  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
-  Gaussian.evaluate_gaussians()
-  if report:
-    print(Gaussian.report_symbolic_functions())
-  #import matplotlib.pyplot as plt
-  #Gaussian.plot_gaussians()
-  #plt.show()
-  return Gaussian
+  Gaussian = []
+  for i in range(ng):
+    Gaussian.append(gp.Gaussian2D(MshRef,A[i],a[i],b[i],x0[i],z0[i],Rotation))
+    if report:
+      print(Gaussian[i])
+  Gopts = gp.GaussiansOptions(Gaussian)
+  return Gopts
 
 def initial_strain_multiple_gaussians_aligned(Domain:gp.Domain,MshRef,Rotation,report=False):
   # gaussian initial strain
@@ -134,17 +128,19 @@ def initial_strain_multiple_gaussians_aligned(Domain:gp.Domain,MshRef,Rotation,r
   # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
   a = np.array([coeff, coeff], dtype=np.float64)
-  b = np.array([0.0, 0.0],     dtype=np.float64)
-  c = np.array([coeff, coeff], dtype=np.float64)
+  b = np.array([coeff, coeff], dtype=np.float64)
 
   domain_centre = 0.5*(Domain.O_num + Domain.L_num) # centre of the domain
 
   z0 = np.array([domain_centre[2], domain_centre[2]], dtype=np.float64)
   x0 = np.array([100.0e3, 500.0e3], dtype=np.float64)
   
-  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
-  strain = Gaussian.compute_field_distribution()
-  return Gaussian,strain
+  Gaussian = []
+  for i in range(ng):
+    Gaussian.append(gp.Gaussian2D(MshRef,A[i],a[i],b[i],x0[i],z0[i],Rotation))
+    if report:
+      print(Gaussian[i])
+  return Gaussian
 
 def initial_heat_source(Domain,Rotation,report=False):
   # gaussian initial heat source
@@ -165,20 +161,22 @@ def initial_heat_source(Domain,Rotation,report=False):
   # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
   a = np.ones(shape=(nx*nz),dtype=np.float64) * coeff
-  b = np.zeros(shape=(nx*nz),dtype=np.float64)
-  c = np.ones(shape=(nx*nz),dtype=np.float64) * coeff
+  b = np.ones(shape=(nx*nz),dtype=np.float64) * coeff
 
   # amplitude of the gaussians (heat source)
   A = np.ones(shape=(nx*nz),dtype=np.float64) * 1.5e-6
 
-  # Create gaussian object
-  Gaussian = gp.Gaussian(Domain,nx*nz,A,a,b,c,xc,zc)
-  Gaussian.evaluate_gaussians()
-  return Gaussian
+  Gaussian = []
+  for i in range(nx*nz):
+    Gaussian.append(gp.Gaussian2D(Domain,A[i],a[i],b[i],xc[i],zc[i]))
+    if report:
+      print(Gaussian[i])
+  Gopts = gp.GaussiansOptions(Gaussian)
+  return Gopts
 
-def initial_conditions(Domain,MshRef,IniStrain,u):
+def initial_conditions(Domain,MshRef,IniStrain,u,IniHeatSource=None):
   plstr = gp.InitialPlasticStrain(IniStrain)
-  model_ics = gp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=plstr)
+  model_ics = gp.InitialConditions(Domain,u,mesh_refinement=MshRef,initial_strain=plstr,initial_heat_source=IniHeatSource)
   return model_ics
 
 def boundary_conditions(u,grad_u,uL):
@@ -311,24 +309,16 @@ def strikeslip():
   # mesh refinement
   MshRef = mesh_refinement(BCs,report=False)
   # initial strain
-  #Gaussian,strain = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
+  #Gaussian = initial_strain_double_wz(Domain,MshRef,Rotation,report=True)
   Gaussian = initial_strain_triple_gaussians(Domain,MshRef,Rotation,report=True)
-  #Gaussian,strain = initial_strain_single_wz(Domain,MshRef,Rotation,report=True)
-  #Gaussian,strain = initial_strain_multiple_gaussians_aligned(Domain,MshRef,Rotation,report=True)
+  #Gaussian = initial_strain_single_wz(Domain,MshRef,Rotation,report=True)
+  #Gaussian = initial_strain_multiple_gaussians_aligned(Domain,MshRef,Rotation,report=True)
   # initial heat source
-  Gaussian_hs = initial_heat_source(Domain,Rotation,report=False)
-
-  #plstr  = gp.InitialPlasticStrain(Gaussian)
+  #Gaussian_hs = initial_heat_source(Domain,Rotation,report=False)
   #hs_ini = gp.InitialHeatSource(Gaussian_hs)
-  #ics    = gp.InitialConditions(Domain,BCs.u,mesh_refinement=MshRef,initial_strain=plstr,initial_heat_source=hs_ini)
-
-  # write the results to a vts file for visualization
-  #point_data = {"u": u_num, "strain": strain}
-  #w = gp.WriteVTS(MshRef, vtk_fname="strike-slip.vts", point_data=point_data)
-  #w.write_vts()
 
   # generate objects for options writing
-  ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u)
+  ics     = initial_conditions(Domain,MshRef,Gaussian,BCs.u,IniHeatSource=None)
   bcs     = boundary_conditions(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   #bcs     = boundary_conditions_compose(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)
   #bcs     = boundary_conditions_navier_slip_all(BCs.u,BCs.grad_u,BCs.u_dir_horizontal)

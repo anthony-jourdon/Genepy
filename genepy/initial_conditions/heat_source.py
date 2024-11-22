@@ -1,4 +1,4 @@
-from genepy.initial_conditions.gaussian import Gaussian
+from genepy.initial_conditions.gaussian import GaussiansOptions
 
 class InitialHeatSource:
   """
@@ -76,7 +76,7 @@ class InitialHeatSource:
 
     :return: string with the options
     """
-    if isinstance(self.data, Gaussian):
+    if isinstance(self.data, GaussiansOptions):
       return self.sprint_option_gaussian(model_name)
     else:
       prefix = "heat_source"

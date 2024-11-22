@@ -23,288 +23,319 @@ import numpy as np
 import sympy as sp
 from genepy.initial_conditions import domain
 from genepy import rotation
+from collections.abc import Iterable
 
 import matplotlib.pyplot as plt
 
-class Gaussian(domain.Domain,rotation.Rotation):
+class Gaussian(domain.Domain):
   """
-  .. py:class:: Gaussian(Domain,ng,A,a,b,c,x0,z0,Rotation=None)
+  .. py:class:: Gaussian(Domain)
 
-    Class to build a 2D gaussian distribution defined by:
-    
-    .. math:: 
-      u = A \\exp\\left( -\\left( a(x-x_0)^2 + 2b(x-x_0)(z-z_0) + c(z-z_0)^2 \\right) \\right)
+    Parent class of all the Gaussian distributions.
 
-    The class inherits from :py:class:`Domain <genepy.Domain>` 
-    and :py:class:`Rotation <genepy.Rotation>`.
+    :Attributes:
 
-    :param Domain Domain: instance of the Domain class
-    :param int ng: number of gaussians
-    :param np.ndarray A: amplitude of the gaussian, shape: ``(ng,)``
-    :param np.ndarray a: gaussians coefficient, shape: ``(ng,)``
-    :param np.ndarray b: gaussian coefficient, shape: ``(ng,)``
-    :param np.ndarray c: gaussian coefficient, shape: ``(ng,)``
-    :param np.ndarray x0: x coordinate of the gaussian centre, shape: ``(ng,)``
-    :param np.ndarray z0: z coordinate of the gaussian centre, shape: ``(ng,)``
-    :param Rotation Rotation: instance of the Rotation class (**optional**)
+    .. py:attribute:: gaussian_sym
+      :type: sympy.Expr
+      :canonical: genepy.initial_conditions.gaussian.Gaussian.gaussian_sym
 
-    Example
-    -------
-    Assuming that instances of :class:`Domain` and :class:`Rotation` (Rotation is optional) 
-    classes are already created and that 2 gaussians are required:
-
-    .. code-block:: python
-
-      import numpy as np
-      import genepy as gp
-
-      ng = np.int32(2) # number of gaussians
-      A  = np.array([..., ...],dtype=np.float64)
-      # shape
-      a  = np.array([..., ...], dtype=np.float64)
-      b  = np.array([..., ...], dtype=np.float64)
-      c  = np.array([..., ...], dtype=np.float64)
-      x0 = np.array([..., ...], dtype=np.float64)
-      z0 = np.array([..., ...], dtype=np.float64)
-      # Create instance of the Gaussian class
-      g  = gp.Gaussian(Domain,ng,A,a,b,c,x0,z0,Rotation=Rotation)
-    
-    Attributes
-    ----------
-
-    .. py:attribute:: ng
-      :type: int
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.ng
-
-      Number of gaussians
-
-    .. py:attribute:: A
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.A
-
-      Amplitude of the gaussian, shape: ``(ng,)``
-
-    .. py:attribute:: a
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.a
-
-      Gaussian coefficient, shape: ``(ng,)``
-
-    .. py:attribute:: b
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.b
-
-      Gaussian coefficient, shape: ``(ng,)``
-
-    .. py:attribute:: c
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.c
-
-      Gaussian coefficient, shape: ``(ng,)``
-
-    .. py:attribute:: x0
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.x0
-
-      x coordinate of the gaussian centre, shape: ``(ng,)``
-
-    .. py:attribute:: z0
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.z0
-
-      z coordinate of the gaussian centre, shape: ``(ng,)``
+      Symbolic expression of the gaussian distribution
 
     .. py:attribute:: gaussian_num
       :type: np.ndarray
       :canonical: genepy.initial_conditions.gaussian.Gaussian.gaussian_num
 
-      Numerical values of the gaussians, shape: ``(ng,n[0],n[1])`` or ``(ng,n[0],n[1],n[2])``
-
-    .. py:attribute:: gaussian_sym
-      :type: np.ndarray
-      :canonical: genepy.initial_conditions.gaussian.Gaussian.gaussian_sym
-
-      Symbolic values of the gaussians, shape: ``(ng,)``
-
-    Methods
-    -------
+      Numerical values of the gaussian distribution
   """
-  def __init__(self,Domain,ng:int,A,a,b,c,x0,z0,Rotation=None) -> None:
-    self.ng = ng
-    self.A  = np.asarray(A,  dtype=np.float64) # amplitude of the gaussian
-    self.a  = np.asarray(a,  dtype=np.float64) # gaussian coefficient
-    self.b  = np.asarray(b,  dtype=np.float64) # gaussian coefficient
-    self.c  = np.asarray(c,  dtype=np.float64) # gaussian coefficient
-    self.x0 = np.asarray(x0, dtype=np.float64) # x coordinate of the gaussian centre
-    self.z0 = np.asarray(z0, dtype=np.float64) # z coordinate of the gaussian centre
-
-    # iterate over the attributes and check if they have the same length than ng
-    for attribute,value in self.__dict__.items():
-      # skip ng attribute
-      if attribute == 'ng':
-        continue
-      # check length
-      if value.shape[0] != ng:
-        raise RuntimeError(f"Attribute {attribute} must have ng = {ng} elements")
-    
-    self.gaussian_num = None
-    self.gaussian_sym = None
-
+  def __init__(self,Domain:domain.Domain) -> None:
     domain.Domain.__init__(self,Domain.dim,Domain.O_num,Domain.L_num,Domain.n)
-    if Rotation is None:
-      rotation.Rotation.__init__(self,Domain.dim,0.0)
-    else:
-      rotation.Rotation.__init__(self,Domain.dim,Rotation.theta,Rotation.axis)
+
+    self.gaussian_sym = None
+    self.gaussian_num = None
     return
   
   def __str__(self) -> str:
-    s = f'{self.__class__.__name__}:\n'
-    s += f'\tDistribution for {self.ng} gaussians\n'
-    for n in range(self.ng):
-      s += f'\tGaussian [{n}]\n'
-      s += f'\t\tAmplitude: {self.A[n]}\n'
-      s += f'\t\ta: {self.a[n]}\n'
-      s += f'\t\tb: {self.b[n]}\n'
-      s += f'\t\tc: {self.c[n]}\n'
-      s += f'\t\tCentre: [ {self.x0[n]},{self.z0[n]} ]\n'
+    s = f'{self.__class__.__name__}\n'
+    s += f'Symbolic expression: {self.gaussian_sym}\n'
+    return s
+    
+
+class GaussianConstructor(Gaussian):
+  """
+ .. py:class:: GaussianConstructor(Domain,A,a,expression)
+  
+    Child class of :py:class:`Gaussian <genepy.initial_conditions.gaussian.Gaussian>` 
+    to build a function describing a gaussian distribution defined by:
+
+    .. math::
+      g(\\mathbf a, \\mathbf x) = A \\exp\\left( - \\mathbf a \\cdot \\mathbf x \\cdot \\mathbf x \\right)
+
+    where :math:`\\mathbf a` is an array of coefficients such that :math:`\\mathbf a = [a_1,a_2,...,a_n]`, 
+    :math:`\\mathbf x` is an array such that :math:`\\mathbf x = [x_1,x_2,...,x_n]` where
+    :math:`x_i, \\, i = 1,2,...,n` can be single variables or mathematical functions and 
+    :math:`A` is the amplitude of the gaussian.
+
+    This class is low level and should be called by the user to create its own gaussian distribution if not 
+    already available with the child classes.
+  
+    :param Domain Domain: instance of the Domain class
+    :param float A: amplitude of the gaussian
+    :param float | list | numpy.ndarray a: gaussian extent coefficient(s). Can be a single float, a list or a numpy array.
+    :param sympy.Expr | list | numpy.ndarray expression: expression(s) of the gaussian. Can be a single expression, a list or a numpy array.
+  """
+  def __init__(
+      self,
+      Domain:domain.Domain,
+      A:float,
+      a:float|list[float]|np.ndarray,
+      expression:sp.Expr|list[sp.Expr]|np.ndarray,
+    ) -> None:
+    Gaussian.__init__(self,Domain)
+
+    self.A = A
+    self.a = a
+    self.x = expression
+    self.gaussian()
+    return
+  
+  def __str__(self) -> str:
+    s = Gaussian.__str__(self)
+    s += f'Amplitude:      {self.A}\n'
+    s += f'Coefficient(s): {self.a}\n'
+    s += f'Exponent(s):    {self.x}\n'
     return s
 
-  def gaussian_2d(self,A:float,a:float,b:float,c:float,x,x0:float,z,z0:float):
+  def _gaussian(self,A,a,x):
     """
-    gaussian_2d(A,a,b,c,x,x0,z,z0)
-    Computes a 2D gaussian distribution such that:
+    Compute the gaussian distribution 
+    
+    .. math::
 
-    .. math:: 
-      u = A \\exp\\left( -\\left( a(x-x_0)^2 + 2b(x-x_0)(z-z_0) + c(z-z_0)^2 \\right) \\right)
+      g(a,x) = A \\exp\\left( -a x^2 \\right)
 
-    :param float A: amplitude of the gaussian
-    :param float a,b,c: gaussian coefficients
-    :param float x0: x coordinate of the centre of the gaussian
-    :param float z0: z coordinate of the centre of the gaussian
-    :param x,z: coordinates can be symbolic or numerical
-
-    :return: **u**: the field with the 2D gaussian distribution
+    for a single dimension.
     """
-    exponent = -( a*(x-x0)*(x-x0) + 2*b*(x-x0)*(z-z0) + c*(z-z0)*(z-z0) )
-    if type(x) == sp.core.symbol.Symbol: u = A * sp.exp( exponent )
-    else:                                u = A * np.exp( exponent )
-    return u
-
-  def symbolic_gaussian(self,A,a,b,c,x0,z0):
-    """
-    symbolic_gaussian(A,a,b,c,x0,z0)
-    Computes the symbolic expression of a 2D gaussian distribution.
-    Calls :meth:`gaussian_2d` with symbolic coordinates.
-
-    :param float A: amplitude of the gaussian
-    :param float a,b,c: gaussian coefficients
-    :param float x0: x coordinate of the centre of the gaussian
-    :param float z0: z coordinate of the centre of the gaussian
-
-    :return: **u**: the symbolic expression of the field with the 2D gaussian distribution
-    """
-    g = self.gaussian_2d(A,a,b,c,self.sym_coor[0],x0,self.sym_coor[self.dim-1],z0)
-    return g
+    return A * sp.exp( -a*x**2 )
   
-  def numerical_gaussian(self,A,a,b,c,x0,z0):
+  def gaussian(self):
     """
-    numerical_gaussian(A,a,b,c,x0,z0)
-    Computes the numerical values of a 2D gaussian distribution.
-    Calls :meth:`gaussian_2d` with numerical coordinates.
+    Compute the gaussian distribution for the given expression(s).
+    Make use of the rule :math:`\\exp(a+b) = \\exp(a)\\exp(b)` to build the final multidimensional expression.
+    The method is called by the class constructor and does not require to be called by the user.
+    """
+    # check the dimensionnality of the expression
+    if isinstance(self.a,Iterable):
+      nd = len(self.a) # number of dimensions
+      g = self._gaussian(self.A,self.a[0],self.x[0]) # first dimension
+      for n in range(1,nd):
+        g *= self._gaussian(self.A,self.a[n],self.x[n]) # next dimensions
+    else:
+      g = self._gaussian(self.A,self.a,self.x)
+    self.gaussian_sym = sp.powsimp(g) # simplify the expression
+    return
+  
+  def evaluate_gaussian(self):
+    """
+    Evaluate numerically the expression of the gaussian distribution.
+    Uses the method :py:meth:`sympy.lambdify` to convert the symbolic expression to a python callable.
+    """
+    if self.gaussian_sym is None:
+      self.gaussian()
+    g = sp.lambdify(self.sym_coor,self.gaussian_sym,"numpy")
+    self.gaussian_num = g(*self.num_coor)
+    return
+    
+class Gaussian2D(GaussianConstructor):
+  """
+  .. py:class:: Gaussian2D(Domain,A,a,b,x0,z0,Rotation=None)
 
+    Child class of :py:class:`GaussianConstructor <genepy.initial_conditions.gaussian.GaussianConstructor>` 
+    to build a 2D gaussian distribution defined by:
+
+    .. math::
+
+      g((a,b);(x,z)) = A \\exp\\left( -\\left( a(x-x_0)^2 + b(z-z_0)^2 \\right) \\right)
+    
+    where :math:`a` and :math:`b` are coefficients controlling the shape of the gaussian in 
+    the :math:`x` and :math:`z` directions respectively, 
+    :math:`x_0` and :math:`z_0` are the coordinates of the centre of the gaussian 
+    and :math:`A` is the amplitude of the gaussian.
+
+    :param Domain Domain: instance of the Domain class
     :param float A: amplitude of the gaussian
-    :param float a,b,c: gaussian coefficients
-    :param float x0: x coordinate of the centre of the gaussian
-    :param float z0: z coordinate of the centre of the gaussian
+    :param float a: gaussian extent coefficient in the :math:`x` direction
+    :param float b: gaussian extent coefficient in the :math:`z` direction
+    :param float x0: :math:`x` coordinate of the centre of the gaussian
+    :param float z0: :math:`z` coordinate of the centre of the gaussian
+    :param Rotation Rotation: instance of the Rotation class (**optional**) to rotate the centre of the gaussian
+    
+    :Example:
 
-    :return: **u**: the numerical values of the field with the 2D gaussian distribution
-    """
-    g = self.gaussian_2d(A,a,b,c,self.num_coor[0],x0,self.num_coor[self.dim-1],z0)
-    return g
+    .. code:: python
+
+      import numpy as np
+      import genepy as gp
+
+      # Domain
+      O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+      L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+      n = np.array([ 64, 32, 64 ], dtype=np.int32)
+      Domain = gp.Domain(3,O,L,n)
+
+      a = 0.5 * 6.0e-5**2
+      b = 0.5 * 6.0e-5**2
+      x0 = 0.5*Domain.L_num[0]
+      z0 = 0.5*Domain.L_num[2]
+
+      Gaussian = gp.Gaussian2D(Domain,1.0,a,b,x0,z0)
+      print(Gaussian) # prints the expression and the parameters of the gaussian
+    
+    If one wants to numerically evaluate the gaussian distribution use:
+
+    .. code:: python
+
+      Gaussian.evaluate_gaussian()
+
+  """
+  def __init__(
+      self,
+      Domain:domain.Domain,
+      A:float,
+      a:float,
+      b:float,
+      x0:float,
+      z0:float,
+      Rotation:rotation.Rotation|None=None
+    ) -> None:
+
+    if Rotation is not None:
+      if Domain.dim == 2:   g_centre = np.array([ [x0, z0] ],    dtype=np.float64)
+      elif Domain.dim == 3: g_centre = np.array([ [x0, 0, z0] ], dtype=np.float64)
+      g_centre = Rotation.rotate_referential(g_centre,Domain.O_num,Domain.L_num)
+      x0 = g_centre[ 0, 0 ]
+      z0 = g_centre[ 0, Domain.dim-1 ]
+
+    expression = [
+      Domain.sym_coor[0] - x0,
+      Domain.sym_coor[2] - z0
+    ]
+    coefficients = [a,b]
+    GaussianConstructor.__init__(self,Domain,A,coefficients,expression)
+    return
+
+class GaussianPlane(GaussianConstructor):
+  """
+  .. py:class:: GaussianPlane(Domain,A,a,plane_coeff)
+
+    Child class of :py:class:`GaussianConstructor <genepy.initial_conditions.gaussian.GaussianConstructor>`
+    to build a 3D gaussian distribution around a plane defined by:
+
+    .. math::
+
+      g( a, D(\\mathbf x) ) = A \\exp\\left( - a D(\\mathbf x)^2 \\right)
+
+    where :math:`a` is the coefficient controlling the shape of the gaussian around the plane and 
+
+    .. math::
+
+      D(\\mathbf x) = \\frac{n_0 x + n_1 y + n_2 z + d}{\\sqrt{n_0^2 + n_1^2 + n_2^2}} 
+      = \\frac{\\mathbf n \\cdot \\mathbf x + d}{|| \\mathbf n ||} 
+
+    is the equation describing the distance between a point of coordinates :math:`\\mathbf x` 
+    and the plane defined by the normal vector :math:`\\mathbf n = [n_0, n_1, n_2]` and the parameter 
+    :math:`d`.
+
+    :param Domain Domain: instance of the Domain class
+    :param float A: amplitude of the gaussian
+    :param float a: gaussian extent coefficient
+    :param np.ndarray plane_coeff: plane coefficients: ``numpy.array([n_0, n_1, n_2, d])``
+                                   where :math:`n_0 x + n_1 y + n_2 z + d = 0`
+    
+    :Example:
+
+    .. code:: python
+
+      import numpy as np
+      import genepy as gp
+
+      # Domain
+      O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+      L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+      n = np.array([ 64, 32, 64 ], dtype=np.int32)
+      Domain = gp.Domain(3,O,L,n)
+
+      # gaussian extent coefficient
+      a = 0.5 * 6.0e-5**2
+
+      # points defining the plane
+      pt_A = np.array([200.0, 0.0, 0.0], dtype=np.float64) * 1e3
+      pt_B = np.array([200.0, 0.0, 300.0], dtype=np.float64) * 1e3
+      pt_C = np.array([600.0, -100.0, 0.0], dtype=np.float64) * 1e3
+      
+      # normal vector to the plane
+      normal = np.cross(pt_B - pt_A, pt_C - pt_A)
+      # d parameter
+      d = -np.dot(normal,pt_A)
+
+      plane_coeff = np.array([normal[0], normal[1], normal[2], d], dtype=np.float64)
+
+      Gaussian = gp.GaussianPlane(Domain,1.0,a,plane_coeff)
+
+  """
+  def __init__(
+      self,
+      Domain:domain.Domain,
+      A:float, # amplitude of the gaussian
+      a:float, # gaussian extent coefficient
+      coeff:np.ndarray, # [a,b,c,d] -> plane coefficients: a*x + b*y + c*z + d
+    ) -> None:
+
+    if isinstance(coeff,Iterable):
+      if len(coeff) != 4:
+        raise RuntimeError(f"Plane coefficients must have 4 elements, found {len(coeff)}")
+    else:
+      raise RuntimeError(f"Plane coefficients must be an iterable, found {type(coeff)}")
+
+    expression = (
+      coeff[0]*Domain.sym_coor[0] + # a*x
+      coeff[1]*Domain.sym_coor[1] + # b*y
+      coeff[2]*Domain.sym_coor[2] + # c*z
+      coeff[3]                      # d
+    ) / sp.sqrt(coeff[0]**2 + coeff[1]**2 + coeff[2]**2) # norm of normal vector
+    GaussianConstructor.__init__(self,Domain,A,a,expression)
+    return
+
+class GaussiansOptions:
+  def __init__(self,gaussians:list[Gaussian],blocksize:int=10) -> None:
+    self.gaussians = gaussians
+    self.ng        = len(gaussians)
+    self.gaussian_sym = []
+    if len(gaussians) <= blocksize:
+      for g in gaussians:
+        self.gaussian_sym.append(g.gaussian_sym)
+    else:
+      self.sum_gaussians(blocksize)
+    return
   
-  def evaluate_gaussians(self):
+  def sum_gaussians(self,blocksize):
     """
-    evaluate_gaussians(self)
-    Evaluate the symbolic and numerical values of the gaussians.
-    Calls :meth:`symbolic_gaussian` and :meth:`numerical_gaussian`.
-    Attach the results to the attributes 
-    :attr:`gaussian_sym <genepy.initial_conditions.gaussian.Gaussian.gaussian_sym>` 
-    and :attr:`gaussian_num <genepy.initial_conditions.gaussian.Gaussian.gaussian_num>`.
-
-    :return: None
-    """
-    self.gaussian_sym = np.zeros(shape=(self.ng), dtype=object)
-    self.gaussian_num = np.zeros(shape=(self.ng,*self.n), dtype=np.float64)
-
-    for n in range(self.ng):
-      if self.dim == 2:   g_centre = np.array([[self.x0[n],self.z0[n]]],dtype=np.float64)
-      elif self.dim == 3: g_centre = np.array([[self.x0[n],0.0,self.z0[n]]],dtype=np.float64)
-      g_centre = self.rotate_referential(g_centre,self.O_num,self.L_num)
-      self.x0[n] = g_centre[0,0]
-      self.z0[n] = g_centre[0,self.dim-1]
-      self.gaussian_sym[n] = self.symbolic_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
-      self.gaussian_num[n] = self.numerical_gaussian(self.A[n],self.a[n],self.b[n],self.c[n],self.x0[n],self.z0[n])
-    return 
-  
-  def sum_gaussians(self,blocksize:int=10):
-    """
-    sum_gaussians(self,blocksize:int=10)
+    sum_gaussians(self,blocksize)
     Sum the gaussians in blocks of size `blocksize`.
     Can be utilized to reduce the amount of options in the input file for `pTatin3d`_.
 
     :param int blocksize: **Optional** size of the block to sum the gaussians. Default is ``10``.
     """
-    if self.gaussian_sym is None:
-      self.evaluate_gaussians()
     nblocks = int(np.ceil(self.ng/blocksize))
-    field_sym = np.zeros(shape=(nblocks), dtype="object")
-    field_num = np.zeros(shape=(nblocks,*self.n), dtype=np.float64)
     for n in range(nblocks):
       start = n*blocksize
       end   = min((n+1)*blocksize,self.ng)
-      field_sym[n] = np.sum(self.gaussian_sym[start:end])
-      field_num[n] = np.sum(self.gaussian_num[start:end], axis=0)
-    self.gaussian_sym = field_sym
-    self.gaussian_num = field_num
+      for i in range(start,end):
+        if i == start: field_sym  = self.gaussians[i].gaussian_sym
+        else:          field_sym += self.gaussians[i].gaussian_sym
+      self.gaussian_sym.append(field_sym)
     self.ng = nblocks
     return 
 
-  def report_symbolic_functions(self):
-    """
-    report_symbolic_functions(self)
-    Return a human readable string representation of
-    the symbolic gaussian functions and 
-    the coordinates of their centre.
-
-    :return: **s**: string that can be printed
-    """
-    s = f"Symbolic gaussian functions:\n"
-    for n in range(self.ng):
-      s += f"\tGaussian [{n}]:\n"
-      s += f"\t\tCentre:   [ {self.x0[n]},{self.z0[n]} ]\n"
-      s += f"\t\tEquation: {self.gaussian_sym[n]}\n"
-    return s
-  
-  def compute_field_distribution(self):
-    """
-    compute_field_distribution(self)
-    Compute the gaussian distribution of a field given the 
-    parameters attached to the instance of the class :class:`Gaussian`.
-
-    :return: **field**: the field with the gaussian distribution of the shape ``(nv,)``
-             with :attr:`nv <genepy.initial_conditions.domain.Domain.nv>` the total number of nodes
-             in the domain.
-    :ret type: np.ndarray
-    """
-    if self.gaussian_num is None:
-      self.evaluate_gaussians()
-    field = np.zeros(shape=(self.n), dtype=np.float64)
-    for n in range(self.ng):
-      field += self.gaussian_num[n]
-    field = np.reshape(field,self.nv,order='F')
-    return field
-  
-  
   def sprint_option(self, model_name:str, prefix:str) -> str:
     if prefix == "wz":
       s = f"-{model_name}_{prefix}_nwz {self.ng} # number of gaussians\n"
@@ -314,28 +345,6 @@ class Gaussian(domain.Domain,rotation.Rotation):
       gaussian_expression = str(sp.ccode(self.gaussian_sym[n])).replace(" ","")
       s += f"-{model_name}_{prefix}_expression_{n} {gaussian_expression}\n"
     return s
-  
-
-  def plot_gaussians(self):
-    """
-    plot_gaussians(self)
-    Plot a 2D view of the gaussian distribution in the domain using `matplotlib <https://matplotlib.org/>`_.
-
-    :return: None
-    """
-    _, ax = plt.subplots()
-    field = np.zeros(shape=(self.n), dtype=np.float64)
-    for n in range(self.ng):
-      field += self.gaussian_num[n] 
-    if self.dim == 2:   g = ax.contourf(*self.num_coor,field,100,cmap='magma')
-    elif self.dim == 3: g = ax.contourf(self.num_coor[0][:,0,:],self.num_coor[2][:,0,:],field[:,0,:],100,cmap='magma')
-    ax.axis('equal')
-    ax.set_title(f'Gaussian distribution {self.dim}D Domain')
-    ax.set_xlabel('x axis')
-    ax.set_ylabel(f'{self.sym_coor[self.dim-1]} axis')
-    plt.colorbar(g,ax=ax)
-    plt.draw()
-    return
 
 def test():
   from genepy import utils
@@ -420,8 +429,93 @@ def test3d():
   w.write_vts()
   GWZ.plot_gaussians()
   
+def test_function_gaussian():
+  from collections.abc import Iterable
+  # Domain
+  O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+  L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+  n = np.array([ 64, 32, 32 ], dtype=np.int32)
+  Domain = domain.Domain(3,O,L,n)
+  
+  # standard 2D gaussian
+  f1 = Domain.sym_coor[0] - 0.5*Domain.L_num[0]
+  f2 = Domain.sym_coor[2] - 0.5*Domain.L_num[2]
+  print(isinstance(f1,Iterable))
+  print(isinstance(f1,sp.Expr))
+
+  a1 = 0.5 * 6.0e-5**2
+  a2 = 0.5 * 3.0e-5**2
+  g1 = sp.exp(-a1*f1**2)
+  g2 = sp.exp(-a2*f2**2)
+  G = sp.powsimp(g1*g2)
+  GG = sp.lambdify((Domain.sym_coor[0],Domain.sym_coor[2]),G,"numpy")
+  H = GG(Domain.num_coor[0],Domain.num_coor[2])
+
+  # funny gaussian distribution around a circle
+  C = np.array([0.5*Domain.L_num[0], 0.5*Domain.L_num[2]],dtype=np.float64)
+  r = 0.25*Domain.L_num[2]
+  f = sp.sqrt((Domain.sym_coor[0]-C[0])**2 + (Domain.sym_coor[2]-C[1])**2) - r
+  
+  g = sp.exp(-a1*f**2)
+  G = sp.powsimp(g)
+  GG = sp.lambdify((Domain.sym_coor[0],Domain.sym_coor[2]),G,"numpy")
+  F = GG(Domain.num_coor[0],Domain.num_coor[2])
+
+  _, ax = plt.subplots(ncols=1,nrows=2,tight_layout=True)
+  c = ax[0].contourf(Domain.num_coor[0][:,0,:],Domain.num_coor[2][:,0,:],H[:,0,:],100,cmap='magma')
+  ax[0].axis('equal')
+  ax[0].set_title(f'2D Gaussian distribution')
+  ax[0].set_xlabel('x axis')
+  ax[0].set_ylabel('z axis')
+
+  c = ax[1].contourf(Domain.num_coor[0][:,0,:],Domain.num_coor[2][:,0,:],F[:,0,:],100,cmap='magma')
+  ax[1].axis('equal')
+  ax[1].set_title(f'Gaussian distribution around a circle')
+  ax[1].set_xlabel('x axis')
+  ax[1].set_ylabel('z axis')
+  
+  plt.draw()
+  plt.show()
+  return
+
+def test_single_gaussian_class():
+  # Domain
+  O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+  L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+  n = np.array([ 64, 32, 32 ], dtype=np.int32)
+  Domain = domain.Domain(3,O,L,n)
+
+  # standard 2D gaussian
+  """
+  expression = [
+    Domain.sym_coor[0] - 0.5*Domain.L_num[0],
+    Domain.sym_coor[2] - 0.5*Domain.L_num[2]
+  ]
+  a = [
+    0.5 * 6.0e-5**2,
+    0.5 * 3.0e-5**2
+  ]
+  """
+  C = np.array([0.5*Domain.L_num[0], 0.5*Domain.L_num[2]],dtype=np.float64)
+  r = 0.25*Domain.L_num[2]
+  expression = sp.sqrt((Domain.sym_coor[0]-C[0])**2 + (Domain.sym_coor[2]-C[1])**2) - r
+  a = 0.5 * 6.0e-5**2
+  G = GaussianConstructor(Domain,1.0,a,expression)
+  print(G.gaussian_sym)
+  G.evaluate_gaussian()
+  _,ax = plt.subplots()
+  c = ax.contourf(Domain.num_coor[0][:,0,:],Domain.num_coor[2][:,0,:],G.gaussian_num[:,0,:],100,cmap='magma')
+  ax.axis('equal')
+  ax.set_title(f'2D Gaussian distribution')
+  ax.set_xlabel('x axis')
+  ax.set_ylabel('z axis')
+  plt.draw()
+  plt.show()
+  return
 
 if __name__ == "__main__":
-  test()
-  test3d()
-  plt.show()
+  #test()
+  #test3d()
+  #plt.show()
+  #test_function_gaussian()
+  test_single_gaussian_class()

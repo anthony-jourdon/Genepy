@@ -100,7 +100,8 @@ class InitialConditions:
     s += self.sprint_initial_velocity()
     for kw in self.possible_kwargs:
       if kw in self.kwargs:
-        s += self.kwargs[kw].sprint_option(self.model_name)
+        if self.kwargs[kw] is not None:
+          s += self.kwargs[kw].sprint_option(self.model_name)
     return s
   
   def sprint_initial_velocity(self) -> str:
