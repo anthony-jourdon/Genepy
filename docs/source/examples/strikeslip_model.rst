@@ -95,7 +95,7 @@ returns the orientation of the velocity field at the boundary.
 
 5. Define gaussian weak zones
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In this example we define two :py:class:`gaussian <genepy.Gaussian>` weak zones.
+In this example we define two :py:class:`gaussian <genepy.Gaussian2D>` weak zones.
 We provide the parameters of the gaussians and their position in the domain.
 
 .. note:: 
@@ -103,21 +103,20 @@ We provide the parameters of the gaussians and their position in the domain.
   Therefore we also rotate the gaussians by 15 degrees.
   This is achieved by passing the 
   :py:class:`Rotation <genepy.Rotation>` class instance to the 
-  :py:class:`Gaussian <genepy.Gaussian>` class constructor.
+  :py:class:`Gaussian2D <genepy.Gaussian2D>` class constructor.
 
 .. code-block:: python
 
-  # gaussian weak zones
+  # gaussian initial strain
   ng = np.int32(2) # number of gaussians
-  A  = np.array([1.0, 1.0],dtype=np.float64) # amplitude (will be multiplied by a random number between 0 and 1 to generate noise in the model)
-  # coefficients for the shape of the gaussians
+  A  = np.array([1.0, 1.0],dtype=np.float64)
+  # shape of the gaussians
   coeff = 0.5 * 6.0e-5**2
   a = np.array([coeff, coeff], dtype=np.float64)
-  b = np.array([0.0, 0.0],     dtype=np.float64)
-  c = np.array([coeff, coeff], dtype=np.float64)
+  b = np.array([coeff, coeff], dtype=np.float64)
   # position of the centre of the gaussians
-  dz    = 25.0e3                            # distance from the domain centre in z direction
-  angle = np.deg2rad(83.0)                  # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
+  dz    = 27.5e3                         # distance from the domain centre in z direction
+  angle = np.deg2rad(75)                 # angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian
   domain_centre = 0.5*(Domain.O + Domain.L) # centre of the domain
   
   x0 = np.zeros(shape=(ng), dtype=np.float64)
@@ -127,12 +126,16 @@ We provide the parameters of the gaussians and their position in the domain.
   # centre of the gaussian in x direction
   x0[0] = gp.utils.x_centre_from_angle(z0[0],angle,(domain_centre[0],domain_centre[2])) 
   x0[1] = gp.utils.x_centre_from_angle(z0[1],angle,(domain_centre[0],domain_centre[2]))
-  # Create instance of Gaussian class
-  Gaussian = gp.Gaussian(MshRef,ng,A,a,b,c,x0,z0,Rotation)
-  # Evaluate symbolic expression and numerical values of the gaussians
-  Gaussian.evaluate_gaussians()
+  # Create gaussian object
+  G = []
+  for i in range(ng):
+    G.append(gp.Gaussian2D(Domain,A[i],a[i],b[i],x0[i],z0[i],Rotation))
+    # print the expression and parameters
+    print(G[i])
 
-6. Initial conditions
+  Gaussian = gp.GaussiansOptions(G)
+
+1. Initial conditions
 ~~~~~~~~~~~~~~~~~~~~~
 Gather the information defined previously to generate the options for the initial conditions.
 
