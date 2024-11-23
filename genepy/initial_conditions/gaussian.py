@@ -389,6 +389,29 @@ class GaussianPlane(GaussianConstructor):
     ) / sp.sqrt(coeff[0]**2 + coeff[1]**2 + coeff[2]**2) # norm of normal vector
     GaussianConstructor.__init__(self,Domain,A,a,expression)
     return
+  
+class GaussianCircle(GaussianConstructor):
+  def __init__(
+      self,
+      Domain:domain.Domain,
+      A:float, # amplitude of the gaussian
+      a:float, # gaussian extent coefficient
+      xc:float, # x coordinate of the centre of the circle
+      zc:float, # z coordinate of the centre of the circle
+      r:float,  # radius of the circle
+      Rotation:rotation.Rotation|None=None
+  ) -> None:
+    
+    if Rotation is not None:
+      if Domain.dim == 2:   g_centre = np.array([ [xc, zc] ],    dtype=np.float64)
+      elif Domain.dim == 3: g_centre = np.array([ [xc, 0, zc] ], dtype=np.float64)
+      g_centre = Rotation.rotate_referential(g_centre,Domain.O_num,Domain.L_num)
+      xc = g_centre[ 0, 0 ]
+      zc = g_centre[ 0, Domain.dim-1 ]
+
+    expression = sp.sqrt((Domain.sym_coor[0]-xc)**2 + (Domain.sym_coor[2]-zc)**2) - r
+    GaussianConstructor.__init__(self,Domain,A,a,expression)
+    return
 
 class GaussiansOptions:
   def __init__(self,gaussians:list[Gaussian],blocksize:int=10) -> None:
@@ -408,7 +431,7 @@ class GaussiansOptions:
     Sum the gaussians in blocks of size `blocksize`.
     Can be utilized to reduce the amount of options in the input file for `pTatin3d`_.
 
-    :param int blocksize: **Optional** size of the block to sum the gaussians. Default is ``10``.
+    :param int blocksize: size of the block to sum the gaussians.
     """
     nblocks = int(np.ceil(self.ng/blocksize))
     for n in range(nblocks):
