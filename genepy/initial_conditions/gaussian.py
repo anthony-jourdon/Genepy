@@ -391,6 +391,57 @@ class GaussianPlane(GaussianConstructor):
     return
   
 class GaussianCircle(GaussianConstructor):
+  """
+  .. py:class:: GaussianCircle(Domain,A,a,xc,zc,r,Rotation=None)
+
+    Child class of :py:class:`GaussianConstructor <genepy.initial_conditions.gaussian.GaussianConstructor>`
+    to build a 2D gaussian distribution around a circle defined by:
+
+    .. math::
+
+      g( a, D(\\mathbf x) ) = A \\exp\\left( - a D(\\mathbf x)^2 \\right)
+
+    where :math:`a` is the coefficient controlling the shape of the gaussian around the circle and
+
+    .. math::
+
+      D(\\mathbf x) = \\sqrt{(x-x_c)^2 + (z-z_c)^2} - r
+
+    is the equation describing the distance between a point of coordinates :math:`\\mathbf x`
+    and the circle defined by the centre :math:`(x_c,z_c)` and the radius :math:`r`.
+
+    :param Domain Domain: instance of the Domain class
+    :param float A: amplitude of the gaussian
+    :param float a: gaussian extent coefficient
+    :param float xc: :math:`x` coordinate of the centre of the circle
+    :param float zc: :math:`z` coordinate of the centre of the circle
+    :param float r: radius of the circle
+    :param Rotation Rotation: instance of the Rotation class (**optional**) to rotate the centre of the circle
+
+    :Example:
+
+    .. code:: python
+
+      import numpy as np
+      import genepy as gp
+
+      # Domain
+      O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+      L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+      n = np.array([ 64, 32, 64 ], dtype=np.int32)
+      Domain = gp.Domain(3,O,L,n)
+
+      # gaussian extent coefficient
+      coeff = 0.5*6.0e-5**2
+      # centre of the circle
+      xc = 0.5*Domain.L_num[0]
+      zc = 0.5*Domain.L_num[2]
+      # radius of the circle
+      r  = 0.25*Domain.L_num[2]
+
+      Gaussian = gp.GaussianCircle(Domain,1.0,coeff,xc,zc,r)
+      
+  """
   def __init__(
       self,
       Domain:domain.Domain,

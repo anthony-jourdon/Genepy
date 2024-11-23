@@ -89,7 +89,13 @@ It is generally used to define the initial strain distribution to place weak zon
 .. autoclass:: genepy.Gaussian2D
     :members:
 
+.. autoclass:: genepy.Gaussian3D
+    :members:
+
 .. autoclass:: genepy.GaussianPlane
+    :members:
+
+.. autoclass:: genepy.GaussianCircle
     :members:
 
 Plastic strain
