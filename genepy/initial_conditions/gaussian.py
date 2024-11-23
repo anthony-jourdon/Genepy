@@ -200,11 +200,11 @@ class Gaussian2D(GaussianConstructor):
   def __init__(
       self,
       Domain:domain.Domain,
-      A:float,
-      a:float,
-      b:float,
-      x0:float,
-      z0:float,
+      A:float, # amplitude of the gaussian
+      a:float, # gaussian extent coefficient in the x direction
+      b:float, # gaussian extent coefficient in the z direction
+      x0:float, # x coordinate of the centre of the gaussian
+      z0:float, # z coordinate of the centre of the gaussian
       Rotation:rotation.Rotation|None=None
     ) -> None:
 
@@ -220,6 +220,91 @@ class Gaussian2D(GaussianConstructor):
       Domain.sym_coor[2] - z0
     ]
     coefficients = [a,b]
+    GaussianConstructor.__init__(self,Domain,A,coefficients,expression)
+    return
+
+class Gaussian3D(GaussianConstructor):
+  """
+  .. py:class:: Gaussian3D(Domain,A,a,b,c,x0,y0,z0,Rotation=None)
+
+    Child class of :py:class:`GaussianConstructor <genepy.initial_conditions.gaussian.GaussianConstructor>` 
+    to build a 3D gaussian distribution defined by:
+
+    .. math::
+
+      g((a,b,c);(x,y,z)) = A \\exp\\left( -\\left( a(x-x_0)^2 + b(y-y_0)^2 + c(z-z_0)^2 \\right) \\right)
+    
+    where :math:`a`, :math:`b` and :math:`c` are coefficients controlling the shape of the gaussian in 
+    the :math:`x`, :math:`y` and :math:`z` directions respectively, 
+    :math:`x_0`, :math:`y_0` and :math:`z_0` are the coordinates of the centre of the gaussian 
+    and :math:`A` is the amplitude of the gaussian.
+
+    :param Domain Domain: instance of the Domain class
+    :param float A: amplitude of the gaussian
+    :param float a: gaussian extent coefficient in the :math:`x` direction
+    :param float b: gaussian extent coefficient in the :math:`y` direction
+    :param float c: gaussian extent coefficient in the :math:`z` direction
+    :param float x0: :math:`x` coordinate of the centre of the gaussian
+    :param float y0: :math:`y` coordinate of the centre of the gaussian
+    :param float z0: :math:`z` coordinate of the centre of the gaussian
+    :param Rotation Rotation: instance of the Rotation class (**optional**) to rotate the centre of the gaussian
+    
+    :Example:
+
+    .. code:: python
+
+      import numpy as np
+      import genepy as gp
+
+      # Domain
+      O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+      L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+      n = np.array([ 64, 32, 64 ], dtype=np.int32)
+      Domain = gp.Domain(3,O,L,n)
+
+      a = 0.5 * 6.0e-5**2
+      b = 0.5 * 6.0e-5**2
+      c = 0.5 * 6.0e-5**2
+      x0 = 0.5*Domain.L_num[0]
+      y0 = 0.5*Domain.L_num[1]
+      z0 = 0.5*Domain.L_num[2]
+
+      Gaussian = gp.Gaussian3D(Domain,1.0,a,b,c,x0,y0,z0)
+      print(Gaussian) # prints the expression and the parameters of the gaussian
+    
+    If one wants to numerically evaluate the gaussian distribution use:
+
+    .. code:: python
+
+      Gaussian.evaluate_gaussian()
+
+  """
+  def __init__(
+    self, 
+    Domain: domain.Domain, 
+    A: float, # amplitude of the gaussian
+    a: float, # gaussian extent coefficient in the x direction
+    b: float, # gaussian extent coefficient in the y direction
+    c: float, # gaussian extent coefficient in the z direction
+    x0: float, # x coordinate of the centre of the gaussian
+    y0: float, # y coordinate of the centre of the gaussian
+    z0: float, # z coordinate of the centre of the gaussian
+    Rotation: rotation.Rotation | None = None
+  ) -> None:
+
+    if Rotation is not None:
+      g_centre = np.array([ [x0, y0, z0] ], dtype=np.float64)
+      g_centre = Rotation.rotate_referential(g_centre,Domain.O_num,Domain.L_num)
+      x0 = g_centre[ 0, 0 ]
+      y0 = g_centre[ 0, 1 ]
+      z0 = g_centre[ 0, 2 ]
+
+    expression = [
+      Domain.sym_coor[0] - x0,
+      Domain.sym_coor[1] - y0,
+      Domain.sym_coor[2] - z0
+    ]
+    coefficients = [a,b,c]
     GaussianConstructor.__init__(self,Domain,A,coefficients,expression)
     return
 
