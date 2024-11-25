@@ -17,6 +17,7 @@ This module requires python >= 3.10 and the following dependencies that can all 
 - sympy
 - matplotlib
 - pyvista
+- gmsh
 
 To be able to import genepy module its location needs to be known by `PYTHONPATH`.
 To do so, move yourself in Genepy and type
