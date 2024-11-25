@@ -98,6 +98,9 @@ It is generally used to define the initial strain distribution to place weak zon
 .. autoclass:: genepy.GaussianCircle
     :members:
 
+.. autoclass:: genepy.GaussiansOptions
+    :members:
+
 Plastic strain
 --------------
 This module contains the class to generate options for the initial plastic strain.

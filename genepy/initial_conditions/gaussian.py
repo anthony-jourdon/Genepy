@@ -465,6 +465,50 @@ class GaussianCircle(GaussianConstructor):
     return
 
 class GaussiansOptions:
+  """
+  .. py:class:: GaussiansOptions(gaussians,blocksize=10)
+
+    Class to generate the options for the input file of `pTatin3d`_.
+    The class takes a list of gaussians and can sum them in blocks of size `blocksize` 
+    to reduce the number of options.
+    The class instance can be used to generate the options for the gaussian distributions.
+    If the gaussians are used to set an initial plastic strain, it should be passed to the class
+    :py:class:`InitialPlasticStrain <genepy.initial_conditions.plastic_strain.InitialPlasticStrain>`.
+
+    :param list gaussians: list of Gaussian instances
+    :param int blocksize: (**Optional**) size of the block to sum the gaussians.
+
+    :Example:
+
+    .. code:: python
+
+      import numpy as np
+      import genepy as gp
+
+      # Domain
+      O = np.array([ 0.0, -250e3, 0.0 ], dtype=np.float64)
+      L = np.array([ 600e3, 0.0, 300e3 ], dtype=np.float64)
+      n = np.array([ 64, 32, 64 ], dtype=np.int32)
+      Domain = gp.Domain(3,O,L,n)
+
+      # gaussian distribution
+      coeff = 0.5*6.0e-5**2
+      x0 = [0.25 * Domain.L_num[0], 0.75 * Domain.L_num[0]]
+      z0 = [0.25 * Domain.L_num[2], 0.75 * Domain.L_num[2]]
+      gaussians = []
+      for i in range(2):
+        gaussians.append(gp.Gaussian2D(Domain,1.0,coeff,coeff,x0[i],z0[i]))
+      
+      Gopt = gp.GaussiansOptions(gaussians,blocksize=5)
+
+    Pass the instance ``Gopts`` to the class 
+    :py:class:`InitialPlasticStrain <genepy.initial_conditions.plastic_strain.InitialPlasticStrain>`:
+
+    .. code:: python
+
+      IPS = gp.InitialPlasticStrain(Gopt)
+      
+  """
   def __init__(self,gaussians:list[Gaussian],blocksize:int=10) -> None:
     self.gaussians = gaussians
     self.ng        = len(gaussians)
