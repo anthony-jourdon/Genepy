@@ -46,7 +46,7 @@ Note however that the mesh refinement can be done in any direction following the
   # Create MeshRefinement class instance
   MshRef = gp.MeshRefinement(Domain,refinement)
 
-1. Rotation
+3. Rotation
 ~~~~~~~~~~~
 To rotate the velocity field we first need to 
 set the parameters of this :py:class:`rotation <genepy.Rotation>`.
@@ -135,7 +135,7 @@ We provide the parameters of the gaussians and their position in the domain.
 
   Gaussian = gp.GaussiansOptions(G)
 
-1. Initial conditions
+6. Initial conditions
 ~~~~~~~~~~~~~~~~~~~~~
 Gather the information defined previously to generate the options for the initial conditions.
 
