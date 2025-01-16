@@ -1,0 +1,24 @@
+genepy.Domain
+===========
+This module contains the class describing the physical domain.
+While most of the usage of this class is for 3 dimensional domains,
+it can also be used for 2 dimensional and 1 dimensional domains.
+
+.. autoclass:: genepy.Domain
+    :members:
+
+
+genepy.MeshRefinement
+===================
+This module contains the class describing the mesh refinement.
+
+.. autoclass:: genepy.MeshRefinement
+    :members:
+    :inherited-members:
+
+genepy.Velocity
+=============
+This module contains the class describing the velocity field.
+
+.. autoclass:: genepy.Velocity
+    :members:
