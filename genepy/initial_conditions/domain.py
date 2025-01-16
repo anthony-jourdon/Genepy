@@ -134,6 +134,7 @@ class Domain:
     if self.num_coor is None: 
       self.numerical_coordinates()
     self.symbolic_coordinates()
+    return
 
   def __str__(self) -> str:
     """

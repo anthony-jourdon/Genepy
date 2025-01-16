@@ -146,7 +146,7 @@ class PswarmFillDomainWithinBoundingBox(Pswarm):
     s += f"-{self.model_name}_{self.prefix}_nx {self.layout[0]},{self.layout[1]},{self.layout[2]} # markers per element in each direction\n"
     s += f"-{self.model_name}_{self.prefix}_lattice_min {self.O[0]:g},{self.O[1]:g},{self.O[2]:g} # min coords of the bounding box\n"
     s += f"-{self.model_name}_{self.prefix}_lattice_max {self.L[0]:g},{self.L[1]:g},{self.L[2]:g} # max coords of the bounding box\n"
-    return 
+    return s
   
   def __str__(self):
     s = Pswarm.__str__(self)
@@ -246,7 +246,7 @@ class PswarmFromUserList(Pswarm):
       for i in range(npoints-1):
         s += f"{self.mcoor[i,component[d]]:g},"
       s += f"{self.mcoor[npoints-1,component[d]]:g} # {d} coord of each marker\n"
-    return 
+    return s
 
   def __str__(self):
     s = Pswarm.__str__(self)
