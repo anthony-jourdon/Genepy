@@ -94,6 +94,7 @@ Depth-dependent viscosity
 
 Arrhenius viscosity
 ....................
+Pre-existing flow laws parameters can be found in ``genepy/material_parameters/arrhenius_flow_laws.json``.
 
 .. autoclass:: genepy.ViscosityArrhenius
     :members:

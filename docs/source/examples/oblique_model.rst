@@ -111,6 +111,8 @@ In this example we use the following material types:
 - :py:class:`Linear softening <genepy.SofteningLinear>`.
 - :py:class:`Boussinesq density <genepy.DensityBoussinesq>`.
 
+Flow laws parameters can be found in ``genepy/material_parameters/arrhenius_flow_laws.json``.
+
 .. code-block:: python
 
   regions = [
