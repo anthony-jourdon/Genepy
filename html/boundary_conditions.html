@@ -1,0 +1,1513 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boundary conditions &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Material parameters" href="material_parameters.html" />
+    <link rel="prev" title="Initial conditions" href="initial_conditions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="genepy_docs.html">Module genepy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html">Initial conditions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Boundary conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#velocity">Velocity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Velocity"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.VelocityLinear"><code class="docutils literal notranslate"><span class="pre">VelocityLinear</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.VelocityLinearAsymmetric"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.VelocityTimeDependant"><code class="docutils literal notranslate"><span class="pre">VelocityTimeDependant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.VelocityInversion"><code class="docutils literal notranslate"><span class="pre">VelocityInversion</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.VelocityCompose"><code class="docutils literal notranslate"><span class="pre">VelocityCompose</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#options-generation">Options generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bounary-conditions-wrapper">Bounary conditions wrapper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stokes-boundary-conditions">Stokes boundary conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy-boundary-conditions">Energy boundary conditions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html">Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#markers-management">Markers management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#passive-tracers">Passive tracers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#surface-processes">Surface processes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="genepy_docs.html">Module genepy</a></li>
+      <li class="breadcrumb-item active">Boundary conditions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boundary_conditions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="initial_conditions.html" class="btn btn-neutral float-left" title="Initial conditions" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="material_parameters.html" class="btn btn-neutral float-right" title="Material parameters" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="boundary-conditions">
+<h1>Boundary conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading"></a></h1>
+<p>Contains a class to evaluate symbolic and numeric linear velocity functions and their derivatives
+and classes to generate options for input files of <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.</p>
+<section id="velocity">
+<h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading"></a></h2>
+<p>This module contains the class evaluating symbolic and numeric velocity field.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Velocity">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Velocity.Velocity">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.Velocity" title="Link to this definition"></a></dt>
+<dd><p>Class to evaluate symbolic and numeric velocity function and its gradient.
+This class is the parent class of the different velocity classes and contains methods shared by all.
+Case specific methods are implemented in the corresponding child classes.
+The class inherits from <a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> and <a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rotation</span></code></a> classes.</p>
+<section id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Velocity.evaluate_gradient">
+<span class="sig-name descname"><span class="pre">evaluate_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.evaluate_gradient" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the gradient of the velocity function in symbolic form 
+returning a matrix of the shape <code class="docutils literal notranslate"><span class="pre">(dim,dim)</span></code> such that:</p>
+<div class="math notranslate nohighlight">
+\[\left( \nabla \mathbf u \right)_{ij} = \frac{\partial u_i}{\partial x_j}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u</strong> – vector valued function of the velocity field</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>grad_u</strong>: matrix of the gradient of the velocity field shape <code class="docutils literal notranslate"><span class="pre">(dim,dim)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Velocity.evaluate_int_u_dot_n_faces">
+<span class="sig-name descname"><span class="pre">evaluate_int_u_dot_n_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.evaluate_int_u_dot_n_faces" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the integral of the dot product of the velocity field 
+with the normal vector over the faces of the domain such that</p>
+<div class="math notranslate nohighlight">
+\[I = \int_S \mathbf u \cdot \mathbf n \, dS\]</div>
+<p>The integral is computed over each face of the domain and stored in a dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">int_u_dot_n</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;xmin&#39;</span><span class="p">:</span> <span class="n">int_u_dot_n_dxmin</span><span class="p">,</span>
+  <span class="s1">&#39;xmax&#39;</span><span class="p">:</span> <span class="n">int_u_dot_n_dxmax</span><span class="p">,</span>
+  <span class="s1">&#39;ymin&#39;</span><span class="p">:</span> <span class="n">int_u_dot_n_dymin</span><span class="p">,</span>
+  <span class="s1">&#39;ymax&#39;</span><span class="p">:</span> <span class="n">int_u_dot_n_dymax</span><span class="p">,</span>
+  <span class="s1">&#39;zmin&#39;</span><span class="p">:</span> <span class="n">int_u_dot_n_dzmin</span><span class="p">,</span>
+  <span class="s1">&#39;zmax&#39;</span><span class="p">:</span> <span class="n">int_u_dot_n_dzmax</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u</strong> – Vector valued function of the velocity field.
+If not provided, the symbolic velocity field is evaluated with <code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic()</span></code></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>int_u_dot_n</strong>: dictionary with the integral of the dot product of the velocity field with the normal vector over the faces of the domain</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Velocity.evaluate_u_dot_n">
+<span class="sig-name descname"><span class="pre">evaluate_u_dot_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.evaluate_u_dot_n" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the dot product of the velocity field with the normal vector in symbolic form 
+such that</p>
+<div class="math notranslate nohighlight">
+\[\mathbf u \cdot \mathbf n = \sum_{i=1}^{d} u_i n_i\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf u\)</span> the vector valued velocity function, 
+<span class="math notranslate nohighlight">\(\mathbf n\)</span> the normal vector to the boundary pointing outward the domain and
+<span class="math notranslate nohighlight">\(d\)</span> the number of spatial dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u</strong> – Vector valued function of the velocity field.
+If not provided, the symbolic velocity field is evaluated with <code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic()</span></code></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>u_dot_n</strong>: dot product of the velocity field with the normal vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Velocity.get_velocity_orientation">
+<span class="sig-name descname"><span class="pre">get_velocity_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.get_velocity_orientation" title="Link to this definition"></a></dt>
+<dd><p>Returns the orientation vector of the velocity field at the boundary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>horizontal</strong> (<em>bool</em>) – if True, only the horizontal components are returned (default: True)</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em>) – if True, the vector is normalized (default: True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>uL</strong>: orientation of the velocity field at the boundary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Velocity.report_symbolic_functions">
+<span class="sig-name descname"><span class="pre">report_symbolic_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.report_symbolic_functions" title="Link to this definition"></a></dt>
+<dd><p>Returns a string with the symbolic velocity function, 
+its gradient and the boundary velocity orientation.
+Can be used with print() or written to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string with the symbolic velocity function, its gradient and the boundary velocity orientation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Velocity.velocity_boundary">
+<span class="sig-name descname"><span class="pre">velocity_boundary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Velocity.velocity_boundary" title="Link to this definition"></a></dt>
+<dd><p>Note to me:
+When domain is ALE and the velocity is composite, the boundary velocity should be computed by face</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityLinear">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">VelocityLinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variation_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VelocityLinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear" title="Link to this definition"></a></dt>
+<dd><p>Class to evaluate symbolic and numeric linear velocity function and its gradient in space.
+The velocity field is defined as a linear function of the coordinates. 
+It can be used for 2D and 3D domains.
+Given a horizontal velocity field, the vertical velocity is computed by integrating the dot product of the velocity field with the normal vector over the faces of the domain.
+The class inherits from <a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> and <a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rotation</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – domain in which the velocity field is evaluated</p></li>
+<li><p><strong>u_norm</strong> (<em>float</em>) – velocity norm of the vector along boundaries</p></li>
+<li><p><strong>variation_dir</strong> (<em>str</em>) – direction in which the velocity varies (<code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>)</p></li>
+<li><p><strong>velocity_type</strong> (<em>str</em>) – velocity field orientation, 
+<code class="docutils literal notranslate"><span class="pre">&quot;extension&quot;</span></code> velocity is directed outward the domain, 
+<code class="docutils literal notranslate"><span class="pre">&quot;compression&quot;</span></code> velocity is directed inward the domain</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Optional</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_angle</strong> (<em>float</em>) – angle in radians of the velocity field with the z axis</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – Rotation object to rotate the referential</p></li>
+</ul>
+</dd>
+</dl>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<p>Assuming the class <a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> as been instanciated as <code class="docutils literal notranslate"><span class="pre">Domain</span></code></p>
+<p><strong>Without rotation</strong> of the referential</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u_norm</span>  <span class="o">=</span> <span class="mf">1.0</span>              <span class="c1"># horizontal velocity norm</span>
+<span class="n">u_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">45.0</span><span class="p">)</span> <span class="c1"># velocity angle in [-pi/2, pi/2]. If 0, can be ommited</span>
+<span class="n">u_dir</span>   <span class="o">=</span> <span class="s2">&quot;z&quot;</span>              <span class="c1"># direction in which velocity varies</span>
+<span class="n">u_type</span>  <span class="o">=</span> <span class="s2">&quot;extension&quot;</span>      <span class="c1"># velocity orientation</span>
+<span class="c1"># Create VelocityLinear instance </span>
+<span class="n">Vel</span> <span class="o">=</span> <span class="n">genepy</span><span class="o">.</span><span class="n">VelocityLinear</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="n">u_norm</span><span class="p">,</span><span class="n">u_dir</span><span class="p">,</span><span class="n">u_type</span><span class="p">,</span><span class="n">u_angle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>With rotation</strong> of the referential</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rotation of the referential</span>
+<span class="n">dim</span>     <span class="o">=</span> <span class="mi">3</span>                                   <span class="c1"># Number of spatial dimensions</span>
+<span class="n">r_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mf">15.0</span><span class="p">)</span>                   <span class="c1"># Rotation angle</span>
+<span class="n">axis</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># Rotation axis</span>
+<span class="c1"># Create Rotation instance</span>
+<span class="n">Rotation</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Rotation</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">r_angle</span><span class="p">,</span><span class="n">axis</span><span class="p">)</span>
+<span class="c1"># Create VelocityLinear instance </span>
+<span class="n">Vel</span> <span class="o">=</span> <span class="n">genepy</span><span class="o">.</span><span class="n">VelocityLinear</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="n">u_norm</span><span class="p">,</span><span class="n">u_dir</span><span class="p">,</span><span class="n">u_type</span><span class="p">,</span><span class="n">u_angle</span><span class="p">,</span><span class="n">Rotation</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.norm">
+<span class="sig-name descname"><span class="pre">norm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.norm" title="Link to this definition"></a></dt>
+<dd><p>Velocity norm</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.alpha" title="Link to this definition"></a></dt>
+<dd><p>Velocity angle with the <span class="math notranslate nohighlight">\(z\)</span> axis in radians</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.type" title="Link to this definition"></a></dt>
+<dd><p>Type of velocity field (<code class="docutils literal notranslate"><span class="pre">&quot;extension&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;compression&quot;</span></code>)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.dir">
+<span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.dir" title="Link to this definition"></a></dt>
+<dd><p>Direction in which the velocity varies (<code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>) defined from
+the given directions <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code> respectively.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.uO">
+<span class="sig-name descname"><span class="pre">uO</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.uO" title="Link to this definition"></a></dt>
+<dd><p>Velocity vector <span class="math notranslate nohighlight">\(\mathbf u_O\)</span> at <span class="math notranslate nohighlight">\(\mathbf x = \mathbf O\)</span>. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>.
+Its value is computed at class initialization by the method <a class="reference internal" href="#genepy.VelocityLinear.boundary_vector" title="genepy.VelocityLinear.boundary_vector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boundary_vector()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.uL">
+<span class="sig-name descname"><span class="pre">uL</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.uL" title="Link to this definition"></a></dt>
+<dd><p>Velocity vector <span class="math notranslate nohighlight">\(\mathbf u_L\)</span> at <span class="math notranslate nohighlight">\(\mathbf x = \mathbf L\)</span>. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>.
+Its value is computed at class initialization by the method <a class="reference internal" href="#genepy.VelocityLinear.boundary_vector" title="genepy.VelocityLinear.boundary_vector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boundary_vector()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.a">
+<span class="sig-name descname"><span class="pre">a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.a" title="Link to this definition"></a></dt>
+<dd><p>Coefficients in vector form <span class="math notranslate nohighlight">\(\mathbf a\)</span> of the linear velocity function 
+<span class="math notranslate nohighlight">\(\mathbf u(x) = \mathbf a x + \mathbf b\)</span>. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>.
+Its value is computed at class initialization by the method <a class="reference internal" href="#genepy.VelocityLinear.velocity_coefficients" title="genepy.VelocityLinear.velocity_coefficients"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_coefficients()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.b">
+<span class="sig-name descname"><span class="pre">b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.b" title="Link to this definition"></a></dt>
+<dd><p>Coefficients in vector form <span class="math notranslate nohighlight">\(\mathbf b\)</span> of the linear velocity function
+<span class="math notranslate nohighlight">\(\mathbf u(x) = \mathbf a x + \mathbf b\)</span>. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>.
+Its value is computed at class initialization by the method <a class="reference internal" href="#genepy.VelocityLinear.velocity_coefficients" title="genepy.VelocityLinear.velocity_coefficients"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_coefficients()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.vertical_evaluated">
+<span class="sig-name descname"><span class="pre">vertical_evaluated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.vertical_evaluated" title="Link to this definition"></a></dt>
+<dd><p>Flag to check if the vertical velocity has been evaluated</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.u" title="Link to this definition"></a></dt>
+<dd><p>Vector valued function of the velocity field. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>. Contains sympy expressions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.grad_u">
+<span class="sig-name descname"><span class="pre">grad_u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.grad_u" title="Link to this definition"></a></dt>
+<dd><p>Matrix of the gradient of the velocity field. Shape <code class="docutils literal notranslate"><span class="pre">(dim,dim)</span></code>. Contains sympy expressions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.u_dir_horizontal">
+<span class="sig-name descname"><span class="pre">u_dir_horizontal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.u_dir_horizontal" title="Link to this definition"></a></dt>
+<dd><p>Horizontal vector of the velocity field orientation. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.VelocityLinear.u_dir">
+<span class="sig-name descname"><span class="pre">u_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityLinear.VelocityLinear.u_dir" title="Link to this definition"></a></dt>
+<dd><p>Full vector of the velocity field orientation. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="id1">
+<h3>Methods<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.boundary_vector">
+<span class="sig-name descname"><span class="pre">boundary_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.boundary_vector" title="Link to this definition"></a></dt>
+<dd><p>Computes a vector horizontal components from:</p>
+<ul class="simple">
+<li><p>1D &amp; 2D: only the <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.norm" title="genepy.boundary_conditions.velocity.VelocityLinear.norm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">norm</span></code></a> is used,</p></li>
+<li><p>3D: the <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.norm" title="genepy.boundary_conditions.velocity.VelocityLinear.norm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">norm</span></code></a> 
+and angle <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.alpha" title="genepy.boundary_conditions.velocity.VelocityLinear.alpha"><code class="xref py py-attr docutils literal notranslate"><span class="pre">alpha</span></code></a> 
+with the <span class="math notranslate nohighlight">\(z\)</span> axis (North-South) such that:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}u_x &amp;= \sqrt{||\mathbf u||^2 - u_z^2} \\
+u_y &amp;= 0 \\
+u_z &amp;= ||\mathbf u|| \cos(\alpha)\end{split}\]</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These values are always positive, special attention is required 
+if different signs are needed. This is normally addressed with the 
+<a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.type" title="genepy.boundary_conditions.velocity.VelocityLinear.type"><code class="xref py py-attr docutils literal notranslate"><span class="pre">type</span></code></a> class attribute.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>norm</strong> (<em>float</em>) – velocity norm</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – angle with the <span class="math notranslate nohighlight">\(z\)</span> axis in radians</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>boundary velocity, shape (dim,)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic">
+<span class="sig-name descname"><span class="pre">evaluate_velocity_and_gradient_symbolic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic" title="Link to this definition"></a></dt>
+<dd><p>Calls the methods:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#genepy.VelocityLinear.evaluate_velocity_symbolic" title="genepy.VelocityLinear.evaluate_velocity_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic</span></code></a> 
+to evaluate the horizontal components of the velocity</p></li>
+<li><p><a class="reference internal" href="#genepy.VelocityLinear.evaluate_vertical_velocity" title="genepy.VelocityLinear.evaluate_vertical_velocity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_vertical_velocity</span></code></a> 
+to evaluate the vertical component of the velocity</p></li>
+<li><p><a class="reference internal" href="#genepy.Velocity.evaluate_gradient" title="genepy.Velocity.evaluate_gradient"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_gradient</span></code></a> 
+to evaluate the gradient of the velocity vector</p></li>
+</ul>
+<p>in symbolic form.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.evaluate_velocity_numeric">
+<span class="sig-name descname"><span class="pre">evaluate_velocity_numeric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.evaluate_velocity_numeric" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the velocity field numerically</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.evaluate_velocity_symbolic">
+<span class="sig-name descname"><span class="pre">evaluate_velocity_symbolic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.evaluate_velocity_symbolic" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the velocity field in symbolic form returning 
+a vector valued function of the form <span class="math notranslate nohighlight">\(\mathbf u (x,y,z) = \mathbf a x + \mathbf b y + \mathbf c z + \mathbf d\)</span>
+and shape <code class="docutils literal notranslate"><span class="pre">(1,dim)</span></code>.</p>
+<p>If a rotation is required i.e., an instance of the <a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rotation</span></code></a>
+class with a non-zero angle is provided, the velocity is evaluated as:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf u_R (\mathbf x) = \boldsymbol R \mathbf u (\mathbf x_R)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf x\)</span> is the non-rotated coordinate system, 
+<span class="math notranslate nohighlight">\(\boldsymbol R\)</span> is the rotation matrix,
+<span class="math notranslate nohighlight">\(\mathbf x_R\)</span> is the rotated coordinate system,
+<span class="math notranslate nohighlight">\(\mathbf u\)</span> is the velocity field before rotation and
+<span class="math notranslate nohighlight">\(\mathbf u_R\)</span> is the rotated velocity field.</p>
+<p>The rotation of the coordinate system is performed by the method 
+<a class="reference internal" href="initial_conditions.html#genepy.Rotation.rotate_referential" title="genepy.Rotation.rotate_referential"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rotate_referential()</span></code></a>.
+The evaluation of the velocity field with the (rotated) coordinate system is done with
+the method <a class="reference internal" href="#genepy.VelocityLinear.velocity_function" title="genepy.VelocityLinear.velocity_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_function()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.evaluate_vertical_velocity">
+<span class="sig-name descname"><span class="pre">evaluate_vertical_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.evaluate_vertical_velocity" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the vertical component of the velocity field.
+Can be used for numerical or symbolic evaluation.
+Calls the methods:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#genepy.VelocityLinear.evaluate_vertical_velocity_coefficients" title="genepy.VelocityLinear.evaluate_vertical_velocity_coefficients"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_vertical_velocity_coefficients()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#genepy.VelocityLinear.velocity_function_1d" title="genepy.VelocityLinear.velocity_function_1d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_function_1d()</span></code></a></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – coordinate of the vertical direction</p></li>
+<li><p><strong>u</strong> – <strong>(Optional)</strong>, vector valued function of the velocity field.
+If not provided, the symbolic velocity field is evaluated with <a class="reference internal" href="#genepy.VelocityLinear.evaluate_velocity_symbolic" title="genepy.VelocityLinear.evaluate_velocity_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic()</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>vertical component of the velocity field</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.evaluate_vertical_velocity_coefficients">
+<span class="sig-name descname"><span class="pre">evaluate_vertical_velocity_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.evaluate_vertical_velocity_coefficients" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the coefficients of the vertical component of the velocity function
+<span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> such that <span class="math notranslate nohighlight">\(u_y(y) = a y + b\)</span>. 
+To evaluate the coefficients, the following boundary conditions are used</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}u_y(L_y) &amp;= 0 \\
+u_y(O_y) &amp;= \frac{1}{S_{xz}} \sum_f \int_S \mathbf u \cdot \mathbf n \, dS \\\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(S_{xz}\)</span> is the surface of the bottom face of the domain, 
+<span class="math notranslate nohighlight">\(O_y\)</span> and <span class="math notranslate nohighlight">\(L_y\)</span> are the minimum and maximum values 
+of the domain in the <span class="math notranslate nohighlight">\(y\)</span> direction.</p>
+<p><span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are then computed with 
+<a class="reference internal" href="#genepy.VelocityLinear.velocity_coefficients_1d" title="genepy.VelocityLinear.velocity_coefficients_1d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_coefficients_1d()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u</strong> – <strong>(Optional)</strong>, vector valued function of the velocity field.
+If not provided, the symbolic velocity field is evaluated with <a class="reference internal" href="#genepy.VelocityLinear.evaluate_velocity_symbolic" title="genepy.VelocityLinear.evaluate_velocity_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic()</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>a</strong>: slope of the vertical component of the velocity,
+<strong>b</strong>: constant of the vertical component of the velocity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.velocity_boundary">
+<span class="sig-name descname"><span class="pre">velocity_boundary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.velocity_boundary" title="Link to this definition"></a></dt>
+<dd><p>Computes the boundary velocity vectors <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.uO" title="genepy.boundary_conditions.velocity.VelocityLinear.uO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">uO</span></code></a> 
+and <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.uL" title="genepy.boundary_conditions.velocity.VelocityLinear.uL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">uL</span></code></a> based on the 
+<a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.norm" title="genepy.boundary_conditions.velocity.VelocityLinear.norm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">norm</span></code></a> and the angle
+<a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.alpha" title="genepy.boundary_conditions.velocity.VelocityLinear.alpha"><code class="xref py py-attr docutils literal notranslate"><span class="pre">alpha</span></code></a> provided at class initialization.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The velocity field is <strong>symmetric</strong> on the boundaries i.e., <code class="docutils literal notranslate"><span class="pre">uL</span> <span class="pre">=</span> <span class="pre">-uO</span></code> for <strong>compression</strong> and 
+<code class="docutils literal notranslate"><span class="pre">uO</span> <span class="pre">=</span> <span class="pre">-uL</span></code> for <strong>extension</strong>.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.velocity_coefficients">
+<span class="sig-name descname"><span class="pre">velocity_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.velocity_coefficients" title="Link to this definition"></a></dt>
+<dd><p>For the vector valued velocity function <span class="math notranslate nohighlight">\(\mathbf u(x) = \mathbf a x + \mathbf b\)</span>,
+computes coefficients <span class="math notranslate nohighlight">\(\mathbf a\)</span> and <span class="math notranslate nohighlight">\(\mathbf b\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf a &amp;= \frac{\mathbf u_L - \mathbf u_O}{\mathbf L - \mathbf O} \\
+\mathbf b &amp;= -\mathbf a \mathbf L + \mathbf u_L\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf u_O\)</span> and <span class="math notranslate nohighlight">\(\mathbf u_L\)</span> computed by 
+<a class="reference internal" href="#genepy.VelocityLinear.boundary_vector" title="genepy.VelocityLinear.boundary_vector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boundary_vector()</span></code></a> 
+and <span class="math notranslate nohighlight">\(\mathbf O\)</span> and <span class="math notranslate nohighlight">\(\mathbf L\)</span> the origin and max values of the domain.
+Each component of the velocity field is computed by calling 
+<a class="reference internal" href="#genepy.VelocityLinear.velocity_coefficients_1d" title="genepy.VelocityLinear.velocity_coefficients_1d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_coefficients_1d()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.velocity_coefficients_1d">
+<span class="sig-name descname"><span class="pre">velocity_coefficients_1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">O</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.velocity_coefficients_1d" title="Link to this definition"></a></dt>
+<dd><p>computes velocity function coefficients <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> of the linear function 
+<span class="math notranslate nohighlight">\(u(x) = ax + b\)</span> for a given direction <span class="math notranslate nohighlight">\(x \in [O,L]\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}a &amp;= \frac{u_L - u_O}{L - O} \\
+b &amp;= -aL + u_L\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(u_O\)</span> the velocity at <span class="math notranslate nohighlight">\(x = O\)</span> 
+and <span class="math notranslate nohighlight">\(u_L\)</span> the velocity at <span class="math notranslate nohighlight">\(x = L\)</span> .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uO</strong> (<em>float</em>) – velocity at the origin of the direction</p></li>
+<li><p><strong>uL</strong> (<em>float</em>) – velocity at the max value of the direction</p></li>
+<li><p><strong>O</strong> (<em>float</em>) – origin of the direction</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – max value of the direction</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>a</strong>: slope of the component of the velocity, 
+<strong>b</strong>: constant of the component of the velocity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.velocity_function">
+<span class="sig-name descname"><span class="pre">velocity_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.velocity_function" title="Link to this definition"></a></dt>
+<dd><p>computes the vector valued linear velocity function
+such that <span class="math notranslate nohighlight">\(\mathbf u(x) = \mathbf a x + \mathbf b\)</span>.
+Calls the method <a class="reference internal" href="#genepy.VelocityLinear.velocity_function_1d" title="genepy.VelocityLinear.velocity_function_1d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_function_1d()</span></code></a> for each direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – coordinates of the direction in which the velocity varies</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>vector valued velocity function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinear.velocity_function_1d">
+<span class="sig-name descname"><span class="pre">velocity_function_1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinear.velocity_function_1d" title="Link to this definition"></a></dt>
+<dd><p>Computes the linear velocity field in 1 direction (scalar valued function) 
+such that <span class="math notranslate nohighlight">\(u(x) = ax + b\)</span> for the given direction <span class="math notranslate nohighlight">\(x\)</span> and 
+coefficients <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> computed by the method 
+<a class="reference internal" href="#genepy.VelocityLinear.velocity_coefficients_1d" title="genepy.VelocityLinear.velocity_coefficients_1d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_coefficients_1d</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – coordinate of the direction in which the velocity varies</p></li>
+<li><p><strong>a</strong> – slope of the component of the velocity</p></li>
+<li><p><strong>b</strong> – constant of the component of the velocity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>scalar valued function of the velocity field</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">VelocityLinearAsymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_normL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_normO</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variation_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_angleL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_angleO</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinearAsymmetric" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VelocityLinearAsymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_normL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_normO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_angleL</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_angleO</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric" title="Link to this definition"></a></dt>
+<dd><p>Inherits from <a class="reference internal" href="#genepy.VelocityLinear" title="genepy.VelocityLinear"><code class="xref py py-class docutils literal notranslate"><span class="pre">VelocityLinear</span></code></a> 
+to evaluate a linear velocity field with different velocities at the boundaries.
+Both the norm and the angle can be different at the boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – domain in which the velocity field is evaluated</p></li>
+<li><p><strong>u_normL</strong> (<em>float</em>) – velocity norm of the vector at the boundary of maximum coordinate</p></li>
+<li><p><strong>u_normO</strong> (<em>float</em>) – velocity norm of the vector at the boundary of minimum coordinate</p></li>
+<li><p><strong>variation_dir</strong> (<em>str</em>) – direction in which the velocity varies (<code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>)</p></li>
+<li><p><strong>velocity_type</strong> (<em>str</em>) – velocity field orientation, 
+<code class="docutils literal notranslate"><span class="pre">&quot;extension&quot;</span></code> velocity is directed outward the domain, 
+<code class="docutils literal notranslate"><span class="pre">&quot;compression&quot;</span></code> velocity is directed inward the domain</p></li>
+<li><p><strong>u_angleL</strong> (<em>float</em>) – <strong>(Optional)</strong>  angle in radians of the velocity field at the boundary of maximum coordinate</p></li>
+<li><p><strong>u_angleO</strong> (<em>float</em>) – <strong>(Optional)</strong>  angle in radians of the velocity field at the boundary of minimum coordinate</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – <strong>(Optional)</strong> Rotation class instance to rotate the referential</p></li>
+</ul>
+</dd>
+</dl>
+<section id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>For an asymetric orthogonal shortening in the <span class="math notranslate nohighlight">\(z\)</span> direction from 1 cm/a to 0 cm/a at the boundaries,
+assuming that the class <a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> 
+has been instanciated as <code class="docutils literal notranslate"><span class="pre">domain</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cma2ms</span>  <span class="o">=</span> <span class="mf">1e-2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span><span class="p">)</span> <span class="c1"># cm/a to m/s conversion</span>
+<span class="n">u_normL</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">cma2ms</span>
+<span class="n">u_normO</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">u_dir</span>   <span class="o">=</span> <span class="s2">&quot;z&quot;</span>
+<span class="n">u_type</span>  <span class="o">=</span> <span class="s2">&quot;compression&quot;</span>
+<span class="n">Vel</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">VelocityLinearAsymmetric</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span><span class="n">u_normL</span><span class="p">,</span><span class="n">u_normO</span><span class="p">,</span><span class="n">u_dir</span><span class="p">,</span><span class="n">u_type</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Attributes<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normL">
+<span class="sig-name descname"><span class="pre">normL</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normL" title="Link to this definition"></a></dt>
+<dd><p>Velocity norm at the boundary of maximum coordinate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normO">
+<span class="sig-name descname"><span class="pre">normO</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normO" title="Link to this definition"></a></dt>
+<dd><p>Velocity norm at the boundary of minimum coordinate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaL">
+<span class="sig-name descname"><span class="pre">alphaL</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaL" title="Link to this definition"></a></dt>
+<dd><p>Velocity angle with the <span class="math notranslate nohighlight">\(z\)</span> axis in radians at the boundary of maximum coordinate. Default: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaO">
+<span class="sig-name descname"><span class="pre">alphaO</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaO" title="Link to this definition"></a></dt>
+<dd><p>Velocity angle with the <span class="math notranslate nohighlight">\(z\)</span> axis in radians at the boundary of minimum coordinate. Default: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityLinearAsymmetric.velocity_boundary">
+<span class="sig-name descname"><span class="pre">velocity_boundary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityLinearAsymmetric.velocity_boundary" title="Link to this definition"></a></dt>
+<dd><p>Computes the boundary velocity vectors <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.uO" title="genepy.boundary_conditions.velocity.VelocityLinear.uO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">uO</span></code></a> 
+and <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.uL" title="genepy.boundary_conditions.velocity.VelocityLinear.uL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">uL</span></code></a> based on the 
+<a class="reference internal" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normL" title="genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">normL</span></code></a>,
+<a class="reference internal" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normO" title="genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.normO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">normO</span></code></a> and the angles
+<a class="reference internal" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaL" title="genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">alphaL</span></code></a>,
+<a class="reference internal" href="#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaO" title="genepy.boundary_conditions.velocity.VelocityLinearAsymmetric.alphaO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">alphaO</span></code></a> provided at class initialization.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In compression <a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.uL" title="genepy.boundary_conditions.velocity.VelocityLinear.uL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">uL</span></code></a> 
+is directed inward the domain i.e., negative, and in extension 
+<a class="reference internal" href="#genepy.VelocityLinear.VelocityLinear.uO" title="genepy.boundary_conditions.velocity.VelocityLinear.uO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">uO</span></code></a> 
+is directed outward the domain i.e., positive.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityTimeDependant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">VelocityTimeDependant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityTimeDependant" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityTimeDependant.VelocityTimeDependant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VelocityTimeDependant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityTimeDependant.VelocityTimeDependant" title="Link to this definition"></a></dt>
+<dd><p>Class to construct and evaluate time dependant velocity function.
+This class is the parent class of all time dependant velocity classes 
+and inherits from the class <a class="reference internal" href="#genepy.Velocity" title="genepy.Velocity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Velocity</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – domain in which the velocity field is evaluated</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – <strong>(Optional)</strong> Rotation class instance to rotate the referential</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id3">
+<h3>Methods<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityTimeDependant.sum_functions">
+<span class="sig-name descname"><span class="pre">sum_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityTimeDependant.sum_functions" title="Link to this definition"></a></dt>
+<dd><p>Abstract method to sum user defined functions. 
+The functions to sum should return objects of the same shape and type.</p>
+<p>Considering the functions <span class="math notranslate nohighlight">\(f_1(x), f_2(x), \ldots , f_n(x)\)</span> this method computes:</p>
+<div class="math notranslate nohighlight">
+\[u(x) = \sum_{i=1}^{n} f_i(x)\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> represents the variable(s) of the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_func</strong> (<em>list</em>) – list of user defined functions</p></li>
+<li><p><strong>user_args</strong> (<em>list</em>) – list of arguments to pass to the functions</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityInversion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">VelocityInversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.VelocityLinear" title="genepy.boundary_conditions.velocity.VelocityLinear"><span class="pre">VelocityLinear</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.VelocityLinear" title="genepy.boundary_conditions.velocity.VelocityLinear"><span class="pre">VelocityLinear</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slopes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VelocityInversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slopes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion" title="Link to this definition"></a></dt>
+<dd><p>Class to construct and evaluate a time dependant velocity function with two phases by summing
+two <a class="reference internal" href="#genepy.VelocityInversion.velocity_function" title="genepy.VelocityInversion.velocity_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arctangent</span> <span class="pre">functions</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – domain in which the velocity field is evaluated</p></li>
+<li><p><strong>phase1</strong> (<a class="reference internal" href="#genepy.VelocityLinear" title="genepy.VelocityLinear"><em>VelocityLinear</em></a>) – <a class="reference internal" href="#genepy.VelocityLinear" title="genepy.VelocityLinear"><code class="xref py py-class docutils literal notranslate"><span class="pre">Velocity</span></code></a> class instance of the first phase</p></li>
+<li><p><strong>phase2</strong> (<a class="reference internal" href="#genepy.VelocityLinear" title="genepy.VelocityLinear"><em>VelocityLinear</em></a>) – <a class="reference internal" href="#genepy.VelocityLinear" title="genepy.VelocityLinear"><code class="xref py py-class docutils literal notranslate"><span class="pre">Velocity</span></code></a> class instance of the second phase</p></li>
+<li><p><strong>breakpoints</strong> (<em>list</em>) – list of two breakpoints in time</p></li>
+<li><p><strong>slopes</strong> (<em>list</em>) – list of two slopes at the breakpoints</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – <strong>(Optional)</strong> Rotation class instance to rotate the referential</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id4">
+<h3>Attributes<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.phases">
+<span class="sig-name descname"><span class="pre">phases</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.phases" title="Link to this definition"></a></dt>
+<dd><p>List containing the 2 class instances of the velocity phases. Shape <code class="docutils literal notranslate"><span class="pre">[phase1:Velocity,</span> <span class="pre">phase2:Velocity]</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.breakpoints">
+<span class="sig-name descname"><span class="pre">breakpoints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.breakpoints" title="Link to this definition"></a></dt>
+<dd><p>List of the two breakpoints in time. Shape <code class="docutils literal notranslate"><span class="pre">[breakpoint1:float,</span> <span class="pre">breakpoint2:float]</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.slopes">
+<span class="sig-name descname"><span class="pre">slopes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.slopes" title="Link to this definition"></a></dt>
+<dd><p>List of the two slopes at the breakpoints. Shape <code class="docutils literal notranslate"><span class="pre">[slope1:float,</span> <span class="pre">slope2:float]</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.u" title="Link to this definition"></a></dt>
+<dd><p>Vector valued function of the velocity field. Shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code>. Contains sympy expressions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.grad_u">
+<span class="sig-name descname"><span class="pre">grad_u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.grad_u" title="Link to this definition"></a></dt>
+<dd><p>Matrix of the gradient of the velocity field. Shape <code class="docutils literal notranslate"><span class="pre">(dim,dim)</span></code>. Contains sympy expressions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.u_dir_horizontal">
+<span class="sig-name descname"><span class="pre">u_dir_horizontal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.u_dir_horizontal" title="Link to this definition"></a></dt>
+<dd><p>List of horizontal vectors of the velocity field orientation for each phase. Shape <code class="docutils literal notranslate"><span class="pre">[(dim,),</span> <span class="pre">(dim,)]</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.VelocityInversion.u_dir">
+<span class="sig-name descname"><span class="pre">u_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#genepy.VelocityInversion.VelocityInversion.u_dir" title="Link to this definition"></a></dt>
+<dd><p>List of the full vector of the velocity field orientation for each phase. Shape <code class="docutils literal notranslate"><span class="pre">[(dim,),</span> <span class="pre">(dim,)]</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="id5">
+<h3>Methods<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.evaluate_velocity_and_gradient_symbolic">
+<span class="sig-name descname"><span class="pre">evaluate_velocity_and_gradient_symbolic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.evaluate_velocity_and_gradient_symbolic" title="Link to this definition"></a></dt>
+<dd><p>Calls the methods:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#genepy.VelocityInversion.evaluate_velocity_symbolic" title="genepy.VelocityInversion.evaluate_velocity_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic</span></code></a> 
+to evaluate the time dependant velocity function</p></li>
+<li><p><a class="reference internal" href="#genepy.Velocity.evaluate_gradient" title="genepy.Velocity.evaluate_gradient"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_gradient</span></code></a> 
+to evaluate the gradient of the velocity function</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">u,</span> <span class="pre">grad_u</span></code>, time dependant velocity function and its gradient</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.evaluate_velocity_symbolic">
+<span class="sig-name descname"><span class="pre">evaluate_velocity_symbolic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.evaluate_velocity_symbolic" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the time dependant velocity function in symbolic form.
+Calls the methods <a class="reference internal" href="#genepy.VelocityLinear.evaluate_velocity_symbolic" title="genepy.VelocityLinear.evaluate_velocity_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic</span></code></a> 
+and <a class="reference internal" href="#genepy.VelocityLinear.evaluate_vertical_velocity" title="genepy.VelocityLinear.evaluate_vertical_velocity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_vertical_velocity</span></code></a> for each phase.
+Then evaluates the time dependant velocity function with the method 
+<a class="reference internal" href="#genepy.VelocityInversion.velocity_function" title="genepy.VelocityInversion.velocity_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_function</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>time dependant velocity function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.get_time_zero_velocity">
+<span class="sig-name descname"><span class="pre">get_time_zero_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.get_time_zero_velocity" title="Link to this definition"></a></dt>
+<dd><p>Computes the time at which the velocity function evaluates to zero.
+The result is obtained by solving the equation <span class="math notranslate nohighlight">\(f(t) = 0\)</span> with the iterative Newton-Raphson method.
+The initial guess is set to the first breakpoint in time because it is the most likely to converge (steep part of the function).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>report</strong> (<em>bool</em>) – if True, the Newton-Raphson method reports the convergence of the solution (default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time at which the velocity function evaluates to zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.plot_1D_velocity">
+<span class="sig-name descname"><span class="pre">plot_1D_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.plot_1D_velocity" title="Link to this definition"></a></dt>
+<dd><p>Plots the velocity function in 1D over time.
+If the spatial dimension is more than 1 (i.e., 2D and 3D)
+only the norm of the velocity function is evaluated to allow plotting.
+The sign convention for the plot is:</p>
+<ul class="simple">
+<li><p>extension: positive velocity</p></li>
+<li><p>compression: negative velocity</p></li>
+</ul>
+<p>Displays two plots:</p>
+<ul class="simple">
+<li><p>the velocity over time in m/s</p></li>
+<li><p>the velocity over time in cm/a</p></li>
+</ul>
+<p>On both plots the point at which the velocity evaluates to zero is marked with a red circle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>numpy.ndarray</em>) – time array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.velocity_function">
+<span class="sig-name descname"><span class="pre">velocity_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.velocity_function" title="Link to this definition"></a></dt>
+<dd><p>Evaluates a time dependant velocity function <span class="math notranslate nohighlight">\(u(t)\)</span> with two phases by summing two arctangent functions such that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f_1(t) &amp;= b_1 \left( \frac{1}{2} - \frac{\tan^{-1} \left(s_1(t-t_1) \right)}{\pi} \right) \\
+f_2(t) &amp;= b_2 \left( \frac{1}{2} + \frac{\tan^{-1} \left(s_2(t-t_2) \right)}{\pi} \right) \\
+u(t) &amp;= f_1(t) + f_2(t)\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(t_i\)</span> are the breakpoints in time, <span class="math notranslate nohighlight">\(s_i\)</span> are the arctangent slopes at the breakpoints 
+and <span class="math notranslate nohighlight">\(b_i\)</span> are the bounds of the functions (min and max values i.e., the steady state velocities of each phase).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – time at which the velocity function is evaluated, can be symbolic or numeric</p></li>
+<li><p><strong>bound</strong> (<em>list</em>) – list of two bounds of the velocity function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time-dependant velocity function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityInversion.velocity_function_derivative">
+<span class="sig-name descname"><span class="pre">velocity_function_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityInversion.velocity_function_derivative" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the derivative with respect to time of the velocity function.
+The derivative is computed by summing the derivatives of the two arctangent functions defined in 
+<a class="reference internal" href="#genepy.VelocityInversion.velocity_function" title="genepy.VelocityInversion.velocity_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">velocity_function</span></code></a> such that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f'_1(t) &amp;= -\frac{b_1 s_1}{\pi (1 + (s_1(t-t_1))^2)} \\
+f'_2(t) &amp;=  \frac{b_2 s_2}{\pi (1 + (s_2(t-t_2))^2)}\end{split}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – time at which the function is evaluated, can be symbolic or numeric</p></li>
+<li><p><strong>bound</strong> (<em>list</em>) – list of two bounds of the stady-state velocity functions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>derivative with respect to time of the velocity function</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityCompose">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">VelocityCompose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Velocities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#genepy.Velocity" title="genepy.boundary_conditions.velocity.Velocity"><span class="pre">Velocity</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityCompose" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.VelocityCompose.VelocityCompose">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VelocityCompose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Velocities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityCompose.VelocityCompose" title="Link to this definition"></a></dt>
+<dd><p>Class to construct and evaluate a velocity function composed by multiple velocity functions.
+The composition method is defined by the <code class="docutils literal notranslate"><span class="pre">method</span></code> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – domain in which the velocity field is evaluated</p></li>
+<li><p><strong>Velocities</strong> (<em>list</em>) – list of <a class="reference internal" href="#genepy.Velocity" title="genepy.Velocity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Velocity</span></code></a> class instances</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – <strong>(Optional)</strong> Rotation</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – <strong>(Optional)</strong> method to compose the velocity functions, default is <code class="docutils literal notranslate"><span class="pre">&quot;sum&quot;</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<section id="id6">
+<h3>Attributes<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityCompose.VelocityCompose.nfuncs">
+<span class="sig-name descname"><span class="pre">nfuncs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.VelocityCompose.VelocityCompose.nfuncs" title="Link to this definition"></a></dt>
+<dd><p>Number of velocity functions to compose</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityCompose.VelocityCompose.velocities">
+<span class="sig-name descname"><span class="pre">velocities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#genepy.VelocityCompose.VelocityCompose.velocities" title="Link to this definition"></a></dt>
+<dd><p>List of <a class="reference internal" href="#genepy.Velocity" title="genepy.Velocity"><code class="xref py py-class docutils literal notranslate"><span class="pre">velocity</span></code></a> class instances of velocity functions to compose.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.VelocityCompose.VelocityCompose.method">
+<span class="sig-name descname"><span class="pre">method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.VelocityCompose.VelocityCompose.method" title="Link to this definition"></a></dt>
+<dd><p>Method to compose the velocity functions. Default is <code class="docutils literal notranslate"><span class="pre">&quot;sum&quot;</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="id7">
+<h3>Methods<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.VelocityCompose.sum_velocities">
+<span class="sig-name descname"><span class="pre">sum_velocities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.VelocityCompose.sum_velocities" title="Link to this definition"></a></dt>
+<dd><p>Sums the velocity functions of <a class="reference internal" href="#genepy.Velocity" title="genepy.Velocity"><code class="xref py py-class docutils literal notranslate"><span class="pre">velocity</span></code></a> class instances from the list 
+<a class="reference internal" href="#genepy.VelocityCompose.VelocityCompose.velocities" title="genepy.boundary_conditions.velocity.VelocityCompose.velocities"><code class="xref py py-attr docutils literal notranslate"><span class="pre">velocities</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="options-generation">
+<h2>Options generation<a class="headerlink" href="#options-generation" title="Link to this heading"></a></h2>
+<section id="bounary-conditions-wrapper">
+<h3>Bounary conditions wrapper<a class="headerlink" href="#bounary-conditions-wrapper" title="Link to this heading"></a></h3>
+<p>This class is a wrapper to generate options of the boundary conditions
+for input files of <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.ModelBCs">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">ModelBCs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity_bcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.boundary_conditions.bcs.StokesBoundaryCondition"><span class="pre">StokesBoundaryCondition</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_bc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.TemperatureBC" title="genepy.boundary_conditions.bcs.TemperatureBC"><span class="pre">TemperatureBC</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.ModelBCs" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.ModelBCs.ModelBCs">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ModelBCs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity_bcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><span class="pre">StokesBoundaryCondition</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_bc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.TemperatureBC" title="genepy.TemperatureBC"><span class="pre">TemperatureBC</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.ModelBCs.ModelBCs" title="Link to this definition"></a></dt>
+<dd><p>Class to generate options for the boundary conditions of a <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> model.
+Enforce the model name for all boundary conditions objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>velocity_bcs</strong> (<em>list</em><em>[</em><a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><em>StokesBoundaryCondition</em></a><em>]</em>) – list of instances of class 
+<a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a> 
+for the Stokes boundary conditions of the model.</p></li>
+<li><p><strong>energy_bc</strong> (<a class="reference internal" href="#genepy.TemperatureBC" title="genepy.TemperatureBC"><em>TemperatureBC</em></a>) – instance of class <a class="reference internal" href="#genepy.TemperatureBC" title="genepy.TemperatureBC"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemperatureBC</span></code></a> 
+for the energy boundary conditions of the model.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id8">
+<h4>Attributes<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.ModelBCs.ModelBCs.model_name">
+<span class="sig-name descname"><span class="pre">model_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.ModelBCs.ModelBCs.model_name" title="Link to this definition"></a></dt>
+<dd><p>Name of the model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.ModelBCs.ModelBCs.u_bcs">
+<span class="sig-name descname"><span class="pre">u_bcs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><span class="pre">StokesBoundaryCondition</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#genepy.ModelBCs.ModelBCs.u_bcs" title="Link to this definition"></a></dt>
+<dd><p>List of instances of class <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a> (and its children) 
+for the Stokes problem boundary conditions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.ModelBCs.ModelBCs.energy_bc">
+<span class="sig-name descname"><span class="pre">energy_bc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#genepy.TemperatureBC" title="genepy.TemperatureBC"><span class="pre">TemperatureBC</span></a></em><a class="headerlink" href="#genepy.ModelBCs.ModelBCs.energy_bc" title="Link to this definition"></a></dt>
+<dd><p>Instance of class <a class="reference internal" href="#genepy.TemperatureBC" title="genepy.TemperatureBC"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemperatureBC</span></code></a> for the energy boundary conditions</p>
+</dd></dl>
+
+</section>
+<section id="id9">
+<h4>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
+<p>The following example assumes that the velocity function <code class="docutils literal notranslate"><span class="pre">u</span></code>, its gradient <code class="docutils literal notranslate"><span class="pre">grad_u</span></code>
+and the orientation vector <code class="docutils literal notranslate"><span class="pre">uL</span></code> are defined elsewhere in the code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Velocity boundary conditions</span>
+<span class="n">bcs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span><span class="s2">&quot;Zmax&quot;</span><span class="p">,[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;z&quot;</span><span class="p">],</span><span class="n">u</span><span class="p">),</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="mi">37</span><span class="p">,</span><span class="s2">&quot;Zmin&quot;</span><span class="p">,[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;z&quot;</span><span class="p">],</span><span class="n">u</span><span class="p">),</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">NavierSlip</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="s2">&quot;Xmax&quot;</span><span class="p">,</span><span class="n">grad_u</span><span class="p">,</span><span class="n">uL</span><span class="p">),</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">NavierSlip</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="s2">&quot;Xmin&quot;</span><span class="p">,</span><span class="n">grad_u</span><span class="p">,</span><span class="n">uL</span><span class="p">),</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">DirichletUdotN</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span><span class="s2">&quot;Bottom&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="c1"># Temperature boundary conditions</span>
+<span class="n">Tbcs</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">TemperatureBC</span><span class="p">({</span><span class="s2">&quot;ymax&quot;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;ymin&quot;</span><span class="p">:</span><span class="mf">1450.0</span><span class="p">})</span>
+<span class="c1"># collect all boundary conditions</span>
+<span class="n">all_bcs</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">ModelBCs</span><span class="p">(</span><span class="n">bcs</span><span class="p">,</span><span class="n">Tbcs</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.BoundaryCondition">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">BoundaryCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.BoundaryCondition" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.BoundaryCondition.BoundaryCondition">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BoundaryCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.BoundaryCondition.BoundaryCondition" title="Link to this definition"></a></dt>
+<dd><p>Abstract class to generate options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> boundary conditions.
+Parent class of <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a> 
+and <a class="reference internal" href="#genepy.TemperatureBC" title="genepy.TemperatureBC"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemperatureBC</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.BoundaryCondition.format_expression">
+<span class="sig-name descname"><span class="pre">format_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.BoundaryCondition.format_expression" title="Link to this definition"></a></dt>
+<dd><p>Format the given expression to be used in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file.
+Basically, it removes spaces between characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>str</em>) – expression to format</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>formatted expression</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.BoundaryCondition.is_expression">
+<span class="sig-name descname"><span class="pre">is_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.BoundaryCondition.is_expression" title="Link to this definition"></a></dt>
+<dd><p>Check if the given expression contains one or several variables of the list 
+<code class="docutils literal notranslate"><span class="pre">[&quot;x&quot;,&quot;y&quot;,&quot;z&quot;,&quot;t&quot;,&quot;p&quot;]</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>str</em>) – expression to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the expression contains one or several variables of the list, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="stokes-boundary-conditions">
+<h3>Stokes boundary conditions<a class="headerlink" href="#stokes-boundary-conditions" title="Link to this heading"></a></h3>
+<p>This class is parent of all Stokes boundary conditions classes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#genepy.Dirichlet" title="genepy.boundary_conditions.dirichlet.Dirichlet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dirichlet</span></code></a></p></li>
+<li><p><a class="reference internal" href="#genepy.NavierSlip" title="genepy.boundary_conditions.navierslip.NavierSlip"><code class="xref py py-class docutils literal notranslate"><span class="pre">NavierSlip</span></code></a></p></li>
+<li><p><a class="reference internal" href="#genepy.Neumann" title="genepy.boundary_conditions.neumann.Neumann"><code class="xref py py-class docutils literal notranslate"><span class="pre">Neumann</span></code></a></p></li>
+</ul>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">StokesBoundaryCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.StokesBoundaryCondition" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.StokesBoundaryCondition">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StokesBoundaryCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.StokesBoundaryCondition.StokesBoundaryCondition" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> 
+boundary condition for the Stokes problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>int</em>) – tag of the boundary condition given by gmsh</p></li>
+<li><p><strong>mesh_file</strong> (<em>str</em>) – path to the mesh file containing the facets of the boundary</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id10">
+<h4>Attributes<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.StokesBoundaryCondition.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.StokesBoundaryCondition.StokesBoundaryCondition.tag" title="Link to this definition"></a></dt>
+<dd><p>Tag of the boundary condition</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.StokesBoundaryCondition.prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.StokesBoundaryCondition.StokesBoundaryCondition.prefix" title="Link to this definition"></a></dt>
+<dd><p>Prefix: “bc” for the options</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.StokesBoundaryCondition.bc_type">
+<span class="sig-name descname"><span class="pre">bc_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.StokesBoundaryCondition.StokesBoundaryCondition.bc_type" title="Link to this definition"></a></dt>
+<dd><p>Type of the boundary condition in the model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.StokesBoundaryCondition.bc_name">
+<span class="sig-name descname"><span class="pre">bc_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.StokesBoundaryCondition.StokesBoundaryCondition.bc_name" title="Link to this definition"></a></dt>
+<dd><p>Name of the boundary condition in the model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.StokesBoundaryCondition.mesh_file">
+<span class="sig-name descname"><span class="pre">mesh_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.StokesBoundaryCondition.StokesBoundaryCondition.mesh_file" title="Link to this definition"></a></dt>
+<dd><p>Path to the mesh file containing the facets of the boundary</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.StokesBoundaryCondition.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.StokesBoundaryCondition.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.
+All subclasses of <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a> call this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="dirichlet">
+<h4>Dirichlet<a class="headerlink" href="#dirichlet" title="Link to this heading"></a></h4>
+<p>Classes to generate options for Dirichlet boundary conditions.
+Inherits from class <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.boundary_conditions.bcs.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Dirichlet">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Dirichlet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Dirichlet" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Dirichlet.Dirichlet">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Dirichlet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Dirichlet.Dirichlet" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> for a Dirichlet type boundary condition.
+Inherited from <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>int</em>) – tag of the boundary condition given by gmsh</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of the boundary condition in the model</p></li>
+<li><p><strong>components</strong> (<em>list</em>) – list of string of the velocity components on which to impose the Dirichlet condition. Possible values <code class="docutils literal notranslate"><span class="pre">[&quot;x&quot;,&quot;y&quot;,&quot;z&quot;]</span></code></p></li>
+<li><p><strong>velocity</strong> – velocity to impose, expected shape: <code class="docutils literal notranslate"><span class="pre">(1,dim)</span></code></p></li>
+<li><p><strong>mesh_file</strong> (<em>str</em>) – path to the mesh file containing the facets of the boundary</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id11">
+<h5>Attributes<a class="headerlink" href="#id11" title="Link to this heading"></a></h5>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Dirichlet.Dirichlet.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Dirichlet.Dirichlet.tag" title="Link to this definition"></a></dt>
+<dd><p>Tag of the boundary condition</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Dirichlet.Dirichlet.prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Dirichlet.Dirichlet.prefix" title="Link to this definition"></a></dt>
+<dd><p>Prefix: “bc_dirichlet” for the options</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Dirichlet.Dirichlet.bc_type">
+<span class="sig-name descname"><span class="pre">bc_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Dirichlet.Dirichlet.bc_type" title="Link to this definition"></a></dt>
+<dd><p>Type of the boundary condition in the model. For Dirichlet: 7</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Dirichlet.Dirichlet.bc_name">
+<span class="sig-name descname"><span class="pre">bc_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Dirichlet.Dirichlet.bc_name" title="Link to this definition"></a></dt>
+<dd><p>Name of the boundary condition in the model, name is arbitrary but providing one is mandatory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Dirichlet.Dirichlet.mesh_file">
+<span class="sig-name descname"><span class="pre">mesh_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Dirichlet.Dirichlet.mesh_file" title="Link to this definition"></a></dt>
+<dd><p>Path to the mesh file containing the facets of the boundary</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Dirichlet.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Dirichlet.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns the string to be added to the options file descibing the Dirichlet boundary condition.
+Calls <a class="reference internal" href="#genepy.StokesBoundaryCondition.sprint_option" title="genepy.StokesBoundaryCondition.sprint_option"><code class="xref py py-meth docutils literal notranslate"><span class="pre">genepy.StokesBoundaryCondition.sprint_option()</span></code></a> first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string to be added to the options file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="navier-slip">
+<h4>Navier-slip<a class="headerlink" href="#navier-slip" title="Link to this heading"></a></h4>
+<p>Class to generate options for Navier-slip boundary conditions.
+Inherits from class <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.boundary_conditions.bcs.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.NavierSlip">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">NavierSlip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_orientation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.NavierSlip" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.NavierSlip.NavierSlip">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NavierSlip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_orientation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.NavierSlip.NavierSlip" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>
+using Navier-slip type of boundary conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>int</em>) – tag of the boundary condition given by gmsh</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of the boundary condition in the model</p></li>
+<li><p><strong>grad_u</strong> – velocity gradient to impose, expected shape: <code class="docutils literal notranslate"><span class="pre">(3,3)</span></code></p></li>
+<li><p><strong>u_orientation</strong> – orientation of the velocity, expected shape: <code class="docutils literal notranslate"><span class="pre">(1,3)</span></code></p></li>
+<li><p><strong>mesh_file</strong> (<em>str</em>) – path to the mesh file containing the facets of the boundary</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id12">
+<h5>Attributes<a class="headerlink" href="#id12" title="Link to this heading"></a></h5>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.NavierSlip.NavierSlip.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.NavierSlip.NavierSlip.tag" title="Link to this definition"></a></dt>
+<dd><p>Tag of the boundary condition</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.NavierSlip.NavierSlip.prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.NavierSlip.NavierSlip.prefix" title="Link to this definition"></a></dt>
+<dd><p>Prefix: “bc_navier” for the options</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.NavierSlip.NavierSlip.bc_type">
+<span class="sig-name descname"><span class="pre">bc_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.NavierSlip.NavierSlip.bc_type" title="Link to this definition"></a></dt>
+<dd><p>Type of the boundary condition in the model. For Navier-slip: 6</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.NavierSlip.NavierSlip.bc_name">
+<span class="sig-name descname"><span class="pre">bc_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.NavierSlip.NavierSlip.bc_name" title="Link to this definition"></a></dt>
+<dd><p>Name of the boundary condition in the model, name is arbitrary but providing one is mandatory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.NavierSlip.NavierSlip.mesh_file">
+<span class="sig-name descname"><span class="pre">mesh_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.NavierSlip.NavierSlip.mesh_file" title="Link to this definition"></a></dt>
+<dd><p>Path to the mesh file containing the facets of the boundary</p>
+</dd></dl>
+
+</section>
+<section id="id13">
+<h5>Methods<a class="headerlink" href="#id13" title="Link to this heading"></a></h5>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.NavierSlip.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.NavierSlip.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns the string to be added to the options file descibing the Navier-slip boundary condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="neumann">
+<h4>Neumann<a class="headerlink" href="#neumann" title="Link to this heading"></a></h4>
+<p>Class to generate options for Neumann boundary conditions.
+Inherits from class <a class="reference internal" href="#genepy.StokesBoundaryCondition" title="genepy.boundary_conditions.bcs.StokesBoundaryCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Neumann">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Neumann</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_stress_expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Neumann" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Neumann</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_stress_expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path_to_file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Neumann.Neumann" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>
+Neumann boundary condition for the Stokes problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>int</em>) – tag of the boundary condition given by gmsh</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of the boundary condition in the model (<strong>optional</strong>)</p></li>
+<li><p><strong>dev_stress_expression</strong> (<em>str</em>) – expression for the deviatoric stress</p></li>
+<li><p><strong>mesh_file</strong> (<em>str</em>) – path to the mesh file containing the facets of the boundary</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, when imposing a Neumann boundary condition such that the 
+imposed traction <span class="math notranslate nohighlight">\(\mathbf T\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[\mathbf T = \boldsymbol \sigma \mathbf n\]</div>
+<p>with the <strong>full</strong> stress tensor</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol \sigma = \boldsymbol \tau - p \boldsymbol I \]</div>
+<p>it is necessary to provide <em>at least</em> a traction vector capable to 
+maintain the fluid (the rocks) inside the physical domain i.e. to 
+provide the <strong>part of the pressure related to the density structure and
+the gravitational field</strong>. For this purpose, <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> computes</p>
+<div class="math notranslate nohighlight">
+\[\nabla \cdot \nabla p_p = \nabla \cdot (\rho \mathbf g) \]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho\)</span> is the density, <span class="math notranslate nohighlight">\(\mathbf g\)</span> is the gravitational acceleration vector,
+and <span class="math notranslate nohighlight">\(p_p\)</span> is refered as the Poisson pressure.</p>
+<p>If nothing more is provided, the Neumann boundary condition will be imposed as:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf T = -p_p \mathbf n\]</div>
+<p>as <span class="math notranslate nohighlight">\(\mathbf n\)</span> points outward the domain.
+It is possible to add a scalar function (expression) <span class="math notranslate nohighlight">\(\tau(\mathbf x,p_p,t)\)</span> 
+with the syntax <code class="docutils literal notranslate"><span class="pre">x,y,z,p,t</span></code> for the textual variable names 
+(any standard c math function can be used in the expression, see <a class="reference external" href="https://github.com/codeplea/tinyexpr">this link</a>).
+In this case, the Neumann boundary condition will be imposed as:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf T = (\tau - p_p) \mathbf n\]</div>
+</div>
+<section id="id14">
+<h5>Attributes<a class="headerlink" href="#id14" title="Link to this heading"></a></h5>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Neumann.Neumann.tag" title="Link to this definition"></a></dt>
+<dd><p>Tag of the boundary condition</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann.prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Neumann.Neumann.prefix" title="Link to this definition"></a></dt>
+<dd><p>Prefix: “bc_neumann” for the options</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann.bc_type">
+<span class="sig-name descname"><span class="pre">bc_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Neumann.Neumann.bc_type" title="Link to this definition"></a></dt>
+<dd><p>Type of the boundary condition in the model. For Neumann: 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann.bc_name">
+<span class="sig-name descname"><span class="pre">bc_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Neumann.Neumann.bc_name" title="Link to this definition"></a></dt>
+<dd><p>Name of the boundary condition in the model, name is arbitrary but providing one is mandatory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann.mesh_file">
+<span class="sig-name descname"><span class="pre">mesh_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Neumann.Neumann.mesh_file" title="Link to this definition"></a></dt>
+<dd><p>Path to the mesh file containing the facets of the boundary</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Neumann.Neumann.dev_stress">
+<span class="sig-name descname"><span class="pre">dev_stress</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Neumann.Neumann.dev_stress" title="Link to this definition"></a></dt>
+<dd><p>Expression for the deviatoric stress. Can be None, in that case no deviatoric stress 
+is imposed, only the pressure.</p>
+</dd></dl>
+
+</section>
+<section id="id15">
+<h5>Methods<a class="headerlink" href="#id15" title="Link to this heading"></a></h5>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Neumann.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Neumann.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>generates the string to be written in the options file for the Neumann boundary condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string to be written in the options file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="energy-boundary-conditions">
+<h3>Energy boundary conditions<a class="headerlink" href="#energy-boundary-conditions" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.TemperatureBC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">TemperatureBC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.TemperatureBC" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.TemperatureBC.TemperatureBC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TemperatureBC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.TemperatureBC.TemperatureBC" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> thermal energy boundary condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conditions</strong> (<em>dict</em>) – dictionary of the form <code class="docutils literal notranslate"><span class="pre">{face:</span> <span class="pre">value}</span></code> where <code class="docutils literal notranslate"><span class="pre">face</span></code> is one of
+<code class="docutils literal notranslate"><span class="pre">['xmin','xmax','ymin','ymax','zmin','zmax']</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code> is the temperature value.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="initial_conditions.html" class="btn btn-neutral float-left" title="Initial conditions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="material_parameters.html" class="btn btn-neutral float-right" title="Material parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+genepy package
+============
+
+Submodules
+----------
+
+genepy.bc\_inversion module
+-------------------------
+
+.. automodule:: genepy.bc_inversion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+genepy.ptatin\_options module
+---------------------------
+
+.. automodule:: genepy.ptatin_options
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+genepy.rotation module
+--------------------
+
+.. automodule:: genepy.rotation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+genepy.surface\_processes module
+------------------------------
+
+.. automodule:: genepy.surface_processes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+genepy.utils module
+-----------------
+
+.. automodule:: genepy.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+genepy.writers module
+-------------------
+
+.. automodule:: genepy.writers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: genepy
+   :members:
+   :undoc-members:
+   :show-inheritance:

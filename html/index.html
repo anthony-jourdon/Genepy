@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Genepy’s documentation! &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genepy_docs.html">Module genepy</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to Genepy’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-genepy-s-documentation">
+<h1>Welcome to Genepy’s documentation!<a class="headerlink" href="#welcome-to-genepy-s-documentation" title="Link to this heading"></a></h1>
+<p><cite>genepy</cite> is a python module designed to evaluate symbolic (mathematic)
+expression to build analytical velocity functions varying in space and time,
+define the rheological parameters of a long-term geodynamic model,
+and generate input file for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+It is a pre-processing tool.</p>
+<p>This module can:</p>
+<ul class="simple">
+<li><p>evaluate and print mathematical expression for the velocity and initial plastic strain distribution</p></li>
+<li><p>attribute rheological parameters to regions identified by a tag (integer value)</p></li>
+<li><p>handle simple mesh refinement for a structured mesh using linear interpolation</p></li>
+<li><p>generate options file for pTatin3d simulations</p></li>
+</ul>
+<p>Some examples can be found in <em>scripts</em>  subdirectory.
+Check out the <a class="reference internal" href="usage.html"><span class="doc">Usage</span></a> section for further information, including how to
+<a class="reference internal" href="usage.html#installation"><span class="std std-ref">install</span></a> the project.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module is still under development.</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#building-a-model">Building a model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gmsh_tuto.html">Building a mesh with Gmsh for the initial geometry and boundary conditions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gmsh_tuto.html#points">1. Points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gmsh_tuto.html#lines">2. Lines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gmsh_tuto.html#surfaces">3. Surfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gmsh_tuto.html#volumes">4. Volumes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gmsh_tuto.html#physical-groups">5. Physical groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gmsh_tuto.html#mesh">6. Mesh</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/simple_model.html">Example: simple model, linear viscous rheology</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/simple_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/simple_model.html#velocity-function">2. Velocity function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/simple_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/simple_model.html#boundary-conditions">4. Boundary conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/simple_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/simple_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/oblique_model.html">Example: oblique model, non-linear rheology</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/oblique_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/oblique_model.html#velocity-function">2. Velocity function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/oblique_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/oblique_model.html#boundary-conditions">4. Boundary conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/oblique_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/oblique_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/strikeslip_model.html">Example: strike-slip model, rotated velocity field and mesh refinement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#mesh-refinement">2. Mesh refinement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#rotation">3. Rotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#velocity-field">4. Velocity field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#define-gaussian-weak-zones">5. Define gaussian weak zones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#initial-conditions">6. Initial conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#boundary-conditions">7. Boundary conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#material-parameters">8. Material parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#add-surface-processes">9. Add surface processes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#add-passive-tracers">10. Add passive tracers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/strikeslip_model.html#create-the-model-and-generate-options">11.  Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html">Example: Two phases model, extension followed by compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/time_dependant_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/time_dependant_model.html#velocity-field">2. Velocity field</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="examples/time_dependant_model.html#extension-phase">2.1. Extension phase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="examples/time_dependant_model.html#compression-phase">2.2. Compression phase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="examples/time_dependant_model.html#combine-the-two-phases">2.3. Combine the two phases</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="examples/time_dependant_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/time_dependant_model.html#boundary-conditions">4. Boundary conditions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="examples/time_dependant_model.html#temperature-boundary-conditions">4.1. Temperature boundary conditions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="examples/time_dependant_model.html#id1">4.2. Extension phase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="examples/time_dependant_model.html#id2">4.3. Compression phase</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="examples/time_dependant_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/time_dependant_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/ale_model.html">Arbitrary Lagrangian Eulerian (ALE) model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/ale_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/ale_model.html#velocity-function">2. Velocity function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/ale_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/ale_model.html#boundary-conditions">4. Boundary conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/ale_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/ale_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#run-ptatin3d">Run pTatin3d</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#compute-initial-topography">Compute initial topography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#running-initial-conditions-driver">Running initial conditions driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#running-linear-driver">Running linear driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#computing-steady-state-temperature">Computing steady-state temperature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#running-non-linear-driver-with-checkpointing">Running non-linear driver with checkpointing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="genepy_docs.html">Module genepy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html">Initial conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#domain">Domain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#eulerian-domain-with-free-surface">Eulerian Domain (with free-surface)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Domain"><code class="docutils literal notranslate"><span class="pre">Domain</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain"><code class="docutils literal notranslate"><span class="pre">Domain.Domain</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.dim"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.dim</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.O"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.O</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.L"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.L</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.O_num"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.O_num</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.L_num"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.L_num</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.n"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.n</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.nv"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.nv</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.num_coor"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.num_coor</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.Domain.Domain.sym_coor"><code class="docutils literal notranslate"><span class="pre">Domain.Domain.sym_coor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Domain.numerical_coordinates"><code class="docutils literal notranslate"><span class="pre">Domain.numerical_coordinates()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Domain.shape_coor"><code class="docutils literal notranslate"><span class="pre">Domain.shape_coor()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Domain.sprint_option"><code class="docutils literal notranslate"><span class="pre">Domain.sprint_option()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Domain.symbolic_coordinates"><code class="docutils literal notranslate"><span class="pre">Domain.symbolic_coordinates()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#ale-domain">ALE Domain</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.DomainALE"><code class="docutils literal notranslate"><span class="pre">DomainALE</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.DomainALE.DomainALE"><code class="docutils literal notranslate"><span class="pre">DomainALE.DomainALE</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.DomainALE.DomainALE.O_num"><code class="docutils literal notranslate"><span class="pre">DomainALE.DomainALE.O_num</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="initial_conditions.html#genepy.DomainALE.DomainALE.L_num"><code class="docutils literal notranslate"><span class="pre">DomainALE.DomainALE.L_num</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.DomainALE.sprint_option"><code class="docutils literal notranslate"><span class="pre">DomainALE.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#mesh-refinement">Mesh refinement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement"><code class="docutils literal notranslate"><span class="pre">MeshRefinement</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.MeshRefinement"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.MeshRefinement</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.MeshRefinement.params"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.MeshRefinement.params</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.MeshRefinement.dirmap"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.MeshRefinement.dirmap</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.normalize"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.normalize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.refine"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.refine()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.refine_direction"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.refine_direction()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.MeshRefinement.sprint_option"><code class="docutils literal notranslate"><span class="pre">MeshRefinement.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#rotation">Rotation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.Rotation"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.Rotation"><code class="docutils literal notranslate"><span class="pre">Rotation.Rotation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.Rotation.dim"><code class="docutils literal notranslate"><span class="pre">Rotation.Rotation.dim</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.Rotation.theta"><code class="docutils literal notranslate"><span class="pre">Rotation.Rotation.theta</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.Rotation.axis"><code class="docutils literal notranslate"><span class="pre">Rotation.Rotation.axis</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.rotate_referential"><code class="docutils literal notranslate"><span class="pre">Rotation.rotate_referential()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.rotate_vector"><code class="docutils literal notranslate"><span class="pre">Rotation.rotate_vector()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.rotation_matrix"><code class="docutils literal notranslate"><span class="pre">Rotation.rotation_matrix()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.rotation_matrix_2d"><code class="docutils literal notranslate"><span class="pre">Rotation.rotation_matrix_2d()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Rotation.rotation_matrix_3d"><code class="docutils literal notranslate"><span class="pre">Rotation.rotation_matrix_3d()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#gaussian">Gaussian</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian"><code class="docutils literal notranslate"><span class="pre">Gaussian</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian.Gaussian"><code class="docutils literal notranslate"><span class="pre">Gaussian.Gaussian</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian.Gaussian.gaussian_sym"><code class="docutils literal notranslate"><span class="pre">Gaussian.Gaussian.gaussian_sym</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian.Gaussian.gaussian_num"><code class="docutils literal notranslate"><span class="pre">Gaussian.Gaussian.gaussian_num</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.GaussianConstructor"><code class="docutils literal notranslate"><span class="pre">GaussianConstructor</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussianConstructor.GaussianConstructor"><code class="docutils literal notranslate"><span class="pre">GaussianConstructor.GaussianConstructor</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussianConstructor.evaluate_gaussian"><code class="docutils literal notranslate"><span class="pre">GaussianConstructor.evaluate_gaussian()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussianConstructor.gaussian"><code class="docutils literal notranslate"><span class="pre">GaussianConstructor.gaussian()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian2D"><code class="docutils literal notranslate"><span class="pre">Gaussian2D</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian2D.Gaussian2D"><code class="docutils literal notranslate"><span class="pre">Gaussian2D.Gaussian2D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian3D"><code class="docutils literal notranslate"><span class="pre">Gaussian3D</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.Gaussian3D.Gaussian3D"><code class="docutils literal notranslate"><span class="pre">Gaussian3D.Gaussian3D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.GaussianPlane"><code class="docutils literal notranslate"><span class="pre">GaussianPlane</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussianPlane.GaussianPlane"><code class="docutils literal notranslate"><span class="pre">GaussianPlane.GaussianPlane</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.GaussianCircle"><code class="docutils literal notranslate"><span class="pre">GaussianCircle</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussianCircle.GaussianCircle"><code class="docutils literal notranslate"><span class="pre">GaussianCircle.GaussianCircle</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.GaussiansOptions"><code class="docutils literal notranslate"><span class="pre">GaussiansOptions</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussiansOptions.GaussiansOptions"><code class="docutils literal notranslate"><span class="pre">GaussiansOptions.GaussiansOptions</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.GaussiansOptions.sum_gaussians"><code class="docutils literal notranslate"><span class="pre">GaussiansOptions.sum_gaussians()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#plastic-strain">Plastic strain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.InitialPlasticStrain"><code class="docutils literal notranslate"><span class="pre">InitialPlasticStrain</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialPlasticStrain.InitialPlasticStrain"><code class="docutils literal notranslate"><span class="pre">InitialPlasticStrain.InitialPlasticStrain</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialPlasticStrain.sprint_option"><code class="docutils literal notranslate"><span class="pre">InitialPlasticStrain.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#heat-source">Heat source</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.InitialHeatSource"><code class="docutils literal notranslate"><span class="pre">InitialHeatSource</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialHeatSource.InitialHeatSource"><code class="docutils literal notranslate"><span class="pre">InitialHeatSource.InitialHeatSource</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialHeatSource.sprint_option"><code class="docutils literal notranslate"><span class="pre">InitialHeatSource.sprint_option()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialHeatSource.sprint_option_gaussian"><code class="docutils literal notranslate"><span class="pre">InitialHeatSource.sprint_option_gaussian()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="initial_conditions.html#ics-ptatin3d-options-generation">ICs pTatin3d options generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions"><code class="docutils literal notranslate"><span class="pre">InitialConditions</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.InitialConditions"><code class="docutils literal notranslate"><span class="pre">InitialConditions.InitialConditions</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.InitialConditions.model_name"><code class="docutils literal notranslate"><span class="pre">InitialConditions.InitialConditions.model_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.InitialConditions.Domain"><code class="docutils literal notranslate"><span class="pre">InitialConditions.InitialConditions.Domain</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.InitialConditions.u"><code class="docutils literal notranslate"><span class="pre">InitialConditions.InitialConditions.u</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.InitialConditions.kwargs"><code class="docutils literal notranslate"><span class="pre">InitialConditions.InitialConditions.kwargs</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.InitialConditions.possible_kwargs"><code class="docutils literal notranslate"><span class="pre">InitialConditions.InitialConditions.possible_kwargs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.sprint_initial_velocity"><code class="docutils literal notranslate"><span class="pre">InitialConditions.sprint_initial_velocity()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions.sprint_option"><code class="docutils literal notranslate"><span class="pre">InitialConditions.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#velocity">Velocity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.Velocity"><code class="docutils literal notranslate"><span class="pre">Velocity.Velocity</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.evaluate_gradient"><code class="docutils literal notranslate"><span class="pre">Velocity.evaluate_gradient()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.evaluate_int_u_dot_n_faces"><code class="docutils literal notranslate"><span class="pre">Velocity.evaluate_int_u_dot_n_faces()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.evaluate_u_dot_n"><code class="docutils literal notranslate"><span class="pre">Velocity.evaluate_u_dot_n()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.get_velocity_orientation"><code class="docutils literal notranslate"><span class="pre">Velocity.get_velocity_orientation()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.report_symbolic_functions"><code class="docutils literal notranslate"><span class="pre">Velocity.report_symbolic_functions()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.Velocity.velocity_boundary"><code class="docutils literal notranslate"><span class="pre">Velocity.velocity_boundary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear"><code class="docutils literal notranslate"><span class="pre">VelocityLinear</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.norm"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.norm</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.alpha"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.alpha</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.type"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.type</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.dir"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.dir</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.uO"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.uO</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.uL"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.uL</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.a"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.a</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.b"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.b</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.vertical_evaluated"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.vertical_evaluated</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.u"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.u</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.grad_u"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.grad_u</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.u_dir_horizontal"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.u_dir_horizontal</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.VelocityLinear.u_dir"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.VelocityLinear.u_dir</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.boundary_vector"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.boundary_vector()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.evaluate_velocity_and_gradient_symbolic()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.evaluate_velocity_numeric"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.evaluate_velocity_numeric()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.evaluate_velocity_symbolic"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.evaluate_velocity_symbolic()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.evaluate_vertical_velocity"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.evaluate_vertical_velocity()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.evaluate_vertical_velocity_coefficients"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.evaluate_vertical_velocity_coefficients()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.velocity_boundary"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.velocity_boundary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.velocity_coefficients"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.velocity_coefficients()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.velocity_coefficients_1d"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.velocity_coefficients_1d()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.velocity_function"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.velocity_function()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.velocity_function_1d"><code class="docutils literal notranslate"><span class="pre">VelocityLinear.velocity_function_1d()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric.VelocityLinearAsymmetric</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normL"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric.VelocityLinearAsymmetric.normL</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.normO"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric.VelocityLinearAsymmetric.normO</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaL"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaL</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaO"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric.VelocityLinearAsymmetric.alphaO</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinearAsymmetric.velocity_boundary"><code class="docutils literal notranslate"><span class="pre">VelocityLinearAsymmetric.velocity_boundary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityTimeDependant"><code class="docutils literal notranslate"><span class="pre">VelocityTimeDependant</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityTimeDependant.VelocityTimeDependant"><code class="docutils literal notranslate"><span class="pre">VelocityTimeDependant.VelocityTimeDependant</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityTimeDependant.sum_functions"><code class="docutils literal notranslate"><span class="pre">VelocityTimeDependant.sum_functions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion"><code class="docutils literal notranslate"><span class="pre">VelocityInversion</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.phases"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.phases</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.breakpoints"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.breakpoints</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.slopes"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.slopes</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.u"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.u</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.grad_u"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.grad_u</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.u_dir_horizontal"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.u_dir_horizontal</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.VelocityInversion.u_dir"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.VelocityInversion.u_dir</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.evaluate_velocity_and_gradient_symbolic"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.evaluate_velocity_and_gradient_symbolic()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.evaluate_velocity_symbolic"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.evaluate_velocity_symbolic()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.get_time_zero_velocity"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.get_time_zero_velocity()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.plot_1D_velocity"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.plot_1D_velocity()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.velocity_function"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.velocity_function()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityInversion.velocity_function_derivative"><code class="docutils literal notranslate"><span class="pre">VelocityInversion.velocity_function_derivative()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityCompose"><code class="docutils literal notranslate"><span class="pre">VelocityCompose</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityCompose.VelocityCompose"><code class="docutils literal notranslate"><span class="pre">VelocityCompose.VelocityCompose</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityCompose.VelocityCompose.nfuncs"><code class="docutils literal notranslate"><span class="pre">VelocityCompose.VelocityCompose.nfuncs</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityCompose.VelocityCompose.velocities"><code class="docutils literal notranslate"><span class="pre">VelocityCompose.VelocityCompose.velocities</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityCompose.VelocityCompose.method"><code class="docutils literal notranslate"><span class="pre">VelocityCompose.VelocityCompose.method</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.VelocityCompose.sum_velocities"><code class="docutils literal notranslate"><span class="pre">VelocityCompose.sum_velocities()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="boundary_conditions.html#options-generation">Options generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#bounary-conditions-wrapper">Bounary conditions wrapper</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs"><code class="docutils literal notranslate"><span class="pre">ModelBCs</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs.ModelBCs"><code class="docutils literal notranslate"><span class="pre">ModelBCs.ModelBCs</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs.ModelBCs.model_name"><code class="docutils literal notranslate"><span class="pre">ModelBCs.ModelBCs.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs.ModelBCs.u_bcs"><code class="docutils literal notranslate"><span class="pre">ModelBCs.ModelBCs.u_bcs</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs.ModelBCs.energy_bc"><code class="docutils literal notranslate"><span class="pre">ModelBCs.ModelBCs.energy_bc</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.BoundaryCondition"><code class="docutils literal notranslate"><span class="pre">BoundaryCondition</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.BoundaryCondition.BoundaryCondition"><code class="docutils literal notranslate"><span class="pre">BoundaryCondition.BoundaryCondition</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.BoundaryCondition.format_expression"><code class="docutils literal notranslate"><span class="pre">BoundaryCondition.format_expression()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.BoundaryCondition.is_expression"><code class="docutils literal notranslate"><span class="pre">BoundaryCondition.is_expression()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#stokes-boundary-conditions">Stokes boundary conditions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.StokesBoundaryCondition"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.StokesBoundaryCondition</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.StokesBoundaryCondition.tag"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.StokesBoundaryCondition.tag</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.StokesBoundaryCondition.prefix"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.StokesBoundaryCondition.prefix</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.StokesBoundaryCondition.bc_type"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.StokesBoundaryCondition.bc_type</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.StokesBoundaryCondition.bc_name"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.StokesBoundaryCondition.bc_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.StokesBoundaryCondition.mesh_file"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.StokesBoundaryCondition.mesh_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.StokesBoundaryCondition.sprint_option"><code class="docutils literal notranslate"><span class="pre">StokesBoundaryCondition.sprint_option()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#dirichlet">Dirichlet</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet"><code class="docutils literal notranslate"><span class="pre">Dirichlet</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.Dirichlet"><code class="docutils literal notranslate"><span class="pre">Dirichlet.Dirichlet</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.Dirichlet.tag"><code class="docutils literal notranslate"><span class="pre">Dirichlet.Dirichlet.tag</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.Dirichlet.prefix"><code class="docutils literal notranslate"><span class="pre">Dirichlet.Dirichlet.prefix</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.Dirichlet.bc_type"><code class="docutils literal notranslate"><span class="pre">Dirichlet.Dirichlet.bc_type</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.Dirichlet.bc_name"><code class="docutils literal notranslate"><span class="pre">Dirichlet.Dirichlet.bc_name</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.Dirichlet.mesh_file"><code class="docutils literal notranslate"><span class="pre">Dirichlet.Dirichlet.mesh_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.Dirichlet.sprint_option"><code class="docutils literal notranslate"><span class="pre">Dirichlet.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#navier-slip">Navier-slip</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip"><code class="docutils literal notranslate"><span class="pre">NavierSlip</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.NavierSlip"><code class="docutils literal notranslate"><span class="pre">NavierSlip.NavierSlip</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.NavierSlip.tag"><code class="docutils literal notranslate"><span class="pre">NavierSlip.NavierSlip.tag</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.NavierSlip.prefix"><code class="docutils literal notranslate"><span class="pre">NavierSlip.NavierSlip.prefix</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.NavierSlip.bc_type"><code class="docutils literal notranslate"><span class="pre">NavierSlip.NavierSlip.bc_type</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.NavierSlip.bc_name"><code class="docutils literal notranslate"><span class="pre">NavierSlip.NavierSlip.bc_name</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.NavierSlip.mesh_file"><code class="docutils literal notranslate"><span class="pre">NavierSlip.NavierSlip.mesh_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.NavierSlip.sprint_option"><code class="docutils literal notranslate"><span class="pre">NavierSlip.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#neumann">Neumann</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann"><code class="docutils literal notranslate"><span class="pre">Neumann</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann.tag"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann.tag</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann.prefix"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann.prefix</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann.bc_type"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann.bc_type</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann.bc_name"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann.bc_name</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann.mesh_file"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann.mesh_file</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.Neumann.dev_stress"><code class="docutils literal notranslate"><span class="pre">Neumann.Neumann.dev_stress</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="boundary_conditions.html#genepy.Neumann.sprint_option"><code class="docutils literal notranslate"><span class="pre">Neumann.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="boundary_conditions.html#energy-boundary-conditions">Energy boundary conditions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="boundary_conditions.html#genepy.TemperatureBC"><code class="docutils literal notranslate"><span class="pre">TemperatureBC</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="boundary_conditions.html#genepy.TemperatureBC.TemperatureBC"><code class="docutils literal notranslate"><span class="pre">TemperatureBC.TemperatureBC</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html">Material parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#wrapper-for-material-parameters">Wrapper for material parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#region">Region</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.Region"><code class="docutils literal notranslate"><span class="pre">Region</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.Region.Region"><code class="docutils literal notranslate"><span class="pre">Region.Region</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.Region.sprint_option"><code class="docutils literal notranslate"><span class="pre">Region.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#model-regions">Model regions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ModelRegions"><code class="docutils literal notranslate"><span class="pre">ModelRegions</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ModelRegions.ModelRegions"><code class="docutils literal notranslate"><span class="pre">ModelRegions.ModelRegions</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ModelRegions.add_region"><code class="docutils literal notranslate"><span class="pre">ModelRegions.add_region()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ModelRegions.sprint_option"><code class="docutils literal notranslate"><span class="pre">ModelRegions.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#parent-class-for-all-material-parameters">Parent class for all material parameters.</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#genepy.MaterialConstants"><code class="docutils literal notranslate"><span class="pre">MaterialConstants</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.MaterialConstants.MaterialConstants"><code class="docutils literal notranslate"><span class="pre">MaterialConstants.MaterialConstants</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.MaterialConstants.MaterialConstants.model_name"><code class="docutils literal notranslate"><span class="pre">MaterialConstants.MaterialConstants.model_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.MaterialConstants.MaterialConstants.region"><code class="docutils literal notranslate"><span class="pre">MaterialConstants.MaterialConstants.region</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.MaterialConstants.sprint_option"><code class="docutils literal notranslate"><span class="pre">MaterialConstants.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#density">Density</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#constant-density">Constant density</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.DensityConstant"><code class="docutils literal notranslate"><span class="pre">DensityConstant</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.DensityConstant.DensityConstant"><code class="docutils literal notranslate"><span class="pre">DensityConstant.DensityConstant</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityConstant.DensityConstant.density"><code class="docutils literal notranslate"><span class="pre">DensityConstant.DensityConstant.density</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityConstant.DensityConstant.model_name"><code class="docutils literal notranslate"><span class="pre">DensityConstant.DensityConstant.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityConstant.DensityConstant.region"><code class="docutils literal notranslate"><span class="pre">DensityConstant.DensityConstant.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#boussinesq-approximation">Boussinesq approximation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq.DensityBoussinesq"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq.DensityBoussinesq</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq.DensityBoussinesq.density"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq.DensityBoussinesq.density</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq.DensityBoussinesq.thermal_expansion"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq.DensityBoussinesq.thermal_expansion</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq.DensityBoussinesq.compressibility"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq.DensityBoussinesq.compressibility</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq.DensityBoussinesq.model_name"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq.DensityBoussinesq.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityBoussinesq.DensityBoussinesq.region"><code class="docutils literal notranslate"><span class="pre">DensityBoussinesq.DensityBoussinesq.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#thermodynamic-table">Thermodynamic table</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.DensityTable"><code class="docutils literal notranslate"><span class="pre">DensityTable</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.DensityTable.DensityTable"><code class="docutils literal notranslate"><span class="pre">DensityTable.DensityTable</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityTable.DensityTable.density"><code class="docutils literal notranslate"><span class="pre">DensityTable.DensityTable.density</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityTable.DensityTable.map"><code class="docutils literal notranslate"><span class="pre">DensityTable.DensityTable.map</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityTable.DensityTable.model_name"><code class="docutils literal notranslate"><span class="pre">DensityTable.DensityTable.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.DensityTable.DensityTable.region"><code class="docutils literal notranslate"><span class="pre">DensityTable.DensityTable.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#viscosity">Viscosity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#constant-viscosity">Constant viscosity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ViscosityConstant"><code class="docutils literal notranslate"><span class="pre">ViscosityConstant</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityConstant.ViscosityConstant"><code class="docutils literal notranslate"><span class="pre">ViscosityConstant.ViscosityConstant</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityConstant.ViscosityConstant.viscosity"><code class="docutils literal notranslate"><span class="pre">ViscosityConstant.ViscosityConstant.viscosity</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityConstant.ViscosityConstant.model_name"><code class="docutils literal notranslate"><span class="pre">ViscosityConstant.ViscosityConstant.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityConstant.ViscosityConstant.region"><code class="docutils literal notranslate"><span class="pre">ViscosityConstant.ViscosityConstant.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#frank-kamenetskii-viscosity">Frank-Kamenetskii viscosity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ViscosityFrankK"><code class="docutils literal notranslate"><span class="pre">ViscosityFrankK</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityFrankK.ViscosityFrankK"><code class="docutils literal notranslate"><span class="pre">ViscosityFrankK.ViscosityFrankK</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityFrankK.ViscosityFrankK.eta0"><code class="docutils literal notranslate"><span class="pre">ViscosityFrankK.ViscosityFrankK.eta0</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityFrankK.ViscosityFrankK.exponent"><code class="docutils literal notranslate"><span class="pre">ViscosityFrankK.ViscosityFrankK.exponent</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityFrankK.ViscosityFrankK.model_name"><code class="docutils literal notranslate"><span class="pre">ViscosityFrankK.ViscosityFrankK.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityFrankK.ViscosityFrankK.region"><code class="docutils literal notranslate"><span class="pre">ViscosityFrankK.ViscosityFrankK.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#depth-dependent-viscosity">Depth-dependent viscosity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ"><code class="docutils literal notranslate"><span class="pre">ViscosityZ</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ.ViscosityZ"><code class="docutils literal notranslate"><span class="pre">ViscosityZ.ViscosityZ</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ.ViscosityZ.eta0"><code class="docutils literal notranslate"><span class="pre">ViscosityZ.ViscosityZ.eta0</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ.ViscosityZ.zeta"><code class="docutils literal notranslate"><span class="pre">ViscosityZ.ViscosityZ.zeta</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ.ViscosityZ.zref"><code class="docutils literal notranslate"><span class="pre">ViscosityZ.ViscosityZ.zref</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ.ViscosityZ.model_name"><code class="docutils literal notranslate"><span class="pre">ViscosityZ.ViscosityZ.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityZ.ViscosityZ.region"><code class="docutils literal notranslate"><span class="pre">ViscosityZ.ViscosityZ.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#arrhenius-viscosity">Arrhenius viscosity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.preexpA"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.preexpA</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.Ascale"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.Ascale</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.entalpy"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.entalpy</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.Vmol"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.Vmol</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.nexp"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.nexp</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.Tref"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.Tref</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.model_name"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.ViscosityArrhenius.region"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.ViscosityArrhenius.region</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius.arrhenius_flow_laws"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius.arrhenius_flow_laws()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius2"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius2</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrhenius2.ViscosityArrhenius2"><code class="docutils literal notranslate"><span class="pre">ViscosityArrhenius2.ViscosityArrhenius2</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.preexpA_diff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.preexpA_diff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Ascale_diff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Ascale_diff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.entalpy_diff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.entalpy_diff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Vmol_diff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Vmol_diff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.pexp_diff"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.pexp_diff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.gsize"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.gsize</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.preexpA_disl"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.preexpA_disl</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Ascale_disl"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Ascale_disl</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.entalpy_disl"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.entalpy_disl</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Vmol_disl"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Vmol_disl</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.nexp_disl"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.nexp_disl</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Tref"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.Tref</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.model_name"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.region"><code class="docutils literal notranslate"><span class="pre">ViscosityArrheniusDislDiff.ViscosityArrheniusDislDiff.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#pasticity">Pasticity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#no-plasticity">No plasticity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.PlasticNone"><code class="docutils literal notranslate"><span class="pre">PlasticNone</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.PlasticNone.PlasticNone"><code class="docutils literal notranslate"><span class="pre">PlasticNone.PlasticNone</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticNone.PlasticNone.model_name"><code class="docutils literal notranslate"><span class="pre">PlasticNone.PlasticNone.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticNone.PlasticNone.region"><code class="docutils literal notranslate"><span class="pre">PlasticNone.PlasticNone.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#vonmises-plasticity">VonMises plasticity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises"><code class="docutils literal notranslate"><span class="pre">PlasticMises</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises.PlasticMises"><code class="docutils literal notranslate"><span class="pre">PlasticMises.PlasticMises</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises.PlasticMises.yield_stress"><code class="docutils literal notranslate"><span class="pre">PlasticMises.PlasticMises.yield_stress</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises.PlasticMises.yield_stress_inf"><code class="docutils literal notranslate"><span class="pre">PlasticMises.PlasticMises.yield_stress_inf</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises.PlasticMises.healing_rate"><code class="docutils literal notranslate"><span class="pre">PlasticMises.PlasticMises.healing_rate</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises.PlasticMises.model_name"><code class="docutils literal notranslate"><span class="pre">PlasticMises.PlasticMises.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticMises.PlasticMises.region"><code class="docutils literal notranslate"><span class="pre">PlasticMises.PlasticMises.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#drucker-prager-plasticity">Drucker-Prager plasticity</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.friction"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.friction</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.friction_inf"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.friction_inf</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.cohesion"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.cohesion</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.cohesion_inf"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.cohesion_inf</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.tension_cutoff"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.tension_cutoff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.highstress_cutoff"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.highstress_cutoff</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.healing_rate"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.healing_rate</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.model_name"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.PlasticDruckerPrager.PlasticDruckerPrager.region"><code class="docutils literal notranslate"><span class="pre">PlasticDruckerPrager.PlasticDruckerPrager.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#plastic-strain-softening">Plastic strain softening</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#no-softening">No softening</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.SofteningNone"><code class="docutils literal notranslate"><span class="pre">SofteningNone</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.SofteningNone.SofteningNone"><code class="docutils literal notranslate"><span class="pre">SofteningNone.SofteningNone</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#linear-softening">Linear softening</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinear"><code class="docutils literal notranslate"><span class="pre">SofteningLinear</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinear.SofteningLinear"><code class="docutils literal notranslate"><span class="pre">SofteningLinear.SofteningLinear</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinear.SofteningLinear.eps_min"><code class="docutils literal notranslate"><span class="pre">SofteningLinear.SofteningLinear.eps_min</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinear.SofteningLinear.eps_max"><code class="docutils literal notranslate"><span class="pre">SofteningLinear.SofteningLinear.eps_max</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinear.SofteningLinear.model_name"><code class="docutils literal notranslate"><span class="pre">SofteningLinear.SofteningLinear.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinear.SofteningLinear.region"><code class="docutils literal notranslate"><span class="pre">SofteningLinear.SofteningLinear.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#exponential-softening">Exponential softening</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.SofteningExponential"><code class="docutils literal notranslate"><span class="pre">SofteningExponential</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.SofteningExponential.SofteningExponential"><code class="docutils literal notranslate"><span class="pre">SofteningExponential.SofteningExponential</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningExponential.SofteningExponential.eps_min"><code class="docutils literal notranslate"><span class="pre">SofteningExponential.SofteningExponential.eps_min</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningExponential.SofteningExponential.eps_fold"><code class="docutils literal notranslate"><span class="pre">SofteningExponential.SofteningExponential.eps_fold</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningExponential.SofteningExponential.model_name"><code class="docutils literal notranslate"><span class="pre">SofteningExponential.SofteningExponential.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningExponential.SofteningExponential.region"><code class="docutils literal notranslate"><span class="pre">SofteningExponential.SofteningExponential.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#temperature-dependent-softening">Temperature-dependent softening</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#linear-temperature-softening">Linear temperature softening</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinearTemperature"><code class="docutils literal notranslate"><span class="pre">SofteningLinearTemperature</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinearTemperature.SofteningLinearTemperature"><code class="docutils literal notranslate"><span class="pre">SofteningLinearTemperature.SofteningLinearTemperature</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinearTemperature.SofteningLinearTemperature.eps_min"><code class="docutils literal notranslate"><span class="pre">SofteningLinearTemperature.SofteningLinearTemperature.eps_min</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinearTemperature.SofteningLinearTemperature.eps_max"><code class="docutils literal notranslate"><span class="pre">SofteningLinearTemperature.SofteningLinearTemperature.eps_max</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinearTemperature.SofteningLinearTemperature.model_name"><code class="docutils literal notranslate"><span class="pre">SofteningLinearTemperature.SofteningLinearTemperature.model_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="material_parameters.html#genepy.SofteningLinearTemperature.SofteningLinearTemperature.region"><code class="docutils literal notranslate"><span class="pre">SofteningLinearTemperature.SofteningLinearTemperature.region</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="material_parameters.html#energy">Energy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#genepy.Energy"><code class="docutils literal notranslate"><span class="pre">Energy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.Energy.Energy"><code class="docutils literal notranslate"><span class="pre">Energy.Energy</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.Energy.Energy.heatcapacity"><code class="docutils literal notranslate"><span class="pre">Energy.Energy.heatcapacity</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.Energy.Energy.heat_source"><code class="docutils literal notranslate"><span class="pre">Energy.Energy.heat_source</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.Energy.Energy.conductivity"><code class="docutils literal notranslate"><span class="pre">Energy.Energy.conductivity</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.Energy.sprint_option"><code class="docutils literal notranslate"><span class="pre">Energy.sprint_option()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#heat-sources">Heat sources</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.EnergySource"><code class="docutils literal notranslate"><span class="pre">EnergySource</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySource.EnergySource"><code class="docutils literal notranslate"><span class="pre">EnergySource.EnergySource</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySource.sprint_option"><code class="docutils literal notranslate"><span class="pre">EnergySource.sprint_option()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#no-source-default">No source (default)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceNone"><code class="docutils literal notranslate"><span class="pre">EnergySourceNone</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceNone.EnergySourceNone"><code class="docutils literal notranslate"><span class="pre">EnergySourceNone.EnergySourceNone</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#defined-on-material-points">Defined on material points</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceMaterialPointValue"><code class="docutils literal notranslate"><span class="pre">EnergySourceMaterialPointValue</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceMaterialPointValue.EnergySourceMaterialPointValue"><code class="docutils literal notranslate"><span class="pre">EnergySourceMaterialPointValue.EnergySourceMaterialPointValue</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#constant-by-region">Constant by region</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceConstant"><code class="docutils literal notranslate"><span class="pre">EnergySourceConstant</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceConstant.EnergySourceConstant"><code class="docutils literal notranslate"><span class="pre">EnergySourceConstant.EnergySourceConstant</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#shear-heating">Shear heating</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceShearHeating"><code class="docutils literal notranslate"><span class="pre">EnergySourceShearHeating</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceShearHeating.EnergySourceShearHeating"><code class="docutils literal notranslate"><span class="pre">EnergySourceShearHeating.EnergySourceShearHeating</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="material_parameters.html#exponential-decay">Exponential decay</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceDecay"><code class="docutils literal notranslate"><span class="pre">EnergySourceDecay</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="material_parameters.html#genepy.EnergySourceDecay.EnergySourceDecay"><code class="docutils literal notranslate"><span class="pre">EnergySourceDecay.EnergySourceDecay</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.Model.Model"><code class="docutils literal notranslate"><span class="pre">Model.Model</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.Model.Model.name"><code class="docutils literal notranslate"><span class="pre">Model.Model.name</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.Model.Model.regions"><code class="docutils literal notranslate"><span class="pre">Model.Model.regions</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.Model.Model.bcs"><code class="docutils literal notranslate"><span class="pre">Model.Model.bcs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.Model.Model.ics"><code class="docutils literal notranslate"><span class="pre">Model.Model.ics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.Model.Model.options"><code class="docutils literal notranslate"><span class="pre">Model.Model.options</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#markers-management">Markers management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.MarkersManagement"><code class="docutils literal notranslate"><span class="pre">MarkersManagement</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.MarkersManagement.MarkersManagement"><code class="docutils literal notranslate"><span class="pre">MarkersManagement.MarkersManagement</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#passive-tracers">Passive tracers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pswarm">Pswarm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.Pswarm"><code class="docutils literal notranslate"><span class="pre">Pswarm</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.Pswarm.Pswarm"><code class="docutils literal notranslate"><span class="pre">Pswarm.Pswarm</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#fill-entire-domain">Fill entire domain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.PswarmFillDomain"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomain</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.PswarmFillDomain.PswarmFillDomain"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomain.PswarmFillDomain</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#fill-domain-within-a-bounding-box">Fill domain within a bounding box</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.PswarmFillDomainWithinBoundingBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomainWithinBoundingBox</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.PswarmFillDomainWithinBoundingBox.PswamFillDomainWithinBoundingBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomainWithinBoundingBox.PswamFillDomainWithinBoundingBox</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#fill-domain-within-a-bounding-box-with-a-given-number-of-particles">Fill domain within a bounding box with a given number of particles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.PswarmFillBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillBox</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.PswarmFillBox.PswarmFillBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillBox.PswarmFillBox</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#place-only-selected-tracers">Place only selected tracers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.PswarmFromUserList"><code class="docutils literal notranslate"><span class="pre">PswarmFromUserList</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="model.html#genepy.PswarmFromUserList.PswarmFromUserList"><code class="docutils literal notranslate"><span class="pre">PswarmFromUserList.PswarmFromUserList</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#surface-processes">Surface processes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.SPMDiffusion"><code class="docutils literal notranslate"><span class="pre">SPMDiffusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.SPMDiffusion.SPMDiffusion"><code class="docutils literal notranslate"><span class="pre">SPMDiffusion.SPMDiffusion</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#genepy.SPMDiffusionBaselvl"><code class="docutils literal notranslate"><span class="pre">SPMDiffusionBaselvl</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#genepy.SPMDiffusionBaselvl.SPMDiffusionBaselvl"><code class="docutils literal notranslate"><span class="pre">SPMDiffusionBaselvl.SPMDiffusionBaselvl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

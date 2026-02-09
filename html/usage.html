@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Building a mesh with Gmsh for the initial geometry and boundary conditions" href="gmsh_tuto.html" />
+    <link rel="prev" title="Welcome to Genepy’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-a-model">Building a model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gmsh_tuto.html">Building a mesh with Gmsh for the initial geometry and boundary conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/simple_model.html">Example: simple model, linear viscous rheology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/oblique_model.html">Example: oblique model, non-linear rheology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/strikeslip_model.html">Example: strike-slip model, rotated velocity field and mesh refinement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html">Example: Two phases model, extension followed by compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/ale_model.html">Arbitrary Lagrangian Eulerian (ALE) model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#run-ptatin3d">Run pTatin3d</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compute-initial-topography">Compute initial topography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-initial-conditions-driver">Running initial conditions driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-linear-driver">Running linear driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computing-steady-state-temperature">Computing steady-state temperature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-non-linear-driver-with-checkpointing">Running non-linear driver with checkpointing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="genepy_docs.html">Module genepy</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Genepy’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gmsh_tuto.html" class="btn btn-neutral float-right" title="Building a mesh with Gmsh for the initial geometry and boundary conditions" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
+<section id="installation">
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>First, this module requires python &gt;= 3.10  and the following
+dependencies that can all be installed using pip</p>
+<ul class="simple">
+<li><p>numpy</p></li>
+<li><p>sympy</p></li>
+<li><p>matplotlib</p></li>
+<li><p>pyvista</p></li>
+</ul>
+<p>To be able to import genepy module its location needs to be known by
+the environment variable <strong>$PYTHONPATH</strong>.
+To do so, move yourself in Genepy and type</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">source genepy.sh</span>
+</pre></div>
+</div>
+<p>This needs to be done every time a new terminal or python session is opened.
+Another possibility is to add it to your bashrc or zshrc but it may be erased by python virtual environment when loaded.</p>
+<p>Once your <strong>$PYTHONPATH</strong> has been appended check that it works correctly by typing</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span>
+</pre></div>
+</div>
+<p>in a python terminal. If no error is raised, the module is correctly installed.</p>
+</section>
+<section id="building-a-model">
+<h2>Building a model<a class="headerlink" href="#building-a-model" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gmsh_tuto.html">Building a mesh with Gmsh for the initial geometry and boundary conditions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gmsh_tuto.html#points">1. Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmsh_tuto.html#lines">2. Lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmsh_tuto.html#surfaces">3. Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmsh_tuto.html#volumes">4. Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmsh_tuto.html#physical-groups">5. Physical groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmsh_tuto.html#mesh">6. Mesh</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In each examples, the following code blocks may re-use variables defined in previous blocks.
+To ensure that the code runs correctly,
+it is recommended to run the code blocks in the order they are presented.</p>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/simple_model.html">Example: simple model, linear viscous rheology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple_model.html#velocity-function">2. Velocity function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple_model.html#boundary-conditions">4. Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/simple_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/oblique_model.html">Example: oblique model, non-linear rheology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/oblique_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/oblique_model.html#velocity-function">2. Velocity function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/oblique_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/oblique_model.html#boundary-conditions">4. Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/oblique_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/oblique_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/strikeslip_model.html">Example: strike-slip model, rotated velocity field and mesh refinement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#mesh-refinement">2. Mesh refinement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#rotation">3. Rotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#velocity-field">4. Velocity field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#define-gaussian-weak-zones">5. Define gaussian weak zones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#initial-conditions">6. Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#boundary-conditions">7. Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#material-parameters">8. Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#add-surface-processes">9. Add surface processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#add-passive-tracers">10. Add passive tracers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/strikeslip_model.html#create-the-model-and-generate-options">11.  Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/time_dependant_model.html">Example: Two phases model, extension followed by compression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/time_dependant_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/time_dependant_model.html#velocity-field">2. Velocity field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html#extension-phase">2.1. Extension phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html#compression-phase">2.2. Compression phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html#combine-the-two-phases">2.3. Combine the two phases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/time_dependant_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/time_dependant_model.html#boundary-conditions">4. Boundary conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html#temperature-boundary-conditions">4.1. Temperature boundary conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html#id1">4.2. Extension phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html#id2">4.3. Compression phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/time_dependant_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/time_dependant_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ale_model.html">Arbitrary Lagrangian Eulerian (ALE) model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/ale_model.html#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/ale_model.html#velocity-function">2. Velocity function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/ale_model.html#initial-conditions">3. Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/ale_model.html#boundary-conditions">4. Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/ale_model.html#material-parameters">5. Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/ale_model.html#create-the-model-and-generate-options">6. Create the model and generate options</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="run-ptatin3d">
+<h2>Run pTatin3d<a class="headerlink" href="#run-ptatin3d" title="Link to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This section <strong>does not</strong> cover the installation of <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.</p>
+<p>All commands are given to run in serial (1 MPI rank) and using
+the standard bash command line arguments. For a parallel run on a HPC machine you need
+to refer to the machine’s documentation.</p>
+<p>In the following examples,
+the environment variable <code class="code docutils literal notranslate"><span class="pre">PETSC_ARCH</span></code> is assumed to be known.</p>
+</div>
+<p>To run the model, you need to have <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> installed on your system.
+Once your model is built and the options file is saved,
+you can run the model using the commands presented below.</p>
+<section id="compute-initial-topography">
+<h3>Compute initial topography<a class="headerlink" href="#compute-initial-topography" title="Link to this heading"></a></h3>
+<p>If your problem involves a density distribution that should produce non-zero topography,
+<a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> provides an automatic method to compute an initial isostatic topography.
+Options related to this problem are provided by default and can be changed using the
+corresponding keywords arguments found in the <a class="reference internal" href="model.html#genepy.Model" title="genepy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> class.</p>
+<p>The option</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-model_GENE3D_isostatic_density_ref<span class="w"> </span><span class="m">3300</span>
+</pre></div>
+</div>
+<p>indicate the reference density in kg.m<sup>-3</sup> considered to compute the isostatic equilibrium and the option</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-model_GENE3D_isostatic_depth<span class="w"> </span>-40e3
+</pre></div>
+</div>
+<p>indicate the depth at which the compensation should be computed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a rule of thumb from experiments, the compensation depth should be chosen
+near the transition from lower densities to the reference density.
+As an example for lithospheric models, the approximate Moho depth is a decent candidate.</p>
+</div>
+<p>To compute this topography run the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$PETSC_ARCH</span>/bin/test_ptatin_driver_pressure_poisson.app<span class="w"> </span>-options_file<span class="w"> </span>path_to_file.opts<span class="w"> </span>-run<span class="w"> </span>-isostatic_remesh
+</pre></div>
+</div>
+<p>It will write a file named <code class="docutils literal notranslate"><span class="pre">isostatic_displacement.pbvec</span></code> that will be used by the next driver
+ran to adjust the topography, therefore to verify the generated topography you need to run another
+driver among the ones presented below.</p>
+</section>
+<section id="running-initial-conditions-driver">
+<h3>Running initial conditions driver<a class="headerlink" href="#running-initial-conditions-driver" title="Link to this heading"></a></h3>
+<p>Before running an actual solve, it is good practice to first run the initial conditions
+driver of <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> to verify that the Stokes boundary conditions, the initial geometry
+and the potential initial plastic strain are correctly defined.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the viscosity type requested is non-linear and depends on the velocity and temperature,
+the viscosity may not be correct because the velocity, pressure and temperature fields
+have not been solved for.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$PETSC_ARCH</span>/bin/ptatin_driver_ic.app<span class="w"> </span>-options_file<span class="w"> </span>path_to_file.opts
+</pre></div>
+</div>
+<p>By default, the following options are added to the options file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-model_GENE3D_output_markers
+-model_GENE3D_bc_debug
+</pre></div>
+</div>
+<p>Before running a large job you should remove them from your options file to avoid
+the flood of the filesystem and standard output.</p>
+</section>
+<section id="running-linear-driver">
+<h3>Running linear driver<a class="headerlink" href="#running-linear-driver" title="Link to this heading"></a></h3>
+<p>If the problem is linear i.e., the viscosities are viscous linear you can run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$PETSC_ARCH</span>/bin/ptatin_driver_linear_ts.app<span class="w"> </span>-options_file<span class="w"> </span>path_to_file.opts
+</pre></div>
+</div>
+</section>
+<section id="computing-steady-state-temperature">
+<h3>Computing steady-state temperature<a class="headerlink" href="#computing-steady-state-temperature" title="Link to this heading"></a></h3>
+<p>If your problem involves temperature, you can compute the initial temperature distribution
+using a steady-state solution of the heat equation.
+<a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> provides a driver to compute this solution.
+Run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$PETSC_ARCH</span>/bin/test_steady_state_diffusion_solve_TFV.app<span class="w"> </span>-options_file<span class="w"> </span>path_to_file.opts
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If your problem involves the asthenosphere, to produce a constant vertical temperature variation in the asthenosphere</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial T}{\partial y} = c\]</div>
+<p>i.e., a linear temperature distribution in the asthenosphere, you need to provide a high conductivity value to your asthensophere.
+However, be careful to set back a reasonable value for the conductivity before running the time dependant problem.</p>
+</div>
+<p>This will write a file named <code class="docutils literal notranslate"><span class="pre">temperature_steady.pbvec</span></code> and if your options file
+contains the option (default):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-view_ic
+</pre></div>
+</div>
+<p>it will also output a file named <code class="docutils literal notranslate"><span class="pre">T_steady.vts</span></code> that contains the solution.</p>
+</section>
+<section id="running-non-linear-driver-with-checkpointing">
+<h3>Running non-linear driver with checkpointing<a class="headerlink" href="#running-non-linear-driver-with-checkpointing" title="Link to this heading"></a></h3>
+<p>Finally, after computing the initial topography (if required) and
+initial temperature distribution,
+to run a non-linear problem with checkpointing capabilities you can run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$PETSC_ARCH</span>/bin/test_ptatin_driver_checkpoint_fv.app<span class="w"> </span>-options_file<span class="w"> </span>path_to_file.opts<span class="w"> </span>-init
+<span class="nv">$PETSC_ARCH</span>/bin/test_ptatin_driver_checkpoint_fv.app<span class="w"> </span>-options_file<span class="w"> </span>path_to_file.opts<span class="w"> </span>-run
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Genepy’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gmsh_tuto.html" class="btn btn-neutral float-right" title="Building a mesh with Gmsh for the initial geometry and boundary conditions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

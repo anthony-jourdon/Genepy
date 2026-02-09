@@ -1,0 +1,1252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Initial conditions &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Boundary conditions" href="boundary_conditions.html" />
+    <link rel="prev" title="Module genepy" href="genepy_docs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="genepy_docs.html">Module genepy</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Initial conditions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#domain">Domain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eulerian-domain-with-free-surface">Eulerian Domain (with free-surface)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ale-domain">ALE Domain</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-refinement">Mesh refinement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.MeshRefinement"><code class="docutils literal notranslate"><span class="pre">MeshRefinement</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rotation">Rotation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Rotation"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gaussian">Gaussian</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Gaussian"><code class="docutils literal notranslate"><span class="pre">Gaussian</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.GaussianConstructor"><code class="docutils literal notranslate"><span class="pre">GaussianConstructor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Gaussian2D"><code class="docutils literal notranslate"><span class="pre">Gaussian2D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Gaussian3D"><code class="docutils literal notranslate"><span class="pre">Gaussian3D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.GaussianPlane"><code class="docutils literal notranslate"><span class="pre">GaussianPlane</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.GaussianCircle"><code class="docutils literal notranslate"><span class="pre">GaussianCircle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.GaussiansOptions"><code class="docutils literal notranslate"><span class="pre">GaussiansOptions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#plastic-strain">Plastic strain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.InitialPlasticStrain"><code class="docutils literal notranslate"><span class="pre">InitialPlasticStrain</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-source">Heat source</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.InitialHeatSource"><code class="docutils literal notranslate"><span class="pre">InitialHeatSource</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ics-ptatin3d-options-generation">ICs pTatin3d options generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.InitialConditions"><code class="docutils literal notranslate"><span class="pre">InitialConditions</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html">Material parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#markers-management">Markers management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#passive-tracers">Passive tracers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#surface-processes">Surface processes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="genepy_docs.html">Module genepy</a></li>
+      <li class="breadcrumb-item active">Initial conditions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/initial_conditions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="genepy_docs.html" class="btn btn-neutral float-left" title="Module genepy" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boundary_conditions.html" class="btn btn-neutral float-right" title="Boundary conditions" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="initial-conditions">
+<h1>Initial conditions<a class="headerlink" href="#initial-conditions" title="Link to this heading"></a></h1>
+<p>Contains the classes to define the initial conditions such as the
+geometry of the physical domain, the mesh refinement or an initial field with
+a gaussian distribution.
+It generates symbolic expressions of the coordinates and initial field distribution.</p>
+<section id="domain">
+<h2>Domain<a class="headerlink" href="#domain" title="Link to this heading"></a></h2>
+<p>In <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>, the physical domain where the simulation is performed
+is defined by the coordinate system showed in the figure below.</p>
+<a class="reference internal image-reference" href="_images/coordinate_system.png"><img alt="_images/coordinate_system.png" class="align-center" src="_images/coordinate_system.png" style="width: 400px;" />
+</a>
+<p>The following code describes the physical domain.
+While most of the usage of this class is for 3 dimensional domains,
+it can also be used for 2 dimensional and 1 dimensional domains.</p>
+<section id="eulerian-domain-with-free-surface">
+<h3>Eulerian Domain (with free-surface)<a class="headerlink" href="#eulerian-domain-with-free-surface" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Domain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minCoor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Domain" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Domain.Domain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minCoor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Domain.Domain" title="Link to this definition"></a></dt>
+<dd><p>Class to build a physical domain. 
+Compatible with 1D, 2D and 3D domains.
+Coordinates (symbolic and numeric) are instantiated by the class constructor using provided coordinates or creating new if not provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<em>int</em>) – dimension of the domain (can be 1, 2 or 3)</p></li>
+<li><p><strong>minCoor</strong> (<em>np.ndarray</em>) – minimum coordinates of the domain</p></li>
+<li><p><strong>maxCoor</strong> (<em>np.ndarray</em>) – maximum coordinates of the domain</p></li>
+<li><p><strong>size</strong> (<em>np.ndarray</em>) – size of the domain (number of points in each direction)</p></li>
+<li><p><strong>coor</strong> (<em>np.ndarray</em>) – coordinates of the domain (numerical), optional</p></li>
+</ul>
+</dd>
+</dl>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span>      <span class="o">=</span> <span class="mi">3</span>
+<span class="n">minCoord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">maxCoord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">size</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">17</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+<span class="n">domain</span>   <span class="o">=</span> <span class="n">genepy</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">minCoord</span><span class="p">,</span><span class="n">maxCoord</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h4>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.dim">
+<span class="sig-name descname"><span class="pre">dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Domain.Domain.dim" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Dimension of the domain</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.O">
+<span class="sig-name descname"><span class="pre">O</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Domain.Domain.O" title="Link to this definition"></a></dt>
+<dd><p>Minimum coordinates of the domain, expected shape: <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code> and dtype: <code class="docutils literal notranslate"><span class="pre">np.float64</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Domain.Domain.L" title="Link to this definition"></a></dt>
+<dd><p>Maximum coordinates of the domain, expected shape: <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code> and dtype: <code class="docutils literal notranslate"><span class="pre">np.float64</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.O_num">
+<span class="sig-name descname"><span class="pre">O_num</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Domain.Domain.O_num" title="Link to this definition"></a></dt>
+<dd><p>Minimum coordinates of the domain, expected shape: <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code> and dtype: <code class="docutils literal notranslate"><span class="pre">np.float64</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.L_num">
+<span class="sig-name descname"><span class="pre">L_num</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Domain.Domain.L_num" title="Link to this definition"></a></dt>
+<dd><p>Maximum coordinates of the domain, expected shape: <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code> and dtype: <code class="docutils literal notranslate"><span class="pre">np.float64</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.n">
+<span class="sig-name descname"><span class="pre">n</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Domain.Domain.n" title="Link to this definition"></a></dt>
+<dd><p>Size of the domain (number of nodes in each direction), expected shape: <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code> and dtype: <code class="docutils literal notranslate"><span class="pre">np.int32</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.nv">
+<span class="sig-name descname"><span class="pre">nv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Domain.Domain.nv" title="Link to this definition"></a></dt>
+<dd><p>Total number of nodes in the domain</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.num_coor">
+<span class="sig-name descname"><span class="pre">num_coor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#genepy.Domain.Domain.num_coor" title="Link to this definition"></a></dt>
+<dd><p>Numerical coordinates of the domain created by <a class="reference internal" href="#genepy.Domain.numerical_coordinates" title="genepy.Domain.numerical_coordinates"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numerical_coordinates()</span></code></a> . 
+Tuple <code class="docutils literal notranslate"><span class="pre">(X)</span></code>, <code class="docutils literal notranslate"><span class="pre">(X,Y)</span></code> or <code class="docutils literal notranslate"><span class="pre">(X,Y,Z)</span></code> (depending on the number of dimensions)
+with each direction being of type ndarray and shape <code class="docutils literal notranslate"><span class="pre">X.shape</span> <span class="pre">=</span> <span class="pre">(*n)</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Domain.Domain.sym_coor">
+<span class="sig-name descname"><span class="pre">sym_coor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#genepy.Domain.Domain.sym_coor" title="Link to this definition"></a></dt>
+<dd><p>Symbolic coordinates of the domain. 
+Tuple <code class="docutils literal notranslate"><span class="pre">('x')</span></code>, <code class="docutils literal notranslate"><span class="pre">('x','y')</span></code> or <code class="docutils literal notranslate"><span class="pre">('x','y','z')</span></code></p>
+</dd></dl>
+
+</section>
+<section id="methods">
+<h4>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h4>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Domain.numerical_coordinates">
+<span class="sig-name descname"><span class="pre">numerical_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Domain.numerical_coordinates" title="Link to this definition"></a></dt>
+<dd><p>Computes the numerical coordinates of the domain as a uniform grid. 
+Compatible with 1D, 2D and 3D.
+Attach the coordinates to the attribute 
+<a class="reference internal" href="#genepy.Domain.Domain.num_coor" title="genepy.initial_conditions.domain.Domain.num_coor"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_coor</span></code></a> 
+as a tuple: <code class="docutils literal notranslate"><span class="pre">self.num_coor</span> <span class="pre">=</span> <span class="pre">(X,Y,Z)</span></code> 
+with each direction being of the shape <code class="docutils literal notranslate"><span class="pre">X.shape</span> <span class="pre">=</span> <span class="pre">(self.n[0],self.n[1],self.n[2])</span></code>.
+Tuples are immutable, so to modify the coordinates, convert them to a list first and restore them as tuple once done.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Domain.shape_coor">
+<span class="sig-name descname"><span class="pre">shape_coor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Domain.shape_coor" title="Link to this definition"></a></dt>
+<dd><p>Reshapes the coordinates from <code class="docutils literal notranslate"><span class="pre">(n[0],n[1],n[2])</span></code> to <code class="docutils literal notranslate"><span class="pre">(nv,dim)</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Domain.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Domain.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – name of the model to include in the options</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the options</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Domain.symbolic_coordinates">
+<span class="sig-name descname"><span class="pre">symbolic_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Domain.symbolic_coordinates" title="Link to this definition"></a></dt>
+<dd><p>Computes the symbolic coordinates of the domain.
+Works in 1D, 2D and 3D.
+Attach the coordinates to the attribute 
+<a class="reference internal" href="#genepy.Domain.Domain.sym_coor" title="genepy.initial_conditions.domain.Domain.sym_coor"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sym_coor</span></code></a> 
+as a tuple (<code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>)</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="ale-domain">
+<h3>ALE Domain<a class="headerlink" href="#ale-domain" title="Link to this heading"></a></h3>
+<p>In case an ALE simulation is performed, the domain can be defined as a moving domain.
+Therefore, its minumum and maximum coordinates will change in time and expressions relying
+on the size of the domain need to consider this.
+To do so, the following class introduce symbolic representation of the domain with the symbols
+<code class="docutils literal notranslate"><span class="pre">&quot;Ox&quot;,</span> <span class="pre">&quot;Oy&quot;,</span> <span class="pre">&quot;Oz&quot;</span></code> for the origin of the domain and <code class="docutils literal notranslate"><span class="pre">&quot;Lx&quot;,</span> <span class="pre">&quot;Ly&quot;,</span> <span class="pre">&quot;Lz&quot;</span></code> for the size of the domain.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.DomainALE">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">DomainALE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minCoor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.DomainALE" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.DomainALE.DomainALE">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DomainALE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minCoor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.DomainALE.DomainALE" title="Link to this definition"></a></dt>
+<dd><p>Class to build a physical domain for ALE simulations. 
+This class creates sympy symbols for the min and max coordinates of the domain to evaluate expressions 
+in which the size of the domain is a variable (typically ALE simulations). 
+Inherits from <a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<em>int</em>) – dimension of the domain (can be 1, 2 or 3)</p></li>
+<li><p><strong>minCoor</strong> (<em>np.ndarray</em>) – minimum coordinates of the domain</p></li>
+<li><p><strong>maxCoor</strong> (<em>np.ndarray</em>) – maximum coordinates of the domain</p></li>
+<li><p><strong>size</strong> (<em>np.ndarray</em>) – size of the domain (number of points in each direction)</p></li>
+<li><p><strong>coor</strong> (<em>np.ndarray</em>) – coordinates of the domain (numerical), optional</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id2">
+<h4>Attributes<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.DomainALE.DomainALE.O_num">
+<span class="sig-name descname"><span class="pre">O_num</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.DomainALE.DomainALE.O_num" title="Link to this definition"></a></dt>
+<dd><p>Symbols of the minimum coordinates of the domain <code class="docutils literal notranslate"><span class="pre">[&quot;Ox&quot;,&quot;Oy&quot;,&quot;Oz&quot;]</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.DomainALE.DomainALE.L_num">
+<span class="sig-name descname"><span class="pre">L_num</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.DomainALE.DomainALE.L_num" title="Link to this definition"></a></dt>
+<dd><p>Symbols of the maximum coordinates of the domain <code class="docutils literal notranslate"><span class="pre">[&quot;Lx&quot;,&quot;Ly&quot;,&quot;Lz&quot;]</span></code></p>
+</dd></dl>
+
+<p>Other attributes are inherited from the <a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> class.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.DomainALE.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.DomainALE.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model to include in the options</p></li>
+<li><p><strong>ale_rm_component</strong> (<em>list</em>) – list of components to remove from the mesh. Valid values are <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the options</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="mesh-refinement">
+<h2>Mesh refinement<a class="headerlink" href="#mesh-refinement" title="Link to this heading"></a></h2>
+<p>This module contains the class describing the mesh refinement.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.MeshRefinement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">MeshRefinement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MeshRefinement" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.MeshRefinement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MeshRefinement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MeshRefinement.MeshRefinement" title="Link to this definition"></a></dt>
+<dd><p>Class to refine a mesh in one or more directions. 
+The refinement is done by linear interpolation of the coordinates of the mesh in the specified directions.
+The class is a subclass of <a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – domain to refine</p></li>
+<li><p><strong>refinement_params</strong> (<em>dict</em>) – dictionary containing the refinement parameters. The dictionary must have the following structure:</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">refinement_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;x_initial&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="s2">&quot;x_refined&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)},</span>
+                     <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;x_initial&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="s2">&quot;x_refined&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)},</span>
+                     <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;x_initial&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="s2">&quot;x_refined&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">refinement_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;mesh_fraction&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="s2">&quot;x_refined&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)}}</span>
+</pre></div>
+</div>
+<p>The keys of the dictionary are the directions to refine (<code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>) 
+and the values are dictionaries with the keys:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;x_initial&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;x_refined&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;mesh_fraction&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;x_refined&quot;</span></code></p></li>
+</ol>
+<p>In the first case, the values of these keys are numpy arrays of the initial and refined coordinates in the specified direction. 
+In the second case, the values of these keys are numpy arrays of the mesh fractions and the refined coordinates in the specified direction.
+The arrays must have the same shape.</p>
+<section id="id4">
+<h3>Attributes<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.MeshRefinement.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#genepy.MeshRefinement.MeshRefinement.params" title="Link to this definition"></a></dt>
+<dd><p>Refinement parameters</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.MeshRefinement.dirmap">
+<span class="sig-name descname"><span class="pre">dirmap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#genepy.MeshRefinement.MeshRefinement.dirmap" title="Link to this definition"></a></dt>
+<dd><p>Dictionary to map the direction to the index of the direction in the mesh i.e., <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;:0</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;:1</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;:2</span></code></p>
+</dd></dl>
+
+</section>
+<section id="id5">
+<h3>Methods<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MeshRefinement.normalize" title="Link to this definition"></a></dt>
+<dd><p>Normalize the coordinates of the mesh in the specified direction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – coordinates to normalize</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – direction of the coordinates to normalize</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>normalized coordinates</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.refine">
+<span class="sig-name descname"><span class="pre">refine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MeshRefinement.refine" title="Link to this definition"></a></dt>
+<dd><p>Refine the mesh in the specified directions in <a class="reference internal" href="#genepy.MeshRefinement.MeshRefinement.params" title="genepy.MeshRefinement.MeshRefinement.params"><code class="xref py py-attr docutils literal notranslate"><span class="pre">params</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.refine_direction">
+<span class="sig-name descname"><span class="pre">refine_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_initial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_refined</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MeshRefinement.refine_direction" title="Link to this definition"></a></dt>
+<dd><p>Refine the mesh in the specified direction using linear interpolation.
+<a class="reference internal" href="#genepy.Domain.Domain.num_coor" title="genepy.initial_conditions.domain.Domain.num_coor"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_coor</span></code></a> is updated with the refined coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<em>int</em>) – direction of the mesh to refine (<code class="docutils literal notranslate"><span class="pre">0:x</span></code>, <code class="docutils literal notranslate"><span class="pre">1:y</span></code>, <code class="docutils literal notranslate"><span class="pre">2:z</span></code>)</p></li>
+<li><p><strong>x_initial</strong> (<em>np.ndarray</em>) – initial coordinates</p></li>
+<li><p><strong>x_refined</strong> (<em>np.ndarray</em>) – refined coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.MeshRefinement.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MeshRefinement.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns a string formatted for pTatin3d input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – name of the model to include in the options</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the options</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="rotation">
+<h2>Rotation<a class="headerlink" href="#rotation" title="Link to this heading"></a></h2>
+<p>This module contains the class to perform rotations of single vectors,
+vector fields and referential in 2D and 3D.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Rotation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0,</span> <span class="pre">1,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Rotation.Rotation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.array([0,</span> <span class="pre">1,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation.Rotation" title="Link to this definition"></a></dt>
+<dd><p>Class to perform rotation of a referential in 2D or 3D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<em>int</em>) – dimension of the rotation (can be 2 or 3)</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – angle of rotation in radians</p></li>
+<li><p><strong>axis</strong> (<em>np.ndarray</em>) – axis of rotation (default is y-axis)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id7">
+<h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span>   <span class="o">=</span> <span class="mi">3</span>                                   <span class="c1"># dimension</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mf">90.0</span><span class="p">)</span>                   <span class="c1"># angle of rotation</span>
+<span class="n">axis</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># axis of rotation</span>
+<span class="c1"># Create class instance</span>
+<span class="n">Rotation</span> <span class="o">=</span> <span class="n">genepy</span><span class="o">.</span><span class="n">Rotation</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>Attributes<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Rotation.Rotation.dim">
+<span class="sig-name descname"><span class="pre">dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#genepy.Rotation.Rotation.dim" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Spatial dimension in which the rotation is performed</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Rotation.Rotation.theta">
+<span class="sig-name descname"><span class="pre">theta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#genepy.Rotation.Rotation.theta" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Angle of rotation in radians</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Rotation.Rotation.axis">
+<span class="sig-name descname"><span class="pre">axis</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Rotation.Rotation.axis" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Axis of rotation, expected shape: <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code> and dtype: <code class="docutils literal notranslate"><span class="pre">np.float64</span></code></p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="id9">
+<h3>Methods<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Rotation.rotate_referential">
+<span class="sig-name descname"><span class="pre">rotate_referential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">O</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation.rotate_referential" title="Link to this definition"></a></dt>
+<dd><p>Rotate the referential of the coordinates <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> given the rotation matrix <span class="math notranslate nohighlight">\(\boldsymbol R\)</span>.
+The referential is first translated to be centred on <span class="math notranslate nohighlight">\(\mathbf{0}\)</span>, then rotated and finally translated back to its original position.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf x_T &amp;= \mathbf x - \frac{1}{2}(\mathbf L + \mathbf O) \\
+\mathbf x_{TR} &amp;= \boldsymbol R \mathbf x_T \\
+\mathbf x_R &amp;= \mathbf x_{TR} + \frac{1}{2}(\mathbf L + \mathbf O)\end{split}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coor</strong> (<em>np.ndarray</em>) – coordinates to be rotated of the shape <code class="docutils literal notranslate"><span class="pre">(npoints,dim)</span></code></p></li>
+<li><p><strong>O</strong> (<em>np.ndarray</em>) – origin of the referential of the shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code></p></li>
+<li><p><strong>L</strong> (<em>np.ndarray</em>) – maximum coordinates of the referential of the shape <code class="docutils literal notranslate"><span class="pre">(dim,)</span></code></p></li>
+<li><p><strong>ccw</strong> (<em>bool</em>) – rotate counter-clockwise (default is True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>coorR</strong> rotated coordinates of the shape <code class="docutils literal notranslate"><span class="pre">(npoints,dim)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Rotation.rotate_vector">
+<span class="sig-name descname"><span class="pre">rotate_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation.rotate_vector" title="Link to this definition"></a></dt>
+<dd><p>Rotate vector(s) <span class="math notranslate nohighlight">\(\mathbf u\)</span> given the rotation matrix <span class="math notranslate nohighlight">\(\boldsymbol R\)</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is <strong>not</strong> a rotation of the vector field, but a rotation of the vectors themselves.
+To rotate the vector field, have a look at how it is done in
+<a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear.evaluate_velocity_symbolic" title="genepy.VelocityLinear.evaluate_velocity_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_symbolic()</span></code></a>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>np.ndarray</em>) – rotation matrix of the shape <code class="docutils literal notranslate"><span class="pre">(dim,dim)</span></code></p></li>
+<li><p><strong>u</strong> (<em>np.ndarray</em>) – vector(s) to be rotated of the shape <code class="docutils literal notranslate"><span class="pre">(npoints,dim)</span></code></p></li>
+<li><p><strong>ccw</strong> (<em>bool</em>) – rotate counter-clockwise (default is True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>u_R</strong> rotated vector(s) of the shape <code class="docutils literal notranslate"><span class="pre">(npoints,dim)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Rotation.rotation_matrix">
+<span class="sig-name descname"><span class="pre">rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation.rotation_matrix" title="Link to this definition"></a></dt>
+<dd><p>Return the rotation matrix depending on the <a class="reference internal" href="#genepy.Rotation.Rotation.dim" title="genepy.rotation.Rotation.dim"><code class="xref py py-attr docutils literal notranslate"><span class="pre">spatial</span> <span class="pre">dimension</span></code></a>.
+calls <a class="reference internal" href="#genepy.Rotation.rotation_matrix_2d" title="genepy.Rotation.rotation_matrix_2d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rotation_matrix_2d()</span></code></a> or 
+<a class="reference internal" href="#genepy.Rotation.rotation_matrix_3d" title="genepy.Rotation.rotation_matrix_3d"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rotation_matrix_3d()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>R</strong> rotation matrix in 2D or 3D of the shape <code class="docutils literal notranslate"><span class="pre">(2,2)</span></code> or <code class="docutils literal notranslate"><span class="pre">(3,3)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Rotation.rotation_matrix_2d">
+<span class="sig-name descname"><span class="pre">rotation_matrix_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation.rotation_matrix_2d" title="Link to this definition"></a></dt>
+<dd><p>computes the 2D rotation matrix given the angle <a class="reference internal" href="#genepy.Rotation.Rotation.theta" title="genepy.rotation.Rotation.theta"><code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>R</strong> rotation matrix in 2D of the shape <code class="docutils literal notranslate"><span class="pre">(2,2)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.Rotation.rotation_matrix_3d">
+<span class="sig-name descname"><span class="pre">rotation_matrix_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Rotation.rotation_matrix_3d" title="Link to this definition"></a></dt>
+<dd><p>computes the 3D rotation matrix given the angle <a class="reference internal" href="#genepy.Rotation.Rotation.theta" title="genepy.rotation.Rotation.theta"><code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code></a> and the <a class="reference internal" href="#genepy.Rotation.Rotation.axis" title="genepy.rotation.Rotation.axis"><code class="xref py py-attr docutils literal notranslate"><span class="pre">axis</span></code></a> of rotation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>R</strong> rotation matrix in 3D of the shape <code class="docutils literal notranslate"><span class="pre">(3,3)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="gaussian">
+<h2>Gaussian<a class="headerlink" href="#gaussian" title="Link to this heading"></a></h2>
+<p>This module contains the class to evaluate gaussian distributions of a field in 2D.
+It is generally used to define the initial strain distribution to place weak zones in the domain.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Gaussian">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Gaussian" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Gaussian.Gaussian">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Gaussian.Gaussian" title="Link to this definition"></a></dt>
+<dd><p>Parent class of all the Gaussian distributions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Gaussian.Gaussian.gaussian_sym">
+<span class="sig-name descname"><span class="pre">gaussian_sym</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">sympy.Expr</span></em><a class="headerlink" href="#genepy.Gaussian.Gaussian.gaussian_sym" title="Link to this definition"></a></dt>
+<dd><p>Symbolic expression of the gaussian distribution</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Gaussian.Gaussian.gaussian_num">
+<span class="sig-name descname"><span class="pre">gaussian_num</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#genepy.Gaussian.Gaussian.gaussian_num" title="Link to this definition"></a></dt>
+<dd><p>Numerical values of the gaussian distribution</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussianConstructor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">GaussianConstructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Expr</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Expr</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianConstructor" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussianConstructor.GaussianConstructor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GaussianConstructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianConstructor.GaussianConstructor" title="Link to this definition"></a></dt>
+<dd><p>Child class of <a class="reference internal" href="#genepy.Gaussian" title="genepy.initial_conditions.gaussian.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gaussian</span></code></a> 
+to build a function describing a gaussian distribution defined by:</p>
+<div class="math notranslate nohighlight">
+\[g(\mathbf a, \mathbf x) = A \exp\left( - \mathbf a \cdot \mathbf x \cdot \mathbf x \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf a\)</span> is an array of coefficients such that <span class="math notranslate nohighlight">\(\mathbf a = [a_1,a_2,...,a_n]\)</span>, 
+<span class="math notranslate nohighlight">\(\mathbf x\)</span> is an array such that <span class="math notranslate nohighlight">\(\mathbf x = [x_1,x_2,...,x_n]\)</span> where
+<span class="math notranslate nohighlight">\(x_i, \, i = 1,2,...,n\)</span> can be single variables or mathematical functions and 
+<span class="math notranslate nohighlight">\(A\)</span> is the amplitude of the gaussian.</p>
+<p>This class is low level and should be called by the user to create its own gaussian distribution if not 
+already available with the child classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – instance of the Domain class</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – amplitude of the gaussian</p></li>
+<li><p><strong>a</strong> (<em>float</em><em> | </em><em>list</em><em> | </em><em>numpy.ndarray</em>) – gaussian extent coefficient(s). Can be a single float, a list or a numpy array.</p></li>
+<li><p><strong>expression</strong> (<em>sympy.Expr</em><em> | </em><em>list</em><em> | </em><em>numpy.ndarray</em>) – expression(s) of the gaussian. Can be a single expression, a list or a numpy array.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.GaussianConstructor.evaluate_gaussian">
+<span class="sig-name descname"><span class="pre">evaluate_gaussian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianConstructor.evaluate_gaussian" title="Link to this definition"></a></dt>
+<dd><p>Evaluate numerically the expression of the gaussian distribution.
+Uses the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">sympy.lambdify()</span></code> to convert the symbolic expression to a python callable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.GaussianConstructor.gaussian">
+<span class="sig-name descname"><span class="pre">gaussian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianConstructor.gaussian" title="Link to this definition"></a></dt>
+<dd><p>Compute the gaussian distribution for the given expression(s).
+Make use of the rule <span class="math notranslate nohighlight">\(\exp(a+b) = \exp(a)\exp(b)\)</span> to build the final multidimensional expression.
+The method is called by the class constructor and does not require to be called by the user.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Gaussian2D">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Gaussian2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Gaussian2D" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Gaussian2D.Gaussian2D">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gaussian2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Gaussian2D.Gaussian2D" title="Link to this definition"></a></dt>
+<dd><p>Child class of <a class="reference internal" href="#genepy.GaussianConstructor" title="genepy.initial_conditions.gaussian.GaussianConstructor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianConstructor</span></code></a> 
+to build a 2D gaussian distribution defined by:</p>
+<div class="math notranslate nohighlight">
+\[g((a,b);(x,z)) = A \exp\left( -\left( a(x-x_0)^2 + b(z-z_0)^2 \right) \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are coefficients controlling the shape of the gaussian in 
+the <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(z\)</span> directions respectively, 
+<span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(z_0\)</span> are the coordinates of the centre of the gaussian 
+and <span class="math notranslate nohighlight">\(A\)</span> is the amplitude of the gaussian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – instance of the Domain class</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – amplitude of the gaussian</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – gaussian extent coefficient in the <span class="math notranslate nohighlight">\(x\)</span> direction</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – gaussian extent coefficient in the <span class="math notranslate nohighlight">\(z\)</span> direction</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(x\)</span> coordinate of the centre of the gaussian</p></li>
+<li><p><strong>z0</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(z\)</span> coordinate of the centre of the gaussian</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – instance of the Rotation class (<strong>optional</strong>) to rotate the centre of the gaussian</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Domain</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">250e3</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">600e3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">300e3</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">Domain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">Gaussian</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Gaussian2D</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">z0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Gaussian</span><span class="p">)</span> <span class="c1"># prints the expression and the parameters of the gaussian</span>
+</pre></div>
+</div>
+<p>If one wants to numerically evaluate the gaussian distribution use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Gaussian</span><span class="o">.</span><span class="n">evaluate_gaussian</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Gaussian3D">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Gaussian3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Gaussian3D" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Gaussian3D.Gaussian3D">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gaussian3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Gaussian3D.Gaussian3D" title="Link to this definition"></a></dt>
+<dd><p>Child class of <a class="reference internal" href="#genepy.GaussianConstructor" title="genepy.initial_conditions.gaussian.GaussianConstructor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianConstructor</span></code></a> 
+to build a 3D gaussian distribution defined by:</p>
+<div class="math notranslate nohighlight">
+\[g((a,b,c);(x,y,z)) = A \exp\left( -\left( a(x-x_0)^2 + b(y-y_0)^2 + c(z-z_0)^2 \right) \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span> are coefficients controlling the shape of the gaussian in 
+the <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span> directions respectively, 
+<span class="math notranslate nohighlight">\(x_0\)</span>, <span class="math notranslate nohighlight">\(y_0\)</span> and <span class="math notranslate nohighlight">\(z_0\)</span> are the coordinates of the centre of the gaussian 
+and <span class="math notranslate nohighlight">\(A\)</span> is the amplitude of the gaussian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – instance of the Domain class</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – amplitude of the gaussian</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – gaussian extent coefficient in the <span class="math notranslate nohighlight">\(x\)</span> direction</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – gaussian extent coefficient in the <span class="math notranslate nohighlight">\(y\)</span> direction</p></li>
+<li><p><strong>c</strong> (<em>float</em>) – gaussian extent coefficient in the <span class="math notranslate nohighlight">\(z\)</span> direction</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(x\)</span> coordinate of the centre of the gaussian</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(y\)</span> coordinate of the centre of the gaussian</p></li>
+<li><p><strong>z0</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(z\)</span> coordinate of the centre of the gaussian</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – instance of the Rotation class (<strong>optional</strong>) to rotate the centre of the gaussian</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Domain</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">250e3</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">600e3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">300e3</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">Domain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">Gaussian</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Gaussian3D</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">y0</span><span class="p">,</span><span class="n">z0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Gaussian</span><span class="p">)</span> <span class="c1"># prints the expression and the parameters of the gaussian</span>
+</pre></div>
+</div>
+<p>If one wants to numerically evaluate the gaussian distribution use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Gaussian</span><span class="o">.</span><span class="n">evaluate_gaussian</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussianPlane">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">GaussianPlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianPlane" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussianPlane.GaussianPlane">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GaussianPlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_coeff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianPlane.GaussianPlane" title="Link to this definition"></a></dt>
+<dd><p>Child class of <a class="reference internal" href="#genepy.GaussianConstructor" title="genepy.initial_conditions.gaussian.GaussianConstructor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianConstructor</span></code></a>
+to build a 3D gaussian distribution around a plane defined by:</p>
+<div class="math notranslate nohighlight">
+\[g( a, D(\mathbf x) ) = A \exp\left( - a D(\mathbf x)^2 \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(a\)</span> is the coefficient controlling the shape of the gaussian around the plane and</p>
+<div class="math notranslate nohighlight">
+\[D(\mathbf x) = \frac{n_0 x + n_1 y + n_2 z + d}{\sqrt{n_0^2 + n_1^2 + n_2^2}} 
+= \frac{\mathbf n \cdot \mathbf x + d}{|| \mathbf n ||} \]</div>
+<p>is the equation describing the distance between a point of coordinates <span class="math notranslate nohighlight">\(\mathbf x\)</span> 
+and the plane defined by the normal vector <span class="math notranslate nohighlight">\(\mathbf n = [n_0, n_1, n_2]\)</span> and the parameter 
+<span class="math notranslate nohighlight">\(d\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – instance of the Domain class</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – amplitude of the gaussian</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – gaussian extent coefficient</p></li>
+<li><p><strong>plane_coeff</strong> (<em>np.ndarray</em>) – plane coefficients: <code class="docutils literal notranslate"><span class="pre">numpy.array([n_0,</span> <span class="pre">n_1,</span> <span class="pre">n_2,</span> <span class="pre">d])</span></code>
+where <span class="math notranslate nohighlight">\(n_0 x + n_1 y + n_2 z + d = 0\)</span></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Domain</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">250e3</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">600e3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">300e3</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">Domain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># gaussian extent coefficient</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1"># points defining the plane</span>
+<span class="n">pt_A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">200.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e3</span>
+<span class="n">pt_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">200.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e3</span>
+<span class="n">pt_C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">600.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e3</span>
+
+<span class="c1"># normal vector to the plane</span>
+<span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">pt_B</span> <span class="o">-</span> <span class="n">pt_A</span><span class="p">,</span> <span class="n">pt_C</span> <span class="o">-</span> <span class="n">pt_A</span><span class="p">)</span>
+<span class="c1"># d parameter</span>
+<span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span><span class="n">pt_A</span><span class="p">)</span>
+
+<span class="n">plane_coeff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">normal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">normal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">normal</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">d</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="n">Gaussian</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">GaussianPlane</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">plane_coeff</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussianCircle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">GaussianCircle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Rotation" title="genepy.rotation.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianCircle" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussianCircle.GaussianCircle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GaussianCircle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussianCircle.GaussianCircle" title="Link to this definition"></a></dt>
+<dd><p>Child class of <a class="reference internal" href="#genepy.GaussianConstructor" title="genepy.initial_conditions.gaussian.GaussianConstructor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianConstructor</span></code></a>
+to build a 2D gaussian distribution around a circle defined by:</p>
+<div class="math notranslate nohighlight">
+\[g( a, D(\mathbf x) ) = A \exp\left( - a D(\mathbf x)^2 \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(a\)</span> is the coefficient controlling the shape of the gaussian around the circle and</p>
+<div class="math notranslate nohighlight">
+\[D(\mathbf x) = \sqrt{(x-x_c)^2 + (z-z_c)^2} - r\]</div>
+<p>is the equation describing the distance between a point of coordinates <span class="math notranslate nohighlight">\(\mathbf x\)</span>
+and the circle defined by the centre <span class="math notranslate nohighlight">\((x_c,z_c)\)</span> and the radius <span class="math notranslate nohighlight">\(r\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – instance of the Domain class</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – amplitude of the gaussian</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – gaussian extent coefficient</p></li>
+<li><p><strong>xc</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(x\)</span> coordinate of the centre of the circle</p></li>
+<li><p><strong>zc</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(z\)</span> coordinate of the centre of the circle</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – radius of the circle</p></li>
+<li><p><strong>Rotation</strong> (<a class="reference internal" href="#genepy.Rotation" title="genepy.Rotation"><em>Rotation</em></a>) – instance of the Rotation class (<strong>optional</strong>) to rotate the centre of the circle</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Domain</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">250e3</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">600e3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">300e3</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">Domain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># gaussian extent coefficient</span>
+<span class="n">coeff</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="c1"># centre of the circle</span>
+<span class="n">xc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">zc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="c1"># radius of the circle</span>
+<span class="n">r</span>  <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">Gaussian</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">GaussianCircle</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">xc</span><span class="p">,</span><span class="n">zc</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussiansOptions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">GaussiansOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gaussians</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#genepy.Gaussian" title="genepy.initial_conditions.gaussian.Gaussian"><span class="pre">Gaussian</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussiansOptions" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.GaussiansOptions.GaussiansOptions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GaussiansOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gaussians</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussiansOptions.GaussiansOptions" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for the input file of <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+The class takes a list of gaussians and can sum them in blocks of size <cite>blocksize</cite> 
+to reduce the number of options.
+The class instance can be used to generate the options for the gaussian distributions.
+If the gaussians are used to set an initial plastic strain, it should be passed to the class
+<a class="reference internal" href="#genepy.InitialPlasticStrain" title="genepy.initial_conditions.plastic_strain.InitialPlasticStrain"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialPlasticStrain</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gaussians</strong> (<em>list</em>) – list of Gaussian instances</p></li>
+<li><p><strong>blocksize</strong> (<em>int</em>) – (<strong>Optional</strong>) size of the block to sum the gaussians.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Domain</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">250e3</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">600e3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">300e3</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span> <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">Domain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># gaussian distribution</span>
+<span class="n">coeff</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span> <span class="o">*</span> <span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span> <span class="o">*</span> <span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">gaussians</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+  <span class="n">gaussians</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">Gaussian2D</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">z0</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+<span class="n">Gopt</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">GaussiansOptions</span><span class="p">(</span><span class="n">gaussians</span><span class="p">,</span><span class="n">blocksize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pass the instance <code class="docutils literal notranslate"><span class="pre">Gopts</span></code> to the class 
+<a class="reference internal" href="#genepy.InitialPlasticStrain" title="genepy.initial_conditions.plastic_strain.InitialPlasticStrain"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialPlasticStrain</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">IPS</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">InitialPlasticStrain</span><span class="p">(</span><span class="n">Gopt</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.GaussiansOptions.sum_gaussians">
+<span class="sig-name descname"><span class="pre">sum_gaussians</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.GaussiansOptions.sum_gaussians" title="Link to this definition"></a></dt>
+<dd><p>Sum the gaussians in blocks of size <cite>blocksize</cite>.
+Can be utilized to reduce the amount of options in the input file for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>blocksize</strong> (<em>int</em>) – size of the block to sum the gaussians.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="plastic-strain">
+<h2>Plastic strain<a class="headerlink" href="#plastic-strain" title="Link to this heading"></a></h2>
+<p>This module contains the class to generate options for the initial plastic strain.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.InitialPlasticStrain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">InitialPlasticStrain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_expressions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Gaussian" title="genepy.initial_conditions.gaussian.Gaussian"><span class="pre">Gaussian</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialPlasticStrain" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.InitialPlasticStrain.InitialPlasticStrain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InitialPlasticStrain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_expressions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialPlasticStrain.InitialPlasticStrain" title="Link to this definition"></a></dt>
+<dd><p>Class to generate options for the initial plastic strain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>strain_expressions</strong> – instance of the <a class="reference internal" href="#genepy.Gaussian" title="genepy.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.Gaussian</span></code></a> class describing the initial plastic strain</p>
+</dd>
+</dl>
+<section id="id10">
+<h3>Methods:<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.InitialPlasticStrain.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialPlasticStrain.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Return a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – name of the model</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the options</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="heat-source">
+<h2>Heat source<a class="headerlink" href="#heat-source" title="Link to this heading"></a></h2>
+<p>This module contains the class to generate options for the initial heat source when set to
+<a class="reference internal" href="material_parameters.html#genepy.EnergySourceMaterialPointValue" title="genepy.EnergySourceMaterialPointValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.EnergySourceMaterialPointValue</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.InitialHeatSource">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">InitialHeatSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hs_expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialHeatSource" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.InitialHeatSource.InitialHeatSource">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InitialHeatSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hs_expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialHeatSource.InitialHeatSource" title="Link to this definition"></a></dt>
+<dd><p>Class to generate options for the initial heat source when using the class
+<a class="reference internal" href="material_parameters.html#genepy.EnergySourceMaterialPointValue" title="genepy.EnergySourceMaterialPointValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.EnergySourceMaterialPointValue</span></code></a>. 
+The heat source should be given as an expression or an instance of the 
+<a class="reference internal" href="#genepy.Gaussian" title="genepy.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.Gaussian</span></code></a> class.
+If the expression is a constant value, prefer to use the
+<a class="reference internal" href="material_parameters.html#genepy.EnergySourceConstant" title="genepy.EnergySourceConstant"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.EnergySourceConstant</span></code></a> class.</p>
+<section id="id11">
+<h3>Example:<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>In the following example we assume that the <a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> class is already instantiated.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># shape of the gaussian</span>
+<span class="n">coeff</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">coeff</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">coeff</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># position of the centre of the gaussian</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">Domain</span><span class="o">.</span><span class="n">O_num</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">Domain</span><span class="o">.</span><span class="n">L_num</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">Domain</span><span class="o">.</span><span class="n">O_num</span><span class="p">[</span><span class="mi">2</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># amplitude of the gaussian (heat source)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5e-6</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># Create gaussian object</span>
+<span class="n">Gaussian</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">z0</span><span class="p">)</span>
+<span class="n">Gaussian</span><span class="o">.</span><span class="n">evaluate_gaussians</span><span class="p">()</span>
+
+<span class="c1"># Create initial heat source</span>
+<span class="n">Hini</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">InitialHeatSource</span><span class="p">(</span><span class="n">Gaussian</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">param hs_expression<span class="colon">:</span></dt>
+<dd class="field-odd"><p>heat source expression (str or sympy expression) for a single expression 
+or an instance of the <a class="reference internal" href="#genepy.Gaussian" title="genepy.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.Gaussian</span></code></a> class</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h3>Methods:<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.InitialHeatSource.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialHeatSource.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Return a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – name of the model</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the options</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.InitialHeatSource.sprint_option_gaussian">
+<span class="sig-name descname"><span class="pre">sprint_option_gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialHeatSource.sprint_option_gaussian" title="Link to this definition"></a></dt>
+<dd><p>Return a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – name of the model</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the options</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="ics-ptatin3d-options-generation">
+<h2>ICs pTatin3d options generation<a class="headerlink" href="#ics-ptatin3d-options-generation" title="Link to this heading"></a></h2>
+<p>This module contains the class to generate the options
+for the initial conditions of a 3D model running GENE3D
+in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.InitialConditions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">InitialConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#genepy.Domain" title="genepy.initial_conditions.domain.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialConditions" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.InitialConditions.InitialConditions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InitialConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialConditions.InitialConditions" title="Link to this definition"></a></dt>
+<dd><p>Abstract class to generate options for 
+<a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> 
+model initial conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Domain</strong> (<a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><em>Domain</em></a>) – instance of the Domain class</p></li>
+<li><p><strong>velocity</strong> – velocity function (str or sympy expression)</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – name of the model (default: model_GENE3D)</p></li>
+<li><p><strong>kwargs</strong> – keyword arguments</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id13">
+<h3>Attributes<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.InitialConditions.InitialConditions.model_name">
+<span class="sig-name descname"><span class="pre">model_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.InitialConditions.InitialConditions.model_name" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Name of the model to include in the options</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.InitialConditions.InitialConditions.Domain">
+<span class="sig-name descname"><span class="pre">Domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#genepy.Domain" title="genepy.Domain"><span class="pre">Domain</span></a></em><a class="headerlink" href="#genepy.InitialConditions.InitialConditions.Domain" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Instance of the Domain class</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.InitialConditions.InitialConditions.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">velocity</span></em><a class="headerlink" href="#genepy.InitialConditions.InitialConditions.u" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Velocity function (str or sympy expression)</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.InitialConditions.InitialConditions.kwargs">
+<span class="sig-name descname"><span class="pre">kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#genepy.InitialConditions.InitialConditions.kwargs" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Keyword arguments</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.InitialConditions.InitialConditions.possible_kwargs">
+<span class="sig-name descname"><span class="pre">possible_kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#genepy.InitialConditions.InitialConditions.possible_kwargs" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Possible keyword arguments</p>
+<ul class="simple">
+<li><p><strong>mesh_refinement</strong>: instance of the <a class="reference internal" href="#genepy.MeshRefinement" title="genepy.MeshRefinement"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.MeshRefinement</span></code></a> class.</p></li>
+<li><p><strong>initial_strain</strong>: instance of the <a class="reference internal" href="#genepy.InitialPlasticStrain" title="genepy.InitialPlasticStrain"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.InitialPlasticStrain</span></code></a> class</p></li>
+<li><p><strong>initial_heat_source</strong>: instance of the <a class="reference internal" href="#genepy.InitialHeatSource" title="genepy.InitialHeatSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">genepy.InitialHeatSource</span></code></a> class</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="id14">
+<h3>Methods:<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.InitialConditions.sprint_initial_velocity">
+<span class="sig-name descname"><span class="pre">sprint_initial_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialConditions.sprint_initial_velocity" title="Link to this definition"></a></dt>
+<dd><p>Returns a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format
+for the initial velocity field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genepy.InitialConditions.sprint_option">
+<span class="sig-name descname"><span class="pre">sprint_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.InitialConditions.sprint_option" title="Link to this definition"></a></dt>
+<dd><p>Returns a string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file using <a class="reference external" href="https://petsc.org">PETSc</a> options format
+for all the initial conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string formatted for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> input file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="genepy_docs.html" class="btn btn-neutral float-left" title="Module genepy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boundary_conditions.html" class="btn btn-neutral float-right" title="Boundary conditions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

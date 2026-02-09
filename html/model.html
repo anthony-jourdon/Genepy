@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Material parameters" href="material_parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="genepy_docs.html">Module genepy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="initial_conditions.html">Initial conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_parameters.html">Material parameters</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#genepy.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Model.Model"><code class="docutils literal notranslate"><span class="pre">Model.Model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#markers-management">Markers management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#genepy.MarkersManagement"><code class="docutils literal notranslate"><span class="pre">MarkersManagement</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.MarkersManagement.MarkersManagement"><code class="docutils literal notranslate"><span class="pre">MarkersManagement.MarkersManagement</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#passive-tracers">Passive tracers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pswarm">Pswarm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.Pswarm"><code class="docutils literal notranslate"><span class="pre">Pswarm</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fill-entire-domain">Fill entire domain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.PswarmFillDomain"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomain</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fill-domain-within-a-bounding-box">Fill domain within a bounding box</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.PswarmFillDomainWithinBoundingBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillDomainWithinBoundingBox</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fill-domain-within-a-bounding-box-with-a-given-number-of-particles">Fill domain within a bounding box with a given number of particles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.PswarmFillBox"><code class="docutils literal notranslate"><span class="pre">PswarmFillBox</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#place-only-selected-tracers">Place only selected tracers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.PswarmFromUserList"><code class="docutils literal notranslate"><span class="pre">PswarmFromUserList</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#surface-processes">Surface processes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#genepy.SPMDiffusion"><code class="docutils literal notranslate"><span class="pre">SPMDiffusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.SPMDiffusion.SPMDiffusion"><code class="docutils literal notranslate"><span class="pre">SPMDiffusion.SPMDiffusion</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#genepy.SPMDiffusionBaselvl"><code class="docutils literal notranslate"><span class="pre">SPMDiffusionBaselvl</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genepy.SPMDiffusionBaselvl.SPMDiffusionBaselvl"><code class="docutils literal notranslate"><span class="pre">SPMDiffusionBaselvl.SPMDiffusionBaselvl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="genepy_docs.html">Module genepy</a></li>
+      <li class="breadcrumb-item active">Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="material_parameters.html" class="btn btn-neutral float-left" title="Material parameters" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model">
+<h1>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h1>
+<p>This class generates the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> model using
+the format of the <a class="reference external" href="https://petsc.org">PETSc</a> library.
+It requires to have generated</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the physical <a class="reference internal" href="initial_conditions.html#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">domain</span></code></a></p></li>
+<li><p>the <a class="reference internal" href="boundary_conditions.html#genepy.VelocityLinear" title="genepy.VelocityLinear"><code class="xref py py-class docutils literal notranslate"><span class="pre">velocity</span></code></a> field function.</p></li>
+<li><p>the <a class="reference internal" href="initial_conditions.html#genepy.InitialConditions" title="genepy.InitialConditions"><code class="xref py py-class docutils literal notranslate"><span class="pre">initial</span> <span class="pre">conditions</span></code></a>.</p></li>
+<li><p>the <a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs" title="genepy.ModelBCs"><code class="xref py py-class docutils literal notranslate"><span class="pre">boundary</span> <span class="pre">conditions</span></code></a>.</p></li>
+<li><p>the <a class="reference internal" href="material_parameters.html#genepy.ModelRegions" title="genepy.ModelRegions"><code class="xref py py-class docutils literal notranslate"><span class="pre">material</span> <span class="pre">parameters</span></code></a>.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Model">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_ics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions" title="genepy.initial_conditions.ics.InitialConditions"><span class="pre">InitialConditions</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_regions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="material_parameters.html#genepy.ModelRegions" title="genepy.material_params.regions.ModelRegions"><span class="pre">ModelRegions</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_bcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs" title="genepy.boundary_conditions.bcs.ModelBCs"><span class="pre">ModelBCs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Model" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Model.Model">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_ics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions" title="genepy.InitialConditions"><span class="pre">InitialConditions</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_regions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="material_parameters.html#genepy.ModelRegions" title="genepy.ModelRegions"><span class="pre">ModelRegions</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_bcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs" title="genepy.ModelBCs"><span class="pre">ModelBCs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Model.Model" title="Link to this definition"></a></dt>
+<dd><p>Class to define the options for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_ics</strong> (<a class="reference internal" href="initial_conditions.html#genepy.InitialConditions" title="genepy.InitialConditions"><em>InitialConditions</em></a>) – Initial conditions of the model.</p></li>
+<li><p><strong>model_regions</strong> (<a class="reference internal" href="material_parameters.html#genepy.ModelRegions" title="genepy.ModelRegions"><em>ModelRegions</em></a>) – Material parameters of the model.</p></li>
+<li><p><strong>model_bcs</strong> (<a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs" title="genepy.ModelBCs"><em>ModelBCs</em></a>) – Boundary conditions of the model.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model. Default is <code class="docutils literal notranslate"><span class="pre">&quot;model_GENE3D&quot;</span></code>.</p></li>
+<li><p><strong>kwargs</strong> – Additional arguments for the model.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Keyword arguments (optional)</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_frequency</strong> (<em>int</em>) – Frequency of results output. Default is <code class="docutils literal notranslate"><span class="pre">25</span></code>.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Path of the output directory. Default is <code class="docutils literal notranslate"><span class="pre">&quot;output&quot;</span></code>.</p></li>
+<li><p><strong>output_fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Fields to output. Default is <code class="docutils literal notranslate"><span class="pre">[&quot;region&quot;,&quot;viscosity&quot;,&quot;density&quot;,&quot;plastic_strain&quot;]</span></code>.</p></li>
+<li><p><strong>checkpoint_ncpumins</strong> (<em>int</em>) – Checkpoint every n cpu minutes. Default is <code class="docutils literal notranslate"><span class="pre">230</span></code>.</p></li>
+<li><p><strong>checkpoint_frequency</strong> (<em>int</em>) – Checkpoint every n time step. Default is <code class="docutils literal notranslate"><span class="pre">25</span></code>.</p></li>
+<li><p><strong>length_bar</strong> (<em>float</em>) – Length scaling. Default is <code class="docutils literal notranslate"><span class="pre">1.0e5</span></code> m.</p></li>
+<li><p><strong>viscosity_bar</strong> (<em>float</em>) – Viscosity scaling. Default is <span class="math notranslate nohighlight">\(10^{22}\)</span> Pa.s.</p></li>
+<li><p><strong>velocity_bar</strong> (<em>float</em>) – Velocity scaling. Default is <span class="math notranslate nohighlight">\(10^{-10}\)</span> m.s<sup>-1</sup>.</p></li>
+<li><p><strong>nsteps</strong> (<em>int</em>) – Max number of time steps. Default is <code class="docutils literal notranslate"><span class="pre">100000</span></code>.</p></li>
+<li><p><strong>dtmin</strong> (<em>float</em>) – Min time step. Default is <code class="docutils literal notranslate"><span class="pre">1.0e-6</span></code>.</p></li>
+<li><p><strong>dtmax</strong> (<em>float</em>) – Max time step. Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p></li>
+<li><p><strong>isostatic_density</strong> (<em>float</em>) – Density reference for initial isostatic topography. Default is <code class="docutils literal notranslate"><span class="pre">3300</span></code> kg.m<sup>-3</sup>.</p></li>
+<li><p><strong>isostatic_depth</strong> (<em>float</em>) – Depth of compensation for initial isostatic topography. Default is <code class="docutils literal notranslate"><span class="pre">-40</span></code> km.</p></li>
+<li><p><strong>max_surface_displacement</strong> (<em>float</em>) – Max surface displacement per time step. Default is 500 m.</p></li>
+<li><p><strong>markers</strong> (<a class="reference internal" href="#genepy.MarkersManagement" title="genepy.MarkersManagement"><em>MarkersManagement</em></a>) – Markers layout and population control options.</p></li>
+<li><p><strong>viscosity_min</strong> (<em>float</em>) – Minimum viscosity value. Default is <span class="math notranslate nohighlight">\(10^{19}\)</span> Pa.s.</p></li>
+<li><p><strong>viscosity_max</strong> (<em>float</em>) – Maximum viscosity value. Default is <span class="math notranslate nohighlight">\(10^{25}\)</span> Pa.s.</p></li>
+<li><p><strong>spm</strong> (<a class="reference internal" href="#genepy.SPMDiffusion" title="genepy.SPMDiffusion"><em>SPMDiffusion</em></a>) – Surface processes SPMDiffusion class instance.</p></li>
+<li><p><strong>pswarm</strong> (<a class="reference internal" href="#genepy.Pswarm" title="genepy.Pswarm"><em>Pswarm</em></a>) – Passive tracers class instance.</p></li>
+<li><p><strong>mpi_ranks</strong> (<em>int</em>) – Number of MPI ranks, it is used to define the solver options. 
+However, only <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">1024</span></code> MPI ranks are actually supported.
+Any value other than <code class="docutils literal notranslate"><span class="pre">1</span></code> will set the solver options for <code class="docutils literal notranslate"><span class="pre">1024</span></code> MPI ranks.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>. The solver options for <code class="docutils literal notranslate"><span class="pre">1024</span></code> MPI ranks 
+may not be the best for a particular problem.</p></li>
+</ul>
+</dd>
+</dl>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Model.Model.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Model.Model.name" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Name of the model. Default is <code class="docutils literal notranslate"><span class="pre">&quot;model_GENE3D&quot;</span></code>.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Model.Model.regions">
+<span class="sig-name descname"><span class="pre">regions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="material_parameters.html#genepy.ModelRegions" title="genepy.ModelRegions"><span class="pre">ModelRegions</span></a></em><a class="headerlink" href="#genepy.Model.Model.regions" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Material parameters of the model.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Model.Model.bcs">
+<span class="sig-name descname"><span class="pre">bcs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="boundary_conditions.html#genepy.ModelBCs" title="genepy.ModelBCs"><span class="pre">ModelBCs</span></a></em><a class="headerlink" href="#genepy.Model.Model.bcs" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Boundary conditions of the model.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Model.Model.ics">
+<span class="sig-name descname"><span class="pre">ics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="initial_conditions.html#genepy.InitialConditions" title="genepy.InitialConditions"><span class="pre">InitialConditions</span></a></em><a class="headerlink" href="#genepy.Model.Model.ics" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Initial conditions of the model.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genepy.Model.Model.options">
+<span class="sig-name descname"><span class="pre">options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#genepy.Model.Model.options" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Options for the model.</p>
+</div></blockquote>
+</dd></dl>
+
+<p>Example</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="markers-management">
+<h1>Markers management<a class="headerlink" href="#markers-management" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.MarkersManagement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">MarkersManagement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5,</span> <span class="pre">5,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">4,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_np_lower</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_np_upper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MarkersManagement" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.MarkersManagement.MarkersManagement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MarkersManagement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5,</span> <span class="pre">5,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">4,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_np_lower</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_np_upper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popctrl_layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.MarkersManagement.MarkersManagement" title="Link to this definition"></a></dt>
+<dd><p>Class to manage the lagrangian markers in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layout</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Number of markers per element in each direction. Default is (5,5,5).</p></li>
+<li><p><strong>popctrl_faces</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>...</em><em>]</em>) – <p>Faces where markers are injected and not cleaned as long as they belong to an element connected to the face. Default is (0,1,4,5).
+Faces numbering is as follow:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: east  = xmax = imax = Pxi</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: west  = xmin = imin = Nxi</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: north = ymax = jmax = Peta</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: south = ymin = jmin = Neta</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">4</span></code>: front = zmax = kmax = Pzeta</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">5</span></code>: back  = zmin = kmin = Nzeta</p></li>
+</ul>
+</p></li>
+<li><p><strong>popctrl_np_lower</strong> (<em>int</em>) – Minimum number of markers per element. Default is 8.</p></li>
+<li><p><strong>popctrl_np_upper</strong> (<em>int</em>) – Maximum number of markers per element. Default is 128.</p></li>
+<li><p><strong>popctrl_layout</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Number of markers injected in each direction. Default is (2,2,2).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="passive-tracers">
+<h1>Passive tracers<a class="headerlink" href="#passive-tracers" title="Link to this heading"></a></h1>
+<section id="pswarm">
+<h2>Pswarm<a class="headerlink" href="#pswarm" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.Pswarm">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">Pswarm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Pswarm" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.Pswarm.Pswarm">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Pswarm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.Pswarm.Pswarm" title="Link to this definition"></a></dt>
+<dd><p>Class to define passive swarms of markers in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+It is the parent class of the different types of passive marker layout:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#genepy.PswarmFillDomain" title="genepy.PswarmFillDomain"><code class="xref py py-class docutils literal notranslate"><span class="pre">PswarmFillDomain</span></code></a></p></li>
+<li><p><a class="reference internal" href="#genepy.PswarmFillDomainWithinBoundingBox" title="genepy.PswarmFillDomainWithinBoundingBox"><code class="xref py py-class docutils literal notranslate"><span class="pre">PswarmFillDomainWithinBoundingBox</span></code></a></p></li>
+<li><p><a class="reference internal" href="#genepy.PswarmFillBox" title="genepy.PswarmFillBox"><code class="xref py py-class docutils literal notranslate"><span class="pre">PswarmFillBox</span></code></a></p></li>
+<li><p><a class="reference internal" href="#genepy.PswarmFromUserList" title="genepy.PswarmFromUserList"><code class="xref py py-class docutils literal notranslate"><span class="pre">PswarmFromUserList</span></code></a></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layout</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Number of markers per element in each direction. Default is (2,2,2).</p></li>
+<li><p><strong>pressure</strong> (<em>bool</em>) – Activate pressure tracking. Default is False.</p></li>
+<li><p><strong>temperature</strong> (<em>bool</em>) – Activate temperature tracking. Default is False.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model. Default is “model_GENE3D”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fill-entire-domain">
+<h2>Fill entire domain<a class="headerlink" href="#fill-entire-domain" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFillDomain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">PswarmFillDomain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFillDomain" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFillDomain.PswarmFillDomain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PswarmFillDomain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFillDomain.PswarmFillDomain" title="Link to this definition"></a></dt>
+<dd><p>Class to define passive swarms of markers in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+Generates options for a passive swarm that fills the entire physical domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layout</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Number of markers per element in each direction. Default is (2,2,2).</p></li>
+<li><p><strong>pressure</strong> (<em>bool</em>) – Activate pressure tracking. Default is False.</p></li>
+<li><p><strong>temperature</strong> (<em>bool</em>) – Activate temperature tracking. Default is False.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model. Default is “model_GENE3D”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fill-domain-within-a-bounding-box">
+<h2>Fill domain within a bounding box<a class="headerlink" href="#fill-domain-within-a-bounding-box" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFillDomainWithinBoundingBox">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">PswarmFillDomainWithinBoundingBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFillDomainWithinBoundingBox" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFillDomainWithinBoundingBox.PswamFillDomainWithinBoundingBox">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PswamFillDomainWithinBoundingBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFillDomainWithinBoundingBox.PswamFillDomainWithinBoundingBox" title="Link to this definition"></a></dt>
+<dd><p>Class to define passive swarms of markers in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+Generates options for a passive swarm that fills the physical domain within a given bounding box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minCoord</strong> (<em>tuple</em><em>[</em><em>float</em><em>,</em><em>float</em><em>,</em><em>float</em><em>]</em>) – Minimum coordinates of the bounding box.</p></li>
+<li><p><strong>maxCoord</strong> (<em>tuple</em><em>[</em><em>float</em><em>,</em><em>float</em><em>,</em><em>float</em><em>]</em>) – Maximum coordinates of the bounding box.</p></li>
+<li><p><strong>layout</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Number of markers per element in each direction. Default is (2,2,2).</p></li>
+<li><p><strong>pressure</strong> (<em>bool</em>) – Activate pressure tracking. Default is False.</p></li>
+<li><p><strong>temperature</strong> (<em>bool</em>) – Activate temperature tracking. Default is False.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model. Default is “model_GENE3D”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fill-domain-within-a-bounding-box-with-a-given-number-of-particles">
+<h2>Fill domain within a bounding box with a given number of particles<a class="headerlink" href="#fill-domain-within-a-bounding-box-with-a-given-number-of-particles" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFillBox">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">PswarmFillBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFillBox" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFillBox.PswarmFillBox">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PswarmFillBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxCoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFillBox.PswarmFillBox" title="Link to this definition"></a></dt>
+<dd><p>Class to define passive swarms of markers in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+Generates options for a passive swarm that fills a given bounding box with a specified marker resolution.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Opposed to the other classes, the layout is not the number of markers 
+per element in each direction but the total number of markers in each direction.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minCoord</strong> (<em>tuple</em><em>[</em><em>float</em><em>,</em><em>float</em><em>,</em><em>float</em><em>]</em>) – Minimum coordinates of the bounding box.</p></li>
+<li><p><strong>maxCoord</strong> (<em>tuple</em><em>[</em><em>float</em><em>,</em><em>float</em><em>,</em><em>float</em><em>]</em>) – Maximum coordinates of the bounding box.</p></li>
+<li><p><strong>layout</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Number of markers in each direction. Default is (2,2,2).</p></li>
+<li><p><strong>pressure</strong> (<em>bool</em>) – Activate pressure tracking. Default is False.</p></li>
+<li><p><strong>temperature</strong> (<em>bool</em>) – Activate temperature tracking. Default is False.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model. Default is “model_GENE3D”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="place-only-selected-tracers">
+<h2>Place only selected tracers<a class="headerlink" href="#place-only-selected-tracers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFromUserList">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">PswarmFromUserList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">markers_coor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFromUserList" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.PswarmFromUserList.PswarmFromUserList">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PswarmFromUserList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">markers_coor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">np.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.PswarmFromUserList.PswarmFromUserList" title="Link to this definition"></a></dt>
+<dd><p>Class to define passive swarms of markers in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+Generates options for a list of passive tracers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This layout should be used only when a small number of tracers are required
+and that their initial coordinates are known.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>markers_coor</strong> (<em>np.ndarray</em>) – Coordinates of the markers.</p></li>
+<li><p><strong>pressure</strong> (<em>bool</em>) – Activate pressure tracking. Default is False.</p></li>
+<li><p><strong>temperature</strong> (<em>bool</em>) – Activate temperature tracking. Default is False.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model. Default is “model_GENE3D”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="surface-processes">
+<h1>Surface processes<a class="headerlink" href="#surface-processes" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.SPMDiffusion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">SPMDiffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirichlet_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.SPMDiffusion" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.SPMDiffusion.SPMDiffusion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPMDiffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirichlet_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0e-6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.SPMDiffusion.SPMDiffusion" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for surface processes diffusion in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+Surface processes are handled by solving the following diffusion equation:</p>
+<div class="math notranslate nohighlight">
+\[\nabla \cdot (k \nabla h) = 0\]</div>
+<p>with <span class="math notranslate nohighlight">\(k\)</span> the diffusivity and <span class="math notranslate nohighlight">\(h\)</span> the height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirichlet_faces</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of faces where Dirichlet boundary conditions are applied. 
+Possible values are: <code class="docutils literal notranslate"><span class="pre">&quot;xmin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;xmax&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;zmin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;zmax&quot;</span></code>.
+At least one is required to ensure uniqueness of the solution.</p></li>
+<li><p><strong>diffusivity</strong> (<em>float</em>) – Diffusivity value in m<sup>2</sup>.s<sup>-1</sup>. Default is <span class="math notranslate nohighlight">\(10^{-6}\)</span>.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Model name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unrecognized face is passed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genepy.SPMDiffusionBaselvl">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genepy.</span></span><span class="sig-name descname"><span class="pre">SPMDiffusionBaselvl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirichlet_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[1e-10,</span> <span class="pre">1e-06]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baselevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.SPMDiffusionBaselvl" title="Link to this definition"></a></dt>
+<dd><dl class="py class">
+<dt class="sig sig-object py" id="genepy.SPMDiffusionBaselvl.SPMDiffusionBaselvl">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPMDiffusionBaselvl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirichlet_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[1.0e-10,</span> <span class="pre">1.0e-6]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baselevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model_GENE3D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genepy.SPMDiffusionBaselvl.SPMDiffusionBaselvl" title="Link to this definition"></a></dt>
+<dd><p>Class to generate the options for surface processes diffusion in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> with a base level.
+The equation solved is the same than in <a class="reference internal" href="#genepy.SPMDiffusion" title="genepy.SPMDiffusion"><code class="xref py py-class docutils literal notranslate"><span class="pre">SPMDiffusion</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirichlet_faces</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of faces where Dirichlet boundary conditions are applied. 
+Possible values are: <code class="docutils literal notranslate"><span class="pre">&quot;xmin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;xmax&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;zmin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;zmax&quot;</span></code>.
+At least one is required to ensure uniqueness of the solution.</p></li>
+<li><p><strong>diffusivity</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Diffusivity values in m<sup>2</sup>.s<sup>-1</sup>. 
+A list of two values is expected, diffusivity[0] is the value below the base level,
+diffusivity[1] is the value above the base level. 
+Default is <span class="math notranslate nohighlight">\(10^{-10}\)</span> m<sup>2</sup>.s<sup>-1</sup> and <span class="math notranslate nohighlight">\(10^{-6}\)</span> m<sup>2</sup>.s<sup>-1</sup>.</p></li>
+<li><p><strong>baselevel</strong> – Base level in m. Default is 0.0.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Model name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unrecognized face is passed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="material_parameters.html" class="btn btn-neutral float-left" title="Material parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

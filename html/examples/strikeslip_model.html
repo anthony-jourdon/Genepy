@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example: strike-slip model, rotated velocity field and mesh refinement &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example: Two phases model, extension followed by compression" href="time_dependant_model.html" />
+    <link rel="prev" title="Example: oblique model, non-linear rheology" href="oblique_model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#installation">Installation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../usage.html#building-a-model">Building a model</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../gmsh_tuto.html">Building a mesh with Gmsh for the initial geometry and boundary conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_model.html">Example: simple model, linear viscous rheology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="oblique_model.html">Example: oblique model, non-linear rheology</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Example: strike-slip model, rotated velocity field and mesh refinement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-domain">1. Create a domain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-refinement">2. Mesh refinement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rotation">3. Rotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#velocity-field">4. Velocity field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#define-gaussian-weak-zones">5. Define gaussian weak zones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-conditions">6. Initial conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boundary-conditions">7. Boundary conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#material-parameters">8. Material parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#add-surface-processes">9. Add surface processes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#add-passive-tracers">10. Add passive tracers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-the-model-and-generate-options">11.  Create the model and generate options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="time_dependant_model.html">Example: Two phases model, extension followed by compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ale_model.html">Arbitrary Lagrangian Eulerian (ALE) model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#run-ptatin3d">Run pTatin3d</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../genepy_docs.html">Module genepy</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../usage.html">Usage</a></li>
+      <li class="breadcrumb-item active">Example: strike-slip model, rotated velocity field and mesh refinement</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/strikeslip_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="oblique_model.html" class="btn btn-neutral float-left" title="Example: oblique model, non-linear rheology" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="time_dependant_model.html" class="btn btn-neutral float-right" title="Example: Two phases model, extension followed by compression" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="example-strike-slip-model-rotated-velocity-field-and-mesh-refinement">
+<h1>Example: strike-slip model, rotated velocity field and mesh refinement<a class="headerlink" href="#example-strike-slip-model-rotated-velocity-field-and-mesh-refinement" title="Link to this heading"></a></h1>
+<p>This example will build a 3D model with vertical
+<a class="reference internal" href="../initial_conditions.html#genepy.MeshRefinement" title="genepy.MeshRefinement"><code class="xref py py-class docutils literal notranslate"><span class="pre">mesh</span> <span class="pre">refinement</span></code></a>
+and a strike-slip velocity field
+<a class="reference internal" href="../initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rotated</span></code></a>
+by 15 degrees as showed in the figure below.
+In addition, 2 <a class="reference internal" href="../initial_conditions.html#genepy.Gaussian" title="genepy.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">gaussian</span></code></a> weak zones are added to the initial conditions of the model</p>
+<a class="reference internal image-reference" href="../_images/Strike_slip-01.png"><img alt="../_images/Strike_slip-01.png" class="align-center" src="../_images/Strike_slip-01.png" style="width: 600px;" />
+</a>
+<section id="create-a-domain">
+<h2>1. Create a domain<a class="headerlink" href="#create-a-domain" title="Link to this heading"></a></h2>
+<p>We define a 3D <a class="reference internal" href="../initial_conditions.html#genepy.Domain" title="genepy.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a> <span class="math notranslate nohighlight">\(\Omega = [0,600]\times[-250,0]\times[0,300]\)</span> km<sup>3</sup>
+<span class="math notranslate nohighlight">\(\in \mathbb R^3\)</span> discretized by a regular grid of 9x9x9 nodes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">genepy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># 3D domain</span>
+<span class="n">dimensions</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">O</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">250e3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># Origin</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">600e3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">300e3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># Length</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span>         <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>   <span class="c1"># Number of Q1 nodes i.e. elements + 1</span>
+<span class="c1"># Create Domain class instance</span>
+<span class="n">Domain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Domain</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="mesh-refinement">
+<h2>2. Mesh refinement<a class="headerlink" href="#mesh-refinement" title="Link to this heading"></a></h2>
+<p>In this step we <a class="reference internal" href="../initial_conditions.html#genepy.MeshRefinement" title="genepy.MeshRefinement"><code class="xref py py-class docutils literal notranslate"><span class="pre">refine</span> <span class="pre">the</span> <span class="pre">mesh</span></code></a>
+in the vertical direction (<span class="math notranslate nohighlight">\(y\)</span>) using linear interpolation.
+Note however that the mesh refinement can be done in any direction following the same pattern.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define refinement parameters in a dictionary</span>
+<span class="n">refinement</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="c1"># direction of refinement</span>
+                  <span class="p">{</span><span class="s2">&quot;x_initial&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">250</span><span class="p">,</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="o">-</span><span class="mf">87.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">*</span><span class="mf">1e3</span><span class="p">,</span> <span class="c1"># xp</span>
+                   <span class="s2">&quot;x_refined&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">250</span><span class="p">,</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mf">16.25</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">*</span><span class="mf">1e3</span><span class="p">}</span> <span class="c1"># f(xp)</span>
+             <span class="p">}</span>
+<span class="c1"># Create MeshRefinement class instance</span>
+<span class="n">MshRef</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">MeshRefinement</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="n">refinement</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rotation">
+<h2>3. Rotation<a class="headerlink" href="#rotation" title="Link to this heading"></a></h2>
+<p>To rotate the velocity field we first need to
+set the parameters of this <a class="reference internal" href="../initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rotation</span></code></a>.
+In this example we perform a rotation of 15 degrees
+clockwise around the <span class="math notranslate nohighlight">\(y\)</span> axis.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rotation of the referential</span>
+<span class="n">r_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mf">15.0</span><span class="p">)</span>                   <span class="c1"># Rotation angle \in [-pi, pi]</span>
+<span class="n">axis</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># Rotation axis</span>
+<span class="c1"># Create instance of Rotation class</span>
+<span class="n">Rotation</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Rotation</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span><span class="n">r_angle</span><span class="p">,</span><span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="velocity-field">
+<h2>4. Velocity field<a class="headerlink" href="#velocity-field" title="Link to this heading"></a></h2>
+<p>Next, we create a strike-slip velocity field with a norm of 1 cm.a<sup>-1</sup>.
+The method
+<a class="reference internal" href="../boundary_conditions.html#genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic" title="genepy.VelocityLinear.evaluate_velocity_and_gradient_symbolic"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_and_gradient_symbolic()</span></code></a>
+returns the symbolic expression of the velocity field and its gradient.
+The method
+<a class="reference internal" href="../boundary_conditions.html#genepy.VelocityLinear.evaluate_velocity_numeric" title="genepy.VelocityLinear.evaluate_velocity_numeric"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_velocity_numeric()</span></code></a>
+returns the numeric value of the velocity field evaluated at coordinates of the nodes.
+The method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_velocity_orientation()</span></code>
+returns the orientation of the velocity field at the boundary.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The rotation of the velocity field is handled inside the velocity function evaluation
+and does not require any additional step.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># velocity function parameters</span>
+<span class="n">cma2ms</span>  <span class="o">=</span> <span class="mf">1e-2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span><span class="p">)</span> <span class="c1"># cm/a to m/s conversion</span>
+<span class="n">u_norm</span>  <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">cma2ms</span>                   <span class="c1"># horizontal velocity norm</span>
+<span class="n">u_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">90.0</span><span class="p">)</span>               <span class="c1"># velocity angle \in [-pi/2, pi/2]</span>
+<span class="n">u_dir</span>   <span class="o">=</span> <span class="s2">&quot;z&quot;</span>                            <span class="c1"># direction in which velocity varies</span>
+<span class="n">u_type</span>  <span class="o">=</span> <span class="s2">&quot;extension&quot;</span>                    <span class="c1"># extension or compression, defines the sign</span>
+<span class="c1"># Create velocity class instance</span>
+<span class="n">BCs</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">VelocityLinear</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="n">u_norm</span><span class="p">,</span><span class="n">u_dir</span><span class="p">,</span><span class="n">u_type</span><span class="p">,</span><span class="n">u_angle</span><span class="p">,</span><span class="n">Rotation</span><span class="p">)</span>
+
+<span class="c1"># Access the symbolic velocity function, its gradient and the orientation of the horizontal velocity at the boundary</span>
+<span class="n">u</span>      <span class="o">=</span> <span class="n">BCs</span><span class="o">.</span><span class="n">u</span>                <span class="c1"># velocity function</span>
+<span class="n">grad_u</span> <span class="o">=</span> <span class="n">BCs</span><span class="o">.</span><span class="n">grad_u</span>           <span class="c1"># gradient of the velocity function</span>
+<span class="n">uL</span>     <span class="o">=</span> <span class="n">BCs</span><span class="o">.</span><span class="n">u_dir_horizontal</span> <span class="c1"># orientation of the horizontal velocity at the boundary (normalized)</span>
+</pre></div>
+</div>
+</section>
+<section id="define-gaussian-weak-zones">
+<h2>5. Define gaussian weak zones<a class="headerlink" href="#define-gaussian-weak-zones" title="Link to this heading"></a></h2>
+<p>In this example we define two <a class="reference internal" href="../initial_conditions.html#genepy.Gaussian2D" title="genepy.Gaussian2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">gaussian</span></code></a> weak zones.
+We provide the parameters of the gaussians and their position in the domain.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this example we rotate the velocity field by 15 degrees.
+Therefore we also rotate the gaussians by 15 degrees.
+This is achieved by passing the
+<a class="reference internal" href="../initial_conditions.html#genepy.Rotation" title="genepy.Rotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rotation</span></code></a> class instance to the
+<a class="reference internal" href="../initial_conditions.html#genepy.Gaussian2D" title="genepy.Gaussian2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gaussian2D</span></code></a> class constructor.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># gaussian initial strain</span>
+<span class="n">ng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># number of gaussians</span>
+<span class="n">A</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="c1"># shape of the gaussians</span>
+<span class="n">coeff</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">6.0e-5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">coeff</span><span class="p">,</span> <span class="n">coeff</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">coeff</span><span class="p">,</span> <span class="n">coeff</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="c1"># position of the centre of the gaussians</span>
+<span class="n">dz</span>    <span class="o">=</span> <span class="mf">27.5e3</span>                         <span class="c1"># distance from the domain centre in z direction</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">75</span><span class="p">)</span>                 <span class="c1"># angle between the x-axis and the line that passes through the centre of the domain and the centre of the gaussian</span>
+<span class="n">domain_centre</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">Domain</span><span class="o">.</span><span class="n">O</span> <span class="o">+</span> <span class="n">Domain</span><span class="o">.</span><span class="n">L</span><span class="p">)</span> <span class="c1"># centre of the domain</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">ng</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="c1"># centre of the gaussian in z direction</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">domain_centre</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">dz</span><span class="p">,</span>
+               <span class="n">domain_centre</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dz</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="c1"># centre of the gaussian in x direction</span>
+<span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">x_centre_from_angle</span><span class="p">(</span><span class="n">z0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">angle</span><span class="p">,(</span><span class="n">domain_centre</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">domain_centre</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+<span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">x_centre_from_angle</span><span class="p">(</span><span class="n">z0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">angle</span><span class="p">,(</span><span class="n">domain_centre</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">domain_centre</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+<span class="c1"># Create gaussian object</span>
+<span class="n">G</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ng</span><span class="p">):</span>
+  <span class="n">G</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">Gaussian2D</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">z0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">Rotation</span><span class="p">))</span>
+  <span class="c1"># print the expression and parameters</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">Gaussian</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">GaussiansOptions</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="initial-conditions">
+<h2>6. Initial conditions<a class="headerlink" href="#initial-conditions" title="Link to this heading"></a></h2>
+<p>Gather the information defined previously to generate the options for the initial conditions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial plastic strain</span>
+<span class="n">IniStrain</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">InitialPlasticStrain</span><span class="p">(</span><span class="n">Gaussian</span><span class="p">)</span>
+<span class="c1"># Initial conditions</span>
+<span class="n">model_ics</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">InitialConditions</span><span class="p">(</span><span class="n">Domain</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">mesh_refinement</span><span class="o">=</span><span class="n">MshRef</span><span class="p">,</span><span class="n">initial_strain</span><span class="o">=</span><span class="n">IniStrain</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="boundary-conditions">
+<h2>7. Boundary conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading"></a></h2>
+<p>Gather the velocity field information and indicate the type of boundary conditions required
+to generate the options for the boundary conditions.</p>
+<p>Details on the methods used to define the boundary conditions can be found in the
+<a class="reference internal" href="../boundary_conditions.html"><span class="doc">boundary conditions</span></a> section.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># path to mesh files (system dependent, change accordingly)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PTATIN&#39;</span><span class="p">],</span><span class="s2">&quot;ptatin-gene/src/models/gene3d/examples&quot;</span><span class="p">)</span>
+<span class="c1"># Velocity boundary conditions</span>
+<span class="n">u_bcs</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="mi">23</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Zmax&quot;</span><span class="p">,</span><span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;z&quot;</span><span class="p">],</span><span class="n">velocity</span><span class="o">=</span><span class="n">u</span><span class="p">,</span><span class="n">mesh_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_facet_23_mesh.bin&quot;</span><span class="p">)),</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="mi">37</span><span class="p">,</span><span class="s2">&quot;Zmin&quot;</span><span class="p">,[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;z&quot;</span><span class="p">],</span><span class="n">u</span><span class="p">,</span><span class="n">mesh_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_facet_37_mesh.bin&quot;</span><span class="p">)),</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">NavierSlip</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Xmax&quot;</span><span class="p">,</span><span class="n">grad_u</span><span class="o">=</span><span class="n">grad_u</span><span class="p">,</span><span class="n">u_orientation</span><span class="o">=</span><span class="n">uL</span><span class="p">,</span><span class="n">mesh_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_facet_32_mesh.bin&quot;</span><span class="p">)),</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">NavierSlip</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="s2">&quot;Xmin&quot;</span><span class="p">,</span><span class="n">grad_u</span><span class="p">,</span><span class="n">uL</span><span class="p">,</span><span class="n">mesh_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_facet_14_mesh.bin&quot;</span><span class="p">)),</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">DirichletUdotN</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span><span class="s2">&quot;Bottom&quot;</span><span class="p">,</span><span class="n">mesh_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_facet_33_mesh.bin&quot;</span><span class="p">)),</span>
+<span class="p">]</span>
+<span class="c1"># Temperature boundary conditions</span>
+<span class="n">Tbcs</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">TemperatureBC</span><span class="p">({</span><span class="s2">&quot;ymax&quot;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;ymin&quot;</span><span class="p">:</span><span class="mf">1450.0</span><span class="p">})</span>
+<span class="c1"># collect all boundary conditions</span>
+<span class="n">model_bcs</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">ModelBCs</span><span class="p">(</span><span class="n">u_bcs</span><span class="p">,</span><span class="n">Tbcs</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="material-parameters">
+<h2>8. Material parameters<a class="headerlink" href="#material-parameters" title="Link to this heading"></a></h2>
+<p>Next we define the material properties (mechanical and thermal) of the different
+regions of the model.
+For each region, a set of parameters is defined using the corresponding classes.
+The details on the methods can be found in the
+<a class="reference internal" href="../material_parameters.html"><span class="doc">material parameters</span></a> section.
+Flow laws parameters can be found in <code class="docutils literal notranslate"><span class="pre">genepy/material_params/arrhenius_flow_laws.json</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the material parameters for the model as a list of Region objects</span>
+<span class="n">regions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="c1"># Upper crust</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">Region</span><span class="p">(</span><span class="mi">38</span><span class="p">,</span>                                          <span class="c1"># region tag</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">DensityBoussinesq</span><span class="p">(</span><span class="mf">2700.0</span><span class="p">,</span><span class="mf">3.0e-5</span><span class="p">,</span><span class="mf">1.0e-11</span><span class="p">),</span> <span class="c1"># density</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">ViscosityArrhenius2</span><span class="p">(</span><span class="s2">&quot;Quartzite&quot;</span><span class="p">),</span>         <span class="c1"># viscosity  (values from the database using rock name)</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">SofteningLinear</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>                 <span class="c1"># softening</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">PlasticDruckerPrager</span><span class="p">(),</span>                   <span class="c1"># plasticity (default values, can be modified using the corresponding parameters)</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">Energy</span><span class="p">(</span><span class="n">heat_source</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySource</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySourceConstant</span><span class="p">(</span><span class="mf">1.5e-6</span><span class="p">),</span>
+                                                  <span class="n">gp</span><span class="o">.</span><span class="n">EnergySourceShearHeating</span><span class="p">()),</span>
+                      <span class="n">conductivity</span><span class="o">=</span><span class="mf">2.7</span><span class="p">)),</span>
+  <span class="c1"># Lower crust</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">Region</span><span class="p">(</span><span class="mi">39</span><span class="p">,</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">DensityBoussinesq</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">2850.0</span><span class="p">,</span><span class="n">thermal_expansion</span><span class="o">=</span><span class="mf">3.0e-5</span><span class="p">,</span><span class="n">compressibility</span><span class="o">=</span><span class="mf">1.0e-11</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">ViscosityArrhenius2</span><span class="p">(</span><span class="s2">&quot;Anorthite&quot;</span><span class="p">,</span><span class="n">Vmol</span><span class="o">=</span><span class="mf">38.0e-6</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">SofteningLinear</span><span class="p">(</span><span class="n">strain_min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">strain_max</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">PlasticDruckerPrager</span><span class="p">(),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">Energy</span><span class="p">(</span><span class="n">heat_source</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySource</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySourceConstant</span><span class="p">(</span><span class="mf">0.5e-6</span><span class="p">),</span>
+                                                  <span class="n">gp</span><span class="o">.</span><span class="n">EnergySourceShearHeating</span><span class="p">()),</span>
+                      <span class="n">conductivity</span><span class="o">=</span><span class="mf">2.85</span><span class="p">)),</span>
+  <span class="c1"># Lithosphere mantle</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">Region</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">DensityBoussinesq</span><span class="p">(</span><span class="mf">3300.0</span><span class="p">,</span><span class="mf">3.0e-5</span><span class="p">,</span><span class="mf">1.0e-11</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">ViscosityArrhenius2</span><span class="p">(</span><span class="s2">&quot;Peridotite(dry)&quot;</span><span class="p">,</span><span class="n">Vmol</span><span class="o">=</span><span class="mf">8.0e-6</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">SofteningLinear</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">PlasticDruckerPrager</span><span class="p">(),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">Energy</span><span class="p">(</span><span class="n">heat_source</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySource</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySourceShearHeating</span><span class="p">()),</span>
+                      <span class="n">conductivity</span><span class="o">=</span><span class="mf">3.3</span><span class="p">)),</span>
+  <span class="c1"># Asthenosphere</span>
+  <span class="n">gp</span><span class="o">.</span><span class="n">Region</span><span class="p">(</span><span class="mi">41</span><span class="p">,</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">DensityBoussinesq</span><span class="p">(</span><span class="mf">3300.0</span><span class="p">,</span><span class="mf">3.0e-5</span><span class="p">,</span><span class="mf">1.0e-11</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">ViscosityArrhenius2</span><span class="p">(</span><span class="s2">&quot;Peridotite(dry)&quot;</span><span class="p">,</span><span class="n">Vmol</span><span class="o">=</span><span class="mf">8.0e-6</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">SofteningLinear</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">PlasticDruckerPrager</span><span class="p">(),</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">Energy</span><span class="p">(</span><span class="n">heat_source</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySource</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">EnergySourceShearHeating</span><span class="p">()),</span>
+                      <span class="n">conductivity</span><span class="o">=</span><span class="mf">3.3</span><span class="p">))</span>
+<span class="p">]</span>
+
+<span class="c1"># path to mesh files (system dependent, change accordingly)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PTATIN&#39;</span><span class="p">],</span><span class="s2">&quot;ptatin-gene/src/models/gene3d/examples&quot;</span><span class="p">)</span>
+<span class="n">model_regions</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">ModelRegions</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span>
+                                <span class="n">mesh_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_md.bin&quot;</span><span class="p">),</span>
+                                <span class="n">region_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="s2">&quot;box_ptatin_region_cell.bin&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="add-surface-processes">
+<h2>9. Add surface processes<a class="headerlink" href="#add-surface-processes" title="Link to this heading"></a></h2>
+<p>In this example we add <a class="reference internal" href="../model.html#genepy.SPMDiffusion" title="genepy.SPMDiffusion"><code class="xref py py-class docutils literal notranslate"><span class="pre">surface</span> <span class="pre">processes</span></code></a>.
+Surface processes are done by solving a diffusion equation.
+Here we set <code class="docutils literal notranslate"><span class="pre">&quot;zmin&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;zmax&quot;</span></code> as Dirichlet boundary conditions for the diffusion equation
+and we set the diffusivity to <span class="math notranslate nohighlight">\(10^6\)</span> m<sup>2</sup>.s<sup>-1</sup>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add erosion-sedimentation with diffusion</span>
+<span class="n">spm</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">SPMDiffusion</span><span class="p">([</span><span class="s2">&quot;zmin&quot;</span><span class="p">,</span><span class="s2">&quot;zmax&quot;</span><span class="p">],</span><span class="n">diffusivity</span><span class="o">=</span><span class="mf">1.0e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="add-passive-tracers">
+<h2>10. Add passive tracers<a class="headerlink" href="#add-passive-tracers" title="Link to this heading"></a></h2>
+<p>Add passive tracers to the model.
+Here we define a box <span class="math notranslate nohighlight">\(x \in [0, 600] \times y \in [-100, 0] \times z \in [0, 300]\)</span> km<sup>3</sup>
+of passive tracers with a layout of <span class="math notranslate nohighlight">\(30 \times 5 \times 15\)</span> lagrangian markers.
+We activate the tracking of the pressure and temperature fields.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Other types of passive tracers layout can be found in the
+<a class="reference internal" href="../model.html#genepy.Pswarm" title="genepy.Pswarm"><code class="xref py py-class docutils literal notranslate"><span class="pre">passive</span> <span class="pre">tracers</span></code></a> section.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add passive tracers</span>
+<span class="n">pswarm</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">PswarmFillBox</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">100.0e3</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mf">600e3</span><span class="p">,</span><span class="o">-</span><span class="mf">4.0e3</span><span class="p">,</span><span class="mf">300.0e3</span><span class="p">],</span>
+                          <span class="n">layout</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">],</span>
+                          <span class="n">pressure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">temperature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-the-model-and-generate-options">
+<h2>11.  Create the model and generate options<a class="headerlink" href="#create-the-model-and-generate-options" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="../model.html#genepy.Model" title="genepy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">model</span></code></a> is created by gathering all the information defined previously.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># write the options for ptatin3d</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">model_ics</span><span class="p">,</span><span class="n">model_regions</span><span class="p">,</span><span class="n">model_bcs</span><span class="p">,</span>
+                 <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;model_GENE3D&quot;</span><span class="p">,</span>
+                 <span class="n">spm</span><span class="o">=</span><span class="n">spm</span><span class="p">,</span><span class="n">pswarm</span><span class="o">=</span><span class="n">pswarm</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;strike-slip.opts&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="oblique_model.html" class="btn btn-neutral float-left" title="Example: oblique model, non-linear rheology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="time_dependant_model.html" class="btn btn-neutral float-right" title="Example: Two phases model, extension followed by compression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

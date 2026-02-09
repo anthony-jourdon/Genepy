@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building a mesh with Gmsh for the initial geometry and boundary conditions &mdash; Genepy 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example: simple model, linear viscous rheology" href="examples/simple_model.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Genepy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="usage.html">Usage</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="usage.html#building-a-model">Building a model</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Building a mesh with Gmsh for the initial geometry and boundary conditions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#points">1. Points</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lines">2. Lines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#surfaces">3. Surfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#volumes">4. Volumes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#physical-groups">5. Physical groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh">6. Mesh</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/simple_model.html">Example: simple model, linear viscous rheology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/oblique_model.html">Example: oblique model, non-linear rheology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/strikeslip_model.html">Example: strike-slip model, rotated velocity field and mesh refinement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/time_dependant_model.html">Example: Two phases model, extension followed by compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/ale_model.html">Arbitrary Lagrangian Eulerian (ALE) model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#run-ptatin3d">Run pTatin3d</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="genepy_docs.html">Module genepy</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Genepy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="usage.html">Usage</a></li>
+      <li class="breadcrumb-item active">Building a mesh with Gmsh for the initial geometry and boundary conditions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gmsh_tuto.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples/simple_model.html" class="btn btn-neutral float-right" title="Example: simple model, linear viscous rheology" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-a-mesh-with-gmsh-for-the-initial-geometry-and-boundary-conditions">
+<h1>Building a mesh with <a class="reference external" href="https://gmsh.info/">Gmsh</a> for the initial geometry and boundary conditions<a class="headerlink" href="#building-a-mesh-with-gmsh-for-the-initial-geometry-and-boundary-conditions" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> represents the materials on lagrangian markers populating the domain.
+The markers are attributed a “phase” index which is used to assign the material properties.
+To generalise the creation of models with <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> we rely on <a class="reference external" href="https://gmsh.info/">Gmsh</a> to create
+a mesh that will hold the initial geometry of the model and the physical position of the
+boundary conditions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The mesh created with <a class="reference external" href="https://gmsh.info/">Gmsh</a> is <strong>not</strong> used to solve the problem, <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>
+creates its own structured mesh.
+It is only used to create the initial geometry and identify boundaries.
+Therefore, the mesh should be as coarse as possible to fasten its creation, ease its
+portability between machines and fasten the location of the lagrangian markers from
+<a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> inside this mesh.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is strongly recommended for beginners to use the <a class="reference external" href="https://gmsh.info/">Gmsh</a> GUI to build the mesh.
+A nice feature of <a class="reference external" href="https://gmsh.info/">Gmsh</a> GUI is that you can edit the .geo file dynamically while
+performing operations in the GUI. This is a good way to learn the syntax of the .geo file
+and understand how <a class="reference external" href="https://gmsh.info/">Gmsh</a> works.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When using a free-surface boundary condition for the surface of the domain, the mesh will deform.
+However, we use the <a class="reference external" href="https://gmsh.info/">Gmsh</a> surfaces to define the boundary conditions in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>.
+Therefore, if the <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> mesh falls outside the <a class="reference external" href="https://gmsh.info/">Gmsh</a> mesh, the boundary conditions will not be applied.
+To prevent this, it is required to create a mesh with <a class="reference external" href="https://gmsh.info/">Gmsh</a> taking in account that the surface in <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> may uplift.
+To do so you can set the <span class="math notranslate nohighlight">\(y\)</span> coordinate of the points defining the surface in <a class="reference external" href="https://gmsh.info/">Gmsh</a> to an altitude that will never
+be reached in the geodynamic simulation.</p>
+</div>
+<section id="points">
+<h2>1. Points<a class="headerlink" href="#points" title="Link to this heading"></a></h2>
+<p>The first step is to create the points that will define the geometry of the model.
+Two possibilities are available to create points in <a class="reference external" href="https://gmsh.info/">Gmsh</a>:</p>
+<ul>
+<li><p>directly in the graphical interface with the Geometry <span class="math notranslate nohighlight">\(\rightarrow\)</span> Elementary entities
+<span class="math notranslate nohighlight">\(\rightarrow\)</span> Add <span class="math notranslate nohighlight">\(\rightarrow\)</span> Point</p></li>
+<li><p>by editing the .geo file using the following syntax:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">lc</span><span class="p">};</span>
+<span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">lc</span><span class="p">};</span>
+<span class="n">Point</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">lc</span><span class="p">};</span>
+<span class="n">Point</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">lc</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>whith the syntax <code class="docutils literal notranslate"><span class="pre">Point(i)</span> <span class="pre">=</span> <span class="pre">{x,</span> <span class="pre">y,</span> <span class="pre">z,</span> <span class="pre">lc};</span></code> where <code class="docutils literal notranslate"><span class="pre">i</span></code> is the index of the point,
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> are the coordinates of the point and <code class="docutils literal notranslate"><span class="pre">lc</span></code> is the size of the mesh around the point.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Editing the .geo file is more efficient when creating a large number of points because
+it can be generated using a script.</p>
+</div>
+<p>In the <a class="reference external" href="https://gmsh.info/">Gmsh</a> GUI you will obtain points as shown in the figure below:</p>
+<figure class="align-center">
+<img alt="_images/box_points.PNG" src="_images/box_points.PNG" />
+</figure>
+</section>
+<section id="lines">
+<h2>2. Lines<a class="headerlink" href="#lines" title="Link to this heading"></a></h2>
+<p>The next step is to connect points to create lines.
+Lines should connect points to create closed loops that will next be utilised to define the surfaces of the model.
+Lines should not cross each other.
+If they cross, prefer creating a point at the intersection and connect the lines to this point.</p>
+<p>Just like for points, lines can be created in the GUI or by editing the .geo file.
+In the GUI use Geometry <span class="math notranslate nohighlight">\(\rightarrow\)</span> Elementary entities <span class="math notranslate nohighlight">\(\rightarrow\)</span> Add <span class="math notranslate nohighlight">\(\rightarrow\)</span> Line.
+In the .geo file use <code class="docutils literal notranslate"><span class="pre">Line(i)</span> <span class="pre">=</span> <span class="pre">{p1,</span> <span class="pre">p2};</span></code> where <code class="docutils literal notranslate"><span class="pre">i</span></code> is the index of the line and <code class="docutils literal notranslate"><span class="pre">p1</span></code> and <code class="docutils literal notranslate"><span class="pre">p2</span></code> are the indices of the points.</p>
+<p>You will obtain lines as shown in the figure below:</p>
+<figure class="align-center">
+<img alt="_images/box_lines-01.PNG" src="_images/box_lines-01.PNG" />
+</figure>
+</section>
+<section id="surfaces">
+<h2>3. Surfaces<a class="headerlink" href="#surfaces" title="Link to this heading"></a></h2>
+<p>Once points closing a surface have been connected by lines the next step is to create the surfaces.
+Surfaces can be created using the GUI with
+Geometry <span class="math notranslate nohighlight">\(\rightarrow\)</span> Elementary entities <span class="math notranslate nohighlight">\(\rightarrow\)</span> Add <span class="math notranslate nohighlight">\(\rightarrow\)</span> Plane surface.
+This tool will ask you to select the lines that close the surface:</p>
+<figure class="align-center">
+<img alt="_images/box_lines_surf_bot-01.PNG" src="_images/box_lines_surf_bot-01.PNG" />
+</figure>
+<p>You need to repeat this operation for each surface of the model (both internal and external surfaces).
+Again you can use the .geo file to create the surfaces.
+However, at this point the organization of the .geo file starts to be more complex and keeping track of
+the indices of the lines that close the surfaces can be difficult.</p>
+</section>
+<section id="volumes">
+<h2>4. Volumes<a class="headerlink" href="#volumes" title="Link to this heading"></a></h2>
+<p>Once the surfaces have been created, the next step is to create the volumes.
+Like surfaces, volumes are built by selecting the surfaces that close the volume.
+This can be done in the GUI with
+Geometry <span class="math notranslate nohighlight">\(\rightarrow\)</span> Elementary entities <span class="math notranslate nohighlight">\(\rightarrow\)</span> Add <span class="math notranslate nohighlight">\(\rightarrow\)</span> Volume.</p>
+<figure class="align-center">
+<img alt="_images/box_volume_bot-01.PNG" src="_images/box_volume_bot-01.PNG" />
+</figure>
+<p>You need to repeat this operation for each volume of the model.</p>
+</section>
+<section id="physical-groups">
+<h2>5. Physical groups<a class="headerlink" href="#physical-groups" title="Link to this heading"></a></h2>
+<p>Once the surfaces and volumes of the model have been created the next step is to define the physical groups.
+Physical groups are used for two purposes:
+1. To define the materials of the model.
+2. To define the boundary conditions of the model.</p>
+<p>When creating a physical group, <a class="reference external" href="https://gmsh.info/">Gmsh</a> assigns a tag to the group.
+<a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> uses this tag to identify the group and assign the correct material properties or boundary conditions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>pTatin3d cannot handle tags greater than 700. Please use tags smaller than 700.</p>
+</div>
+<p>To create a physical group in <a class="reference external" href="https://gmsh.info/">Gmsh</a> with the GUI use
+Geometry <span class="math notranslate nohighlight">\(\rightarrow\)</span> Physical groups <span class="math notranslate nohighlight">\(\rightarrow\)</span> Add <span class="math notranslate nohighlight">\(\rightarrow\)</span> Surface for <strong>surfaces</strong> or
+Geometry <span class="math notranslate nohighlight">\(\rightarrow\)</span> Physical groups <span class="math notranslate nohighlight">\(\rightarrow\)</span> Add <span class="math notranslate nohighlight">\(\rightarrow\)</span> Volume for <strong>volumes</strong>.</p>
+<p>These will ask you to select either volumes or surfaces you want to group as the same physical group.
+It means that you can group several surfaces or volumes in the same physical group.
+As an exemple, if you have two volumes separated in space but made of the same material,
+you can group them in the same physical group.
+The same applies for boundary conditions, if you have two boundaries that have the same boundary condition,
+you can group them in the same physical group.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can choose the tag you want to apply to the physical group.
+You can also choose the name of the physical group which helps to identify the group in the .geo file.
+The .geo file will record the physical groups with the following syntax:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">Physical</span><span class="w"> </span><span class="n">Volume</span><span class="p">(</span><span class="s">&quot;upper_crust&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">38</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="n">Physical</span><span class="w"> </span><span class="n">Surface</span><span class="p">(</span><span class="s">&quot;zmax&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">14</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">17</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>In this exemple, <code class="docutils literal notranslate"><span class="pre">&quot;upper_cruts&quot;</span></code> is the name of the volume physical group, <code class="docutils literal notranslate"><span class="pre">38</span></code> its tag and <code class="docutils literal notranslate"><span class="pre">{1}</span></code>
+the volumes that are in this group and
+<code class="docutils literal notranslate"><span class="pre">&quot;zmax&quot;</span></code> is the name of the surface physical group, <code class="docutils literal notranslate"><span class="pre">37</span></code> its tag and <code class="docutils literal notranslate"><span class="pre">{14,</span> <span class="pre">15,</span> <span class="pre">16,</span> <span class="pre">17}</span></code>
+the surfaces that are in this group.</p>
+</div>
+<figure class="align-center">
+<img alt="_images/box_volume_physical_bot-01.PNG" src="_images/box_volume_physical_bot-01.PNG" />
+</figure>
+</section>
+<section id="mesh">
+<h2>6. Mesh<a class="headerlink" href="#mesh" title="Link to this heading"></a></h2>
+<p>Finally, once everything is set up, the last step is to create the mesh.
+In the GUI use Mesh <span class="math notranslate nohighlight">\(\rightarrow\)</span> 3D to create the mesh.</p>
+<figure class="align-center">
+<img alt="_images/box_mesh.PNG" src="_images/box_mesh.PNG" />
+</figure>
+<p>Once it is done you can save the mesh using File <span class="math notranslate nohighlight">\(\rightarrow\)</span> Save mesh.</p>
+<p>Again, this mesh is not utilised to solve any PDE.
+Therefore, try to create it the coarsest possible.</p>
+<p>7. Export
+The last step is to export the mesh from the .msh format to files that <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> will interpret to create the model.
+This step requires you to download and install the python package <a class="reference external" href="https://github.com/hpc4geo/gmsh_to_point_cloud">gmsh_to_point_cloud</a>.
+Follow the installation instructions on the github page of the package.
+Once it is installed move to the branch of the package that is compatible with <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>anthony_jourdon/surface-tag
+</pre></div>
+</div>
+<p>Then you can generate the files for <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a> with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>parse_regions_from_gmsh.py<span class="w"> </span>-f<span class="w"> </span>your_mesh.msh
+</pre></div>
+</div>
+<p>This will generate a set of files named:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">*_md.bin</span></code> containing the mesh (element-to-vertex connectivity and vertices coordinates)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_region_cell.bin</span></code> containing the region of each cell</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_md.vtu</span></code> combining the mesh and region cell in a .vtu file that can be visualised with Paraview to verify that it is what you expect.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_facet_*_mesh.bin</span></code> containing the mesh of the facets of the model with its tag used for boundary conditions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_facets_*.vtu</span></code> which is the same than the .bin file but in .vtu format to visualise the facets with Paraview.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only the .bin files are used by <a class="reference external" href="https://github.com/laetitialp/ptatin-gene">pTatin3d</a>. The .vtu files are only for visualisation purposes.</p>
+</div>
+<p>As an example, here are the files generated for a simple model with 4 flat layers, a free-surface and 5 boundaries:</p>
+<figure class="align-center">
+<img alt="_images/paraview_regions.PNG" src="_images/paraview_regions.PNG" />
+</figure>
+<figure class="align-center">
+<img alt="_images/paraview_surfaces.PNG" src="_images/paraview_surfaces.PNG" />
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Any portion of a boundary that is not tagged into a physical surface will be considered as a free-surface:</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\sigma} \mathbf{n} = \mathbf{0}\]</div>
+<p>Therefore, the top surface does not need to be tagged, however, if the gravity acceleration is non-zero,
+using a free-surface boundary condition on any other face than the top face will lead to an outflow of material
+under the effect of gravity.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples/simple_model.html" class="btn btn-neutral float-right" title="Example: simple model, linear viscous rheology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Jourdon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
