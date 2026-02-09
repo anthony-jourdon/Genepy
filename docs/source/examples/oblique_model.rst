@@ -111,7 +111,7 @@ In this example we use the following material types:
 - :py:class:`Linear softening <genepy.SofteningLinear>`.
 - :py:class:`Boussinesq density <genepy.DensityBoussinesq>`.
 
-Flow laws parameters can be found in ``genepy/material_parameters/arrhenius_flow_laws.json``.
+Flow laws parameters can be found in ``genepy/material_params/arrhenius_flow_laws.json``.
 
 .. code-block:: python
 
@@ -155,7 +155,7 @@ Flow laws parameters can be found in ``genepy/material_parameters/arrhenius_flow
                                   mesh_file=os.path.join(root,"box_ptatin_md.bin"),
                                   region_file=os.path.join(root,"box_ptatin_region_cell.bin"))
 
-1. Create the model and generate options
+6. Create the model and generate options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Finally, we create the :py:class:`model <genepy.Model>` by gathering all the information defined previously and we save
 the options to a file named ``oblique_extension_model.opts``.

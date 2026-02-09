@@ -178,7 +178,7 @@ regions of the model.
 For each region, a set of parameters is defined using the corresponding classes.
 The details on the methods can be found in the
 :doc:`material parameters <../material_parameters>` section.
-Flow laws parameters can be found in ``genepy/material_parameters/arrhenius_flow_laws.json``.
+Flow laws parameters can be found in ``genepy/material_params/arrhenius_flow_laws.json``.
 
 .. code-block:: python
 
