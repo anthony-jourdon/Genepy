@@ -35,10 +35,4 @@ $ python
 ```
 
 ## Documentation
-Access documentation with this [link](https://anthony-jourdon.github.io/Genepy/).
-
-To update the documentation install `ghp-import` python package found [here](https://github.com/c-w/ghp-import) and use the following command
-
-```
-ghp-import docs/build/html -o -p -n
-```
+Access documentation with this [link](https://genepy.readthedocs.io/en/latest/).
