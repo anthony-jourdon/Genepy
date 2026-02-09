@@ -133,7 +133,9 @@ class Neumann(StokesBoundaryCondition):
     s  = StokesBoundaryCondition.sprint_option(self)
     s += f"-{self.model_name}_poisson_pressure_apply\n"
     if self.dev_stress is not None:
-      s += f"-{self.model_name}_{self.prefix}_dev_stress_{self.tag} {self.dev_stress} # deviatoric stress\n"
+      # ensure that the expression has no whitespace
+      stress = self.format_expression(self.dev_stress)
+      s += f"-{self.model_name}_{self.prefix}_dev_stress_{self.tag} {stress} # deviatoric stress\n"
     return s
   
   def __str__(self):
